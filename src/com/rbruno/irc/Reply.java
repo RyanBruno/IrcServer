@@ -1,0 +1,134 @@
+package com.rbruno.irc;
+
+public enum Reply {
+	/**
+	* Dummy reply number. Not used.
+	*/
+	RPL_NONE (300),
+	/**
+	* Reply format used by USERHOST to list replies to the query list.
+	*/
+	RPL_USERHOST (302),
+	/**
+	* Reply format used by ISON to list replies to the query list.
+	* EX: ":[<nick> {<space><nick>}]"
+	*/
+	RPL_ISON (303),
+	/**
+	* Is sent to any client sending a PRIVMSG to a client which is away.
+	* EX: "<nick> :<away message>"
+	*/
+	RPL_AWAY(301),
+	/**
+	* Sent when the client removes and sets an AWAY message.
+	* EX: ":You are no longer marked as being away"
+	*/
+	RPL_UNAWAY(305),
+	/**
+	* Sent when the client removes and sets an AWAY message.
+	* EX: ":You have been marked as being away"
+	*/
+	RPL_NOWAWAY (306),
+	/**
+	* Reply to a WHOIS command.
+	* EX: "<nick> <user> <host> * :<real name>"
+	*/
+	RPL_WHOISUSER (311),
+	/**
+	* Reply to a WHOIS command.
+	* EX: "<nick> <server> :<server info>"
+	*/
+	RPL_WHOISSERVER(312),
+	/**
+	* Reply to a WHOIS command.
+	* EX: "<nick> :is an IRC operator"
+	*/
+	RPL_WHOISOPERATOR (313),
+	/**
+	* Reply to a WHOIS command.
+	* EX: "<nick> <integer> :seconds idle"
+	*/
+	RPL_WHOISIDLE(317),
+	/**
+	* Reply that ends a WHOIS response.
+	* EX: "<nick> :End of /WHOIS list"
+	*/
+	RPL_ENDOFWHOIS(318),
+	/**
+	* Reply to a WHOIS command.
+	*  "<nick> :{[@|+]<channel><space>}"
+	*/
+	RPL_WHOISCHANNELS(319),
+	/*
+	* Reply to a WHOWAS command.
+	* EX: "<nick> <user> <host> * :<real name>"
+	*/
+	RPL_WHOWASUSER(314),
+	/**
+	* Reply that ends a WHOWAS response.
+	* EX: "<nick> :End of WHOWAS"
+	*/
+	RPL_ENDOFWHOWAS(369),
+	/*
+	* Starts a LIST response.
+	* EX: "Channel :Users  Name"
+	*/
+	RPL_LISTSTART(321),
+	/**
+	* Replies to a LIST command.
+	* EX: "<channel> <# visible> :<topic>"
+	*/
+	RPL_LIST (322),
+	/**
+	* Ends a LIST response.
+	* EX: ":End of /LIST"
+	*/
+	RPL_LISTEND(323),
+	/**
+	* 
+	* EX: "<channel> <mode> <mode params>"
+	*/
+	RPL_CHANNELMODEIS (324),
+	/**
+	* Reply when no topic is set
+	* EX: "<channel> :No topic is set"
+	*/
+	RPL_NOTOPIC (331),
+	/**
+	* Informs the client of the channel topic if one is set. 
+	* EX: "<channel> :<topic>"
+	*/
+	RPL_TOPIC (332),
+	/**
+	* Informs the client that issued an INVITE command that it was success.
+	* EX: "<channel> <nick>"
+	*/
+	RPL_INVITING (341),
+	/**
+	* Informs the client that issued an SUMMON command that it was success.
+	* EX: "<user> :Summoning user to IRC"
+	*/
+	RPL_SUMMONING (342),
+	/**
+	* Replies to a VERSION command.
+	* EX: "<version>.<debuglevel> <server> :<comments>"
+	*/
+	RPL_VERSION(351),
+	/**
+	* Replies to the WHO command.
+	* EX: "<channel> <user> <host> <server> <nick> \ <H|G>[*][@|+] :<hopcount> <real name>"
+	*/
+	RPL_WHOREPLY (352),
+	/**
+	* If a list is needed this must be sent after processing each list item.
+	* EX: "<name> :End of /WHO list"
+	*/
+	RPL_ENDOFWHO (315);
+	
+	
+	int code = 0;
+	Reply(int code){
+		this.code = code;
+	}
+	
+}
