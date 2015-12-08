@@ -5,12 +5,19 @@ import java.net.Socket;
 import java.io.IOException;
 import java.lang.Runnable;
 
-public class Server implements Runnable {
+import com.rbruno.irc.net.Manager;
 
-	public boolean running;
+public class Server implements Runnable {
+	
+	private static Server server;
+	
+	private int port;
+	private boolean running;
 	private ServerSocket serverSocket;
 
 	public Server(int port) throws IOException {
+		server = this;
+		
 		serverSocket = new ServerSocket(port);
 		Thread run = new Thread(this, "Running Thread");
 		run.start();
@@ -21,7 +28,7 @@ public class Server implements Runnable {
 			Socket socket;
 			try {
 				socket = serverSocket.accept();
-				Thread client = new Thread(new Client(socket));
+				Thread client = new Thread(new Manager(socket));
 				client.run();
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -31,5 +38,13 @@ public class Server implements Runnable {
 
 	public static void main(String args[]) throws IOException {
 		new Server(6667);
+	}
+	
+	public static Server getServer() {
+		return server;
+	}
+	
+	public int getPort() {
+		return port;
 	}
 }

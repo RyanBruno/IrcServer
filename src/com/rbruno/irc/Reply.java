@@ -123,8 +123,37 @@ public enum Reply {
 	* If a list is needed this must be sent after processing each list item.
 	* EX: "<name> :End of /WHO list"
 	*/
-	RPL_ENDOFWHO (315);
-	
+	RPL_ENDOFWHO (315),
+	/**
+	* Replies to a NAMES command.
+	* EX: "<channel> :[[@|+]<nick> [[@|+]<nick> [...]]]"
+	*/
+	RPL_NAMREPLY (353),
+	/**
+	* Ends NAMES response. 
+	* EX: "<channel> :End of /NAMES list"
+	*/
+	RPL_ENDOFNAMES (366),
+	/**
+	 * Replies to a LINKS command.
+	 * EX: "<mask> <server> :<hopcount> <server info>"
+	 */
+	 RPL_LINKS (364),
+	 /**
+	  * Ends LINKS response.
+	  * EX: "<mask> :End of /LINKS list"
+	  */
+	 RPL_ENDOFLINKS (365),
+	 /**
+	  * Send with each user on the ban list.
+	  * EX: "<channel> <banid>"
+	  */
+	 RPL_BANLIST (367),
+	 /**
+	  * Ends a ban list.
+	  * EX: "<channel> :End of channel ban list"
+	  */
+	 RPL_ENDOFBANLIST (368);
 	
 	int code = 0;
 	Reply(int code){
