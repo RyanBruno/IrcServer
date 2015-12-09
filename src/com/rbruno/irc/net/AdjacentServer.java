@@ -1,23 +1,21 @@
 package com.rbruno.irc.net;
 
-public class AdjacentServer extends PasswordUser {
+public class AdjacentServer {
 
+	private Connection connection;
 	private String name;
 	private int hopcount;
 	private String info;
 
-	public AdjacentServer(String password, String name, int hopcount, String info) {
-		super(password);
+	public AdjacentServer(Connection connection, String name, int hopcount, String info) {
+		this.connection = connection;
 		this.name = name;
 		this.hopcount = hopcount;
 		this.info = info;
 	}
 
-	public AdjacentServer(PasswordUser connection, String name, int hopcount, String info) {
-		super(connection.getPassword());
-		this.name = name;
-		this.hopcount = hopcount;
-		this.info = info;
+	public Connection getConnection() {
+		return connection;
 	}
 
 	public String getName() {

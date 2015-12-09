@@ -2,6 +2,8 @@ package com.rbruno.irc.commands;
 
 import java.util.ArrayList;
 
+import com.rbruno.irc.Request;
+
 public class Command {
 
 	private String command;
@@ -9,8 +11,9 @@ public class Command {
 
 	private static ArrayList<Command> commands = new ArrayList<Command>();
 
-	public static void add() {
-
+	public static void init() {
+		commands.add(new Pass());
+		commands.add(new Nick());
 	}
 
 	public Command(String command, int parameters) {
@@ -18,7 +21,7 @@ public class Command {
 		this.parameters = parameters;
 	}
 
-	public void execute() {
+	public void execute(Request request) {
 	}
 
 	public String getCommand() {

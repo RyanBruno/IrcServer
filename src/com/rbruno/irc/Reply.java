@@ -153,7 +153,23 @@ public enum Reply {
 	  * Ends a ban list.
 	  * EX: "<channel> :End of channel ban list"
 	  */
-	 RPL_ENDOFBANLIST (368);
+	 RPL_ENDOFBANLIST (368),
+	 RPL_INFO (371),
+	 RPL_ENDOFINFO (374),
+	 RPL_MOTDSTART(375),
+	 RPL_MOTD (372),
+	 RPL_ENDOFMOTD (376),
+	 RPL_YOUREOPER(381),
+	 RPL_REHASHING (382),
+	 RPL_TIME(391),
+	 RPL_USERSSTART(392),
+	 RPL_USERS (393),
+	 RPL_ENDOFUSERS (394),
+	 RPL_NOUSERS (395),
+	 RPL_TRACELINK (200),
+	 RPL_TRACECONNECTING (201),
+	 RPL_TRACEHANDSHAKE (202);
+	 
 	
 	int code = 0;
 	Reply(int code){
