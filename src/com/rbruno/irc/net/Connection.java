@@ -5,16 +5,19 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 
+import com.rbruno.irc.Error;
+import com.rbruno.irc.Reply;
 import com.rbruno.irc.Request;
+import com.rbruno.irc.Server;
 import com.rbruno.irc.commands.Command;
 
 public class Connection implements Runnable {
 
 	private Socket socket;
 	private boolean open = true;
-	
+
 	private String connectionPassword;
-	
+
 	private Client client;
 	private AdjacentServer adjacentServer;
 	private boolean isClient = true;
@@ -30,29 +33,53 @@ public class Connection implements Runnable {
 				String line = reader.readLine();
 				Request request = new Request(this, line);
 				if (!Command.isCommand(request.getCommand())) {
-					//TODO: Send ERR_UNKNOWNCOMMAND
+					// this.send(prefix, code, targetNickname, args)
 				}
-				Command.getCommand(request.getCommand()).execute(request);
+				try {
+					Command.runCommand(request.getCommand(), request);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 			reader.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void send(String prefix, int code, String targetNickname, String args) throws IOException {
 		String message = ":" + prefix + " " + code + " " + targetNickname + " " + args;
-		byte[] block = message .getBytes();
-		
+		byte[] block = message.getBytes();
+
 		socket.getOutputStream().write(block);
 		socket.getOutputStream().flush();
+	}
+
+	public void send(int code, String nickname, String args) throws IOException {
+		send(Server.getServer().getConfig().getProperty("servername"), code, nickname, args);
+	}
+
+	public void send(Reply reply, String nickname, String args) throws IOException {
+		send(reply.getCode(), nickname, args);
+	}
+
+	public void send(Reply reply, Client client, String args) throws IOException {
+		send(reply, client.getNickname(), args);
+	}
+
+	public void send(Error error, String nickname, String args) throws IOException {
+		send(error.getCode(), nickname, args);
+	}
+
+	public void send(Error error, Client client, String args) throws IOException {
+		send(error, client.getNickname(), args);
 	}
 
 	public void close() {
 		open = false;
 	}
-	
-	public Socket getSocket(){	
+
+	public Socket getSocket() {
 		return socket;
 	}
 

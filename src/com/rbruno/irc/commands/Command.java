@@ -2,6 +2,7 @@ package com.rbruno.irc.commands;
 
 import java.util.ArrayList;
 
+import com.rbruno.irc.Error;
 import com.rbruno.irc.Request;
 
 public class Command {
@@ -21,7 +22,7 @@ public class Command {
 		this.parameters = parameters;
 	}
 
-	public void execute(Request request) {
+	public void execute(Request request) throws Exception {
 	}
 
 	public String getCommand() {
@@ -48,10 +49,19 @@ public class Command {
 	}
 
 	public static Command getCommand(String command) {
-		for (Command curret : commands) {
-			if (curret.getCommand().equalsIgnoreCase(command)) return curret;
+		for (Command current : commands) {
+			if (current.getCommand().equalsIgnoreCase(command)) return current;
 		}
 		return null;
 	}
 
+	public static void runCommand(String commandName, Request request) throws Exception {
+		Command command = getCommand(commandName);
+		if (request.getArgs().length < command.getParameters()) {
+			request.getConnection().send(Error.ERR_NEEDMOREPARAMS, request.getConnection().getClient(), "Not enough parameters");
+			return;
+		}
+		command.execute(request);
+
+	}
 }

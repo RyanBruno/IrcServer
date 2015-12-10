@@ -1,27 +1,31 @@
 package com.rbruno.irc;
 
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.io.IOException;
-import java.lang.Runnable;
 
 import com.rbruno.irc.commands.Command;
-import com.rbruno.irc.net.Client;
 import com.rbruno.irc.net.Connection;
 
 public class Server implements Runnable {
 
 	private static Server server;
 
-	private int port;
 	private boolean running;
 	private ServerSocket serverSocket;
 
-	public Server(int port) throws IOException {
+	private Config config;
+	private ClientManager clientManager;
+	private ServerManager serverManager;
+
+	public Server() throws Exception {
+		config = new Config();
+		clientManager = new ClientManager();
+		serverManager = new ServerManager();
 		server = this;
 
 		Command.init();
-		serverSocket = new ServerSocket(port);
+		serverSocket = new ServerSocket(Integer.parseInt(config.getProperty("port")));
 		Thread run = new Thread(this, "Running Thread");
 		run.start();
 	}
@@ -38,20 +42,27 @@ public class Server implements Runnable {
 			}
 		}
 	}
+	
+	
 
-	public void addClient(Client client) {
-		//TODO:
-	}
-
-	public static void main(String args[]) throws IOException {
-		new Server(6667);
+	public static void main(String args[]) throws Exception {
+		new Server();
 	}
 
 	public static Server getServer() {
 		return server;
 	}
 
-	public int getPort() {
-		return port;
+	public Config getConfig() {
+		return config;
 	}
+
+	public ClientManager getClientManager() {
+		return clientManager;
+	}
+
+	public ServerManager getServerManager() {
+		return serverManager;
+	}
+
 }

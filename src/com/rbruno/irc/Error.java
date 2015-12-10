@@ -51,4 +51,8 @@ public enum Error {
 	Error(int code){
 		this.code = code;
 	}
+	
+	public int getCode() {
+		return code;
+	}
 }
