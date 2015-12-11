@@ -19,7 +19,6 @@ public class Connection implements Runnable {
 	private String connectionPassword;
 
 	private Client client;
-	private AdjacentServer adjacentServer;
 	private boolean isClient = true;
 
 	public Connection(Socket socket) {
@@ -95,12 +94,8 @@ public class Connection implements Runnable {
 		return isClient;
 	}
 
-	public AdjacentServer getAdjacentServer() {
-		return adjacentServer;
-	}
-
-	public void setAdjacentServer(AdjacentServer adjacentServer) {
-		this.adjacentServer = adjacentServer;
+	public void setAdjacentServer() {
+		isClient = false;
 	}
 
 	public Client getClient() {

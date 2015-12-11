@@ -9,12 +9,7 @@ public class ServerManager {
 
 	public ServerManager() {
 	}
-
-	public void addClient(AdjacentServer server) {
-		//TODO: Check if server is already registered
-		servers.add(server);
-	}
-
+	
 	public AdjacentServer getClient(String name) {
 		for (AdjacentServer server : servers) {
 			if (server.getName().equals(name)) return server;
@@ -32,9 +27,16 @@ public class ServerManager {
 		}
 	}
 
-	public void addServer(AdjacentServer adjacentServer) {
-		// TODO 
-		
+	public void addServer(AdjacentServer server) {
+		servers.add(server);
+
+	}
+
+	public boolean checkServer(String serverName) {
+		for (AdjacentServer current: servers) {
+			if (current.getName().equals(serverName)) return true;
+		}
+		return false;
 	}
 
 }
