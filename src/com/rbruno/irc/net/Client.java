@@ -1,5 +1,7 @@
 package com.rbruno.irc.net;
 
+import java.util.ArrayList;
+
 public class Client {
 
 	private Connection connection;
@@ -8,6 +10,8 @@ public class Client {
 	private String hostname;
 	private String servername;
 	private String realName;
+	
+	private ArrayList<String> channels = new ArrayList<String>();
 
 	public Client(Connection connection, String nickname) {
 		this.connection = connection;
@@ -66,5 +70,13 @@ public class Client {
 
 	public void setServername(String servername) {
 		this.servername = servername;
+	}
+
+	public ArrayList<String> getChannels() {
+		return channels;
+	}
+
+	public void addChannels(String channel) {
+		channels.add(channel);
 	}
 }
