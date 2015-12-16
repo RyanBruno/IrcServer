@@ -10,20 +10,20 @@ public class ServerManager {
 	public ServerManager() {
 	}
 	
-	public AdjacentServer getClient(String name) {
+	public AdjacentServer getServer(String name) {
 		for (AdjacentServer server : servers) {
 			if (server.getName().equals(name)) return server;
 		}
 		return null;
 	}
 
-	public void removeClient(AdjacentServer server) {
+	public void removeServer(AdjacentServer server) {
 		servers.remove(server);
 	}
 
-	public void removeClient(String name) {
+	public void removeServer(String name) {
 		for (AdjacentServer server : servers) {
-			if (server.getName().equals(name)) removeClient(server);
+			if (server.getName().equals(name)) removeServer(server);
 		}
 	}
 
@@ -37,6 +37,19 @@ public class ServerManager {
 			if (current.getName().equals(serverName)) return true;
 		}
 		return false;
+	}
+	
+	public AdjacentServer[] getAdjacentServers() {
+		ArrayList<AdjacentServer> list = new ArrayList<AdjacentServer>();
+		for (AdjacentServer current : servers) {
+			if (current.getHopcount() == 0) list.add(current);
+		}
+		AdjacentServer[] array = new AdjacentServer[list.size()];
+		for (int i = 0; i < list.size() ; i++) {
+			array[i] = list.get(i);
+		}
+		return array;
+		
 	}
 
 }

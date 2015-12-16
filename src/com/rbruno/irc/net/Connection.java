@@ -54,8 +54,8 @@ public class Connection implements Runnable {
 		socket.getOutputStream().flush();
 	}
 
-	public void send(int code, String nickname, String args) throws IOException {
-		send(Server.getServer().getConfig().getProperty("servername"), code, nickname, args);
+	public void send(int code, String name, String args) throws IOException {
+		send(Server.getServer().getConfig().getProperty("servername"), code, name, args);
 	}
 
 	public void send(Reply reply, String nickname, String args) throws IOException {
@@ -66,8 +66,8 @@ public class Connection implements Runnable {
 		send(reply, client.getNickname(), args);
 	}
 
-	public void send(Error error, String nickname, String args) throws IOException {
-		send(error.getCode(), nickname, args);
+	public void send(Error error, String name, String args) throws IOException {
+		send(error.getCode(), name, args);
 	}
 
 	public void send(Error error, Client client, String args) throws IOException {
