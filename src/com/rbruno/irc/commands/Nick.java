@@ -11,6 +11,7 @@ public class Nick extends Command {
 
 	@Override
 	public void execute(Request request) {
+		//TODO: Check if nick is taken
 		request.getConnection().setClient(new Client(request.getConnection(), request.getArgs()[0]));
 	}
 

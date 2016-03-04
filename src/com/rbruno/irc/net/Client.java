@@ -2,6 +2,8 @@ package com.rbruno.irc.net;
 
 import java.util.ArrayList;
 
+import com.rbruno.irc.Channel;
+
 public class Client {
 
 	private Connection connection;
@@ -10,8 +12,8 @@ public class Client {
 	private String hostname;
 	private String servername;
 	private String realName;
-	
-	private ArrayList<String> channels = new ArrayList<String>();
+
+	private ArrayList<Channel> channels = new ArrayList<Channel>();
 
 	public Client(Connection connection, String nickname) {
 		this.connection = connection;
@@ -72,11 +74,15 @@ public class Client {
 		this.servername = servername;
 	}
 
-	public ArrayList<String> getChannels() {
+	public ArrayList<Channel> getChannels() {
 		return channels;
 	}
 
-	public void addChannels(String channel) {
+	public void addChannels(Channel channel) {
 		channels.add(channel);
+	}
+
+	public void removeChannel(Channel channel) {
+		channels.remove(channel);
 	}
 }

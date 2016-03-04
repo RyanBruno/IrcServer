@@ -19,7 +19,6 @@ public class Connection implements Runnable {
 	private String connectionPassword;
 
 	private Client client;
-	private boolean isClient = true;
 
 	public Connection(Socket socket) {
 		this.socket = socket;
@@ -75,6 +74,7 @@ public class Connection implements Runnable {
 	}
 
 	public void close() {
+		//TODO Fix later
 		open = false;
 	}
 
@@ -91,11 +91,7 @@ public class Connection implements Runnable {
 	}
 
 	public boolean isClient() {
-		return isClient;
-	}
-
-	public void setAdjacentServer() {
-		isClient = false;
+		return client != null;
 	}
 
 	public Client getClient() {
@@ -103,7 +99,6 @@ public class Connection implements Runnable {
 	}
 
 	public void setClient(Client client) {
-		isClient = true;
 		this.client = client;
 	}
 

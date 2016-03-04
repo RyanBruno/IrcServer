@@ -15,6 +15,13 @@ public class Command {
 	public static void init() {
 		commands.add(new Pass());
 		commands.add(new Nick());
+		commands.add(new User());
+		//commands.add(new Server());
+		commands.add(new Oper());
+		commands.add(new Quit());
+		//commands.add(new Squit());
+		commands.add(new Join());
+		commands.add(new Part());
 	}
 
 	public Command(String command, int parameters) {

@@ -16,17 +16,18 @@ public class Server implements Runnable {
 
 	private Config config;
 	private ClientManager clientManager;
-	private ServerManager serverManager;
+	private ChannelManager channelManger;
 
 	public Server() throws Exception {
 		config = new Config();
 		clientManager = new ClientManager();
-		serverManager = new ServerManager();
+		channelManger = new ChannelManager();		
 		server = this;
-
+		
 		Command.init();
 		serverSocket = new ServerSocket(Integer.parseInt(config.getProperty("port")));
 		Thread run = new Thread(this, "Running Thread");
+		running = true;
 		run.start();
 	}
 
@@ -35,8 +36,8 @@ public class Server implements Runnable {
 			Socket socket;
 			try {
 				socket = serverSocket.accept();
-				Thread client = new Thread(new Connection(socket));
-				client.run();
+				Thread connection = new Thread(new Connection(socket));
+				connection.run();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -61,8 +62,8 @@ public class Server implements Runnable {
 		return clientManager;
 	}
 
-	public ServerManager getServerManager() {
-		return serverManager;
+	public ChannelManager getChannelManger() {
+		return channelManger;
 	}
 
 }
