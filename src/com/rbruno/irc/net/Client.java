@@ -1,6 +1,7 @@
 package com.rbruno.irc.net;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.rbruno.irc.Channel;
 
@@ -14,6 +15,7 @@ public class Client {
 	private String realName;
 
 	private ArrayList<Channel> channels = new ArrayList<Channel>();
+	private HashMap<Mode, Boolean> modes = new HashMap<Mode, Boolean>();
 
 	public Client(Connection connection, String nickname) {
 		this.connection = connection;
@@ -28,6 +30,18 @@ public class Client {
 		this.servername = servername;
 		this.realName = realName;
 
+	}
+	
+	public enum Mode{
+		INVISIBLE,SERVER_NOTICES,WALLOPS,OPERATOR
+	}
+	
+	public boolean getMode(Mode mode) {
+		return modes.get(mode);
+	}
+
+	public void setMode(Mode mode, boolean add) {
+		modes.put(mode, add);
 	}
 
 	public String getNickname() {
@@ -85,4 +99,5 @@ public class Client {
 	public void removeChannel(Channel channel) {
 		channels.remove(channel);
 	}
+
 }

@@ -22,6 +22,7 @@ public class Command {
 		//commands.add(new Squit());
 		commands.add(new Join());
 		commands.add(new Part());
+		commands.add(new Mode());
 	}
 
 	public Command(String command, int parameters) {
