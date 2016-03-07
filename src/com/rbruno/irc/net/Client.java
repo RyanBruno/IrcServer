@@ -1,9 +1,11 @@
 package com.rbruno.irc.net;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.rbruno.irc.Channel;
+import com.rbruno.irc.Reply;
 
 public class Client {
 
@@ -15,7 +17,7 @@ public class Client {
 	private String realName;
 
 	private ArrayList<Channel> channels = new ArrayList<Channel>();
-	private HashMap<Mode, Boolean> modes = new HashMap<Mode, Boolean>();
+	private HashMap<ClientMode, Boolean> modes = new HashMap<ClientMode, Boolean>();
 
 	public Client(Connection connection, String nickname) {
 		this.connection = connection;
@@ -31,16 +33,28 @@ public class Client {
 		this.realName = realName;
 
 	}
-	
-	public enum Mode{
-		INVISIBLE,SERVER_NOTICES,WALLOPS,OPERATOR
+
+	public enum ClientMode {
+		INVISIBLE("i"), SERVER_NOTICES("s"), WALLOPS("w"), OPERATOR("o");
+
+		private String symbol;
+
+		ClientMode (String letter) {
+			this.symbol = letter;
+		}
+		
+		public String getSymbol() {
+			return symbol;
+		}
 	}
-	
-	public boolean getMode(Mode mode) {
+
+	public boolean getMode(ClientMode mode) {
 		return modes.get(mode);
 	}
 
-	public void setMode(Mode mode, boolean add) {
+	public void setMode(ClientMode mode, boolean add, Client sender) throws IOException {
+		connection.send(Reply.RPL_UMODEIS, this, sender + " sets mode " + (add ? "+" : "-") +mode.getSymbol() + " on " + getNickname());
+		
 		modes.put(mode, add);
 	}
 
@@ -98,6 +112,14 @@ public class Client {
 
 	public void removeChannel(Channel channel) {
 		channels.remove(channel);
+	}
+
+	public boolean hasMode(ClientMode mode) {
+		return modes.get(mode);
+	}
+
+	public boolean isServerOP() {
+		return modes.get(ClientMode.OPERATOR);
 	}
 
 }

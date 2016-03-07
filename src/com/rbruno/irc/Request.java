@@ -1,5 +1,6 @@
 package com.rbruno.irc;
 
+import com.rbruno.irc.net.Client;
 import com.rbruno.irc.net.Connection;
 
 public class Request {
@@ -8,11 +9,12 @@ public class Request {
 	private String prefix;
 	private String command;
 	private String[] args;
+	private Client client;
 
 	public Request(Connection connection, String request) {
 		this.connection = connection;
 		if (request.startsWith(":")) {
-			this.prefix = request.split(" ")[0];
+			this.prefix = request.split(" ")[0].substring(1);
 			request = request.substring(prefix.length() + 1);
 		}
 		this.command = request.split(" ")[0];
@@ -28,6 +30,11 @@ public class Request {
 			}
 			newArgs[newArgs.length - 1] = postDelimiter;
 			this.args = newArgs;
+		}
+		if (prefix != null) {
+			client = Server.getServer().getClientManager().getClient(prefix);
+		} else {
+			client = connection.getClient();
 		}
 	}
 
@@ -46,4 +53,9 @@ public class Request {
 	public String[] getArgs() {
 		return args;
 	}
+
+	public Client getClient() {
+		return client;
+	}
+
 }
