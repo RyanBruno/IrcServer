@@ -23,6 +23,11 @@ public class Command {
 		commands.add(new Join());
 		commands.add(new Part());
 		commands.add(new Mode());
+		commands.add(new Topic());
+		commands.add(new Names());
+		commands.add(new List());
+		commands.add(new Invite());
+		commands.add(new Kick());
 	}
 
 	public Command(String command, int parameters) {

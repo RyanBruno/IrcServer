@@ -13,7 +13,9 @@ public class Channel {
 	private ArrayList<Client> ops = new ArrayList<Client>();
 	private HashMap<ChannelMode, Boolean> modes = new HashMap<ChannelMode, Boolean>();
 	private ArrayList<Client> voiceList = new ArrayList<Client>();
+	private ArrayList<Client> invitedUsers = new ArrayList<Client>();
 	private int userLimit = 100;
+	private String topic = "";
 
 	public Channel() {
 	}
@@ -56,6 +58,10 @@ public class Channel {
 	public void removeClient(Client client) {
 		clients.remove(client);
 	}
+	
+	public ArrayList<Client> getClients() {
+		return clients;
+	}
 
 	public boolean checkPassword(String password) {
 		return this.password == password;
@@ -95,6 +101,30 @@ public class Channel {
 
 	public boolean hasVoice(Client voicee) {
 		return voiceList.contains(voicee);
+	}
+
+	public String getTopic() {
+		return topic ;
+	}
+	
+	public void setTopic(String topic) {
+		this.topic = topic;
+	}
+	
+	public void inviteUser(Client client) {
+		this.invitedUsers.add(client);
+	}
+	
+	public void unInviteUser(Client client) {
+		this.invitedUsers.remove(client);
+	}
+	
+	public boolean isUserInvited(Client client) {
+		return invitedUsers.contains(client);
+	}
+
+	public boolean isUserOnChannel(Client client) {
+		return clients.contains(client);
 	}
 
 }
