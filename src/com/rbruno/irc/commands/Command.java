@@ -28,6 +28,14 @@ public class Command {
 		commands.add(new List());
 		commands.add(new Invite());
 		commands.add(new Kick());
+		commands.add(new Version());
+		//commands.add(new Stats());
+		//commands.add(new Links());
+		commands.add(new Time());
+		//commands.add(new Connect());
+		//commands.add(new Trace());
+		commands.add(new Admin());
+		commands.add(new Info());
 	}
 
 	public Command(String command, int parameters) {
