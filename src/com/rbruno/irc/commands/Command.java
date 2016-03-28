@@ -36,6 +36,7 @@ public class Command {
 		//commands.add(new Trace());
 		commands.add(new Admin());
 		commands.add(new Info());
+		commands.add(new Privmsg());
 	}
 
 	public Command(String command, int parameters) {

@@ -1,5 +1,6 @@
 package com.rbruno.irc;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -37,14 +38,21 @@ public class Channel {
 		return modes.get(mode);
 	}
 
-	public void setMode(ChannelMode mode, boolean add, Client sender) {
-		send(Reply.RPL_CHANNELMODEIS, this, sender + " sets mode " + (add ? "+" : "-") + mode.getSymbol() + " on " + name);
+	public void setMode(ChannelMode mode, boolean add, Client sender) throws IOException {
+		send(Reply.RPL_CHANNELMODEIS, sender + " sets mode " + (add ? "+" : "-") + mode.getSymbol() + " on " + name);
 		modes.put(mode, add);
 	}
 
-	private void send(Reply rplChannelmodeis, Channel channel, String string) {
-		// TODO Send to all clients
+	private void send(Reply reply, String message) throws IOException {
+		for (Client current : clients){
+			current.getConnection().send(reply, current.getNickname(), message);
+		}
+	}
 
+	public void sendMessage(Client sender, String message) throws IOException {
+		for (Client current : clients){
+			current.getConnection().send(current.getNickname(), "PRIVMSG", sender.getNickname() + " :" + message);
+		}
 	}
 
 	public String getName() {

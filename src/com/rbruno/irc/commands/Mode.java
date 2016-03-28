@@ -30,6 +30,12 @@ public class Mode extends Command {
 				for (char mode : argument.toLowerCase().toCharArray()) {
 					switch (mode) {
 					case 'o':
+						//TODO op
+						if (request.getClient().isServerOP() || target.checkOP(request.getClient())) {
+							target.addOP(Server.getServer().getClientManager().getClient(request.getArgs()[1]));
+						} else {
+							request.getConnection().send(Error.ERR_NOPRIVILEGES, request.getClient(), "Permission Denied- You're not an IRC operator");
+						}
 						break;
 					case 'p':
 						if (request.getClient().isServerOP() || target.checkOP(request.getClient())) {

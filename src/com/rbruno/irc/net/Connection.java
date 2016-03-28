@@ -44,13 +44,22 @@ public class Connection implements Runnable {
 			e.printStackTrace();
 		}
 	}
-
-	public void send(String prefix, int code, String targetNickname, String args) throws IOException {
-		String message = ":" + prefix + " " + code + " " + targetNickname + " " + args;
+	
+	public void send(String message) throws IOException {
 		byte[] block = message.getBytes();
 
 		socket.getOutputStream().write(block);
 		socket.getOutputStream().flush();
+	}
+	
+	public void send(String prefix, String command, String args) throws IOException {
+		String message = ":" + prefix + " " + command  + " " + args;
+		send(message);
+	}
+
+	public void send(String prefix, int code, String targetNickname, String args) throws IOException {
+		String message = ":" + prefix + " " + code + " " + targetNickname + " " + args;
+		send(message);
 	}
 
 	public void send(int code, String name, String args) throws IOException {

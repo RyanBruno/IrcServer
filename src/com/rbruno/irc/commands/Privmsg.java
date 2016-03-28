@@ -1,0 +1,35 @@
+package com.rbruno.irc.commands;
+
+import com.rbruno.irc.Channel;
+import com.rbruno.irc.Error;
+import com.rbruno.irc.Request;
+import com.rbruno.irc.Server;
+import com.rbruno.irc.net.Client;
+
+public class Privmsg extends Command {
+
+	public Privmsg() {
+		super("PRIVMSG", 2);
+	}
+
+	@Override
+	public void execute(Request request) throws Exception {
+		for (String reciver : request.getArgs()[0].split(",")) {
+			if (reciver.startsWith("$")) {
+				// TODO: Server
+			} else if (reciver.startsWith("#") || reciver.startsWith("&")) {
+				Channel channel = Server.getServer().getChannelManger().getChannel(reciver);
+				channel.sendMessage(request.getClient(), request.getArgs()[1]);
+			} else {
+				Client client = Server.getServer().getClientManager().getClient(reciver);
+				if (client != null) {
+					client.getConnection().send("PRIVMSG " + client.getNickname() + " :" + request.getArgs()[2]);
+				} else {
+					request.getClient().getConnection().send(Error.ERR_NOSUCHNICK, client, reciver + " :No such nick");
+				}
+			}
+		}
+
+	}
+
+}
