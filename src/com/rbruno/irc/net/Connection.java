@@ -19,6 +19,8 @@ public class Connection implements Runnable {
 	private String connectionPassword;
 
 	private Client client;
+	
+	private Type type = Type.LOGGIN_IN;
 
 	public Connection(Socket socket) {
 		this.socket = socket;
@@ -30,11 +32,8 @@ public class Connection implements Runnable {
 			while (open) {
 				String line = reader.readLine();
 				Request request = new Request(this, line);
-				if (!Command.isCommand(request.getCommand())) {
-					// this.send(prefix, code, targetNickname, args)
-				}
 				try {
-					Command.runCommand(request.getCommand(), request);
+					Command.runCommand(request);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -43,6 +42,10 @@ public class Connection implements Runnable {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public enum Type {
+		LOGGIN_IN, SERVER, CLIENT
 	}
 	
 	public void send(String message) throws IOException {
@@ -79,6 +82,7 @@ public class Connection implements Runnable {
 	}
 
 	public void send(Error error, Client client, String args) throws IOException {
+		System.out.println(client);
 		send(error, client.getNickname(), args);
 	}
 
@@ -100,7 +104,7 @@ public class Connection implements Runnable {
 	}
 
 	public boolean isClient() {
-		return client != null;
+		return type == Type.CLIENT;
 	}
 
 	public Client getClient() {
@@ -108,7 +112,16 @@ public class Connection implements Runnable {
 	}
 
 	public void setClient(Client client) {
+		type = Type.CLIENT;
 		this.client = client;
+	}
+
+	public boolean isServer() {
+		return type == Type.SERVER;
+	}
+
+	public Type getType() {
+		return type;
 	}
 
 }

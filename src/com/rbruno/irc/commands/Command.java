@@ -16,10 +16,10 @@ public class Command {
 		commands.add(new Pass());
 		commands.add(new Nick());
 		commands.add(new User());
-		//commands.add(new Server());
+		// commands.add(new Server());
 		commands.add(new Oper());
 		commands.add(new Quit());
-		//commands.add(new Squit());
+		// commands.add(new Squit());
 		commands.add(new Join());
 		commands.add(new Part());
 		commands.add(new Mode());
@@ -29,11 +29,11 @@ public class Command {
 		commands.add(new Invite());
 		commands.add(new Kick());
 		commands.add(new Version());
-		//commands.add(new Stats());
-		//commands.add(new Links());
+		// commands.add(new Stats());
+		// commands.add(new Links());
 		commands.add(new Time());
-		//commands.add(new Connect());
-		//commands.add(new Trace());
+		// commands.add(new Connect());
+		// commands.add(new Trace());
 		commands.add(new Admin());
 		commands.add(new Info());
 		commands.add(new Privmsg());
@@ -77,8 +77,13 @@ public class Command {
 		return null;
 	}
 
-	public static void runCommand(String commandName, Request request) throws Exception {
-		Command command = getCommand(commandName);
+	public static void runCommand(Request request) throws Exception {
+		Command command = getCommand(request.getCommand());
+		if (command == null) {
+			if (request.getClient() != null) 
+				request.getConnection().send(Error.ERR_UNKNOWNCOMMAND, request.getClient(), request.getCommand() + " :Unknown command");
+			return;
+		}
 		if (request.getArgs().length < command.getParameters()) {
 			request.getConnection().send(Error.ERR_NEEDMOREPARAMS, request.getConnection().getClient(), "Not enough parameters");
 			return;

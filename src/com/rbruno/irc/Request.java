@@ -8,7 +8,7 @@ public class Request {
 	private Connection connection;
 	private String prefix;
 	private String command;
-	private String[] args;
+	private String[] args = new String[0];
 	private Client client;
 
 	public Request(Connection connection, String request) {
@@ -20,9 +20,8 @@ public class Request {
 		this.command = request.split(" ")[0];
 		request = request.substring(command.length() + 1);
 		String postDelimiter = request.substring(request.split(":")[0].length());
-		request = request.substring(0, postDelimiter.length());
+		request = request.substring(0, request.length() - postDelimiter.length());
 		if (request.length() > 0)  this.args = request.split(" ");
-		
 		if (postDelimiter.length() > 0) {
 			String[] newArgs = new String[args.length + 1];
 			for (int i = 0; i < args.length; i++) {
@@ -31,10 +30,12 @@ public class Request {
 			newArgs[newArgs.length - 1] = postDelimiter;
 			this.args = newArgs;
 		}
-		if (prefix != null) {
+		if (prefix != null && connection.isServer()) {
 			client = Server.getServer().getClientManager().getClient(prefix);
-		} else {
+		} else if (connection.isClient()){
 			client = connection.getClient();
+		} else {
+			client = null;
 		}
 	}
 

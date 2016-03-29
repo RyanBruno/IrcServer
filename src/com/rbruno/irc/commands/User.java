@@ -12,15 +12,21 @@ public class User extends Command {
 
 	@Override
 	public void execute(Request request) {
-		if (request.getConnection().isClient()) {
-			request.getConnection().getClient().setUsername(request.getArgs()[0]);
-			request.getConnection().getClient().setHostname(Server.getServer().getConfig().getProperty("hostname"));
-			request.getConnection().getClient().setServername(Server.getServer().getConfig().getProperty("servername"));
-			request.getConnection().getClient().setRealName(request.getArgs()[3]);
-			Server.getServer().getClientManager().addClient(request.getConnection().getClient());
-		} else {
+		System.out.println(request.getConnection().getType());
+		switch (request.getConnection().getType()) {
+		case CLIENT:
+			//TODO Error
+			break;
+		case LOGGIN_IN:
+			System.out.println("Loggin");
 			Client client = new Client(request.getConnection(), request.getPrefix(), request.getArgs()[0], request.getArgs()[1], request.getArgs()[2], request.getArgs()[3]);
 			Server.getServer().getClientManager().addClient(client);
+			request.getConnection().setClient(client);
+			break;
+		case SERVER:
+			//TODO Server
+			break;
 		}
+		
 	}
 }
