@@ -30,6 +30,7 @@ public class Server implements Runnable {
 		serverSocket = new ServerSocket(Integer.parseInt(config.getProperty("port")));
 		Thread run = new Thread(this, "Running Thread");
 		running = true;
+		System.out.println("Started Server");
 		run.start();
 	}
 

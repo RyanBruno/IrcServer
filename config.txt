@@ -1,2 +1,3 @@
 port=6697
 ServerName=RBruno Network
+hostname=irc.rbruno.com

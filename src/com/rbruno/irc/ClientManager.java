@@ -13,19 +13,21 @@ public class ClientManager {
 	}
 
 	public void broadcastLocal(Reply reply, String args) throws IOException {
-		for (Client client: clients) {
-			if (client.getConnection().isClient()) client.getConnection().send(reply, client, args);
+		for (Client client : clients) {
+			if (client.getConnection().isClient())
+				client.getConnection().send(reply, client, args);
 		}
 	}
-	
+
 	public void addClient(Client client) {
-		//TODO: Check if nick is in use
+		// TODO: Check if nick is in use
 		clients.add(client);
 	}
 
 	public Client getClient(String nickname) {
 		for (Client client : clients) {
-			if (client.getNickname().equals(nickname)) return client;
+			if (client.getNickname().equals(nickname))
+				return client;
 		}
 		return null;
 	}
@@ -36,7 +38,16 @@ public class ClientManager {
 
 	public void removeClient(String nickname) {
 		for (Client client : clients) {
-			if (client.getNickname().equals(nickname)) removeClient(client);
+			if (client.getNickname().equals(nickname))
+				removeClient(client);
 		}
+	}
+
+	public boolean isNick(String nickname) {
+		for (Client client : clients) {
+			if (client.getNickname().equals(nickname))
+				return true;
+		}
+		return false;
 	}
 }
