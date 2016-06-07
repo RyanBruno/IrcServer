@@ -15,8 +15,8 @@ public class Nick extends Command {
 
 	@Override
 	public void execute(Request request) throws IOException {
-		if (Server.getServer().getClientManager().isNick(request.getConnection().getClient().getNickname())) {
-			request.getConnection().send(Error.ERR_NICKNAMEINUSE, request.getClient(), request.getClient().getNickname() + " :Nickname is already in use");
+		if (Server.getServer().getClientManager().isNick(request.getArgs()[0])) {
+			request.getConnection().send(Error.ERR_NICKNAMEINUSE, request.getClient(), request.getArgs()[0] + " :Nickname is already in use");
 			request.getConnection().close();
 			return;
 		}

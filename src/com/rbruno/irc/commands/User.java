@@ -12,14 +12,16 @@ public class User extends Command {
 
 	@Override
 	public void execute(Request request) {
-		System.out.println(request.getConnection().getType());
 		switch (request.getConnection().getType()) {
-		case CLIENT:
-			//TODO Error
-			break;
 		case LOGGIN_IN:
-			System.out.println("Loggin");
-			Client client = new Client(request.getConnection(), request.getPrefix(), request.getArgs()[0], request.getArgs()[1], request.getArgs()[2], request.getArgs()[3]);
+			//TODO Error Must send nick 1st
+			break;
+		case CLIENT:
+			Client client = request.getClient();
+			client.setUsername(request.getArgs()[0]);
+			client.setHostname(request.getArgs()[1]);
+			client.setServername(request.getArgs()[2]);
+			client.setRealName(request.getArgs()[3]);
 			Server.getServer().getClientManager().addClient(client);
 			request.getConnection().setClient(client);
 			break;

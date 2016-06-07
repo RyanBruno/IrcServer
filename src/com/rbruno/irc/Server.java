@@ -23,14 +23,14 @@ public class Server implements Runnable {
 	public Server() throws Exception {
 		config = new Config();
 		clientManager = new ClientManager();
-		channelManger = new ChannelManager();		
+		channelManger = new ChannelManager();
 		server = this;
-		
+
 		Command.init();
 		serverSocket = new ServerSocket(Integer.parseInt(config.getProperty("port")));
 		Thread run = new Thread(this, "Running Thread");
 		running = true;
-		System.out.println("Started Server");
+		System.out.println("Started Server on port: " + serverSocket.getLocalPort());
 		run.start();
 	}
 
@@ -46,8 +46,6 @@ public class Server implements Runnable {
 			}
 		}
 	}
-	
-	
 
 	public static void main(String args[]) throws Exception {
 		new Server();

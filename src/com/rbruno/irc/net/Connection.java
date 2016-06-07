@@ -19,7 +19,7 @@ public class Connection implements Runnable {
 	private String connectionPassword;
 
 	private Client client;
-	
+
 	private Type type = Type.LOGGIN_IN;
 
 	public Connection(Socket socket) {
@@ -30,11 +30,17 @@ public class Connection implements Runnable {
 		try {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"));
 			while (open) {
-				String line = reader.readLine();
-				Request request = new Request(this, line);
 				try {
+					String line = reader.readLine();
+					System.out.println(line);
+					if (line == null) {
+						close();
+						continue;
+					}
+					Request request = new Request(this, line);
 					Command.runCommand(request);
 				} catch (Exception e) {
+					// TODO: Error Handling
 					e.printStackTrace();
 				}
 			}
@@ -43,20 +49,20 @@ public class Connection implements Runnable {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public enum Type {
 		LOGGIN_IN, SERVER, CLIENT
 	}
-	
+
 	public void send(String message) throws IOException {
 		byte[] block = message.getBytes();
 
 		socket.getOutputStream().write(block);
 		socket.getOutputStream().flush();
 	}
-	
+
 	public void send(String prefix, String command, String args) throws IOException {
-		String message = ":" + prefix + " " + command  + " " + args;
+		String message = ":" + prefix + " " + command + " " + args;
 		send(message);
 	}
 
@@ -82,12 +88,12 @@ public class Connection implements Runnable {
 	}
 
 	public void send(Error error, Client client, String args) throws IOException {
-		System.out.println(client);
 		send(error, client.getNickname(), args);
 	}
 
-	public void close() {
-		//TODO Fix later
+	public void close() throws IOException {
+		socket.close();
+		Server.getServer().getClientManager().removeClient(client);
 		open = false;
 	}
 
