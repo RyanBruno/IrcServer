@@ -6,6 +6,7 @@ import java.net.Socket;
 
 import com.rbruno.irc.commands.Command;
 import com.rbruno.irc.config.Config;
+import com.rbruno.irc.logger.Logger;
 import com.rbruno.irc.manage.ChannelManager;
 import com.rbruno.irc.manage.ClientManager;
 import com.rbruno.irc.net.Connection;
@@ -33,7 +34,7 @@ public class Server implements Runnable {
 		serverSocket = new ServerSocket(Integer.parseInt(config.getProperty("port")));
 		Thread run = new Thread(this, "Running Thread");
 		running = true;
-		System.out.println("Started Server on port: " + serverSocket.getLocalPort());
+		Logger.log("Started Server on port: " + serverSocket.getLocalPort());
 		run.start();
 	}
 
