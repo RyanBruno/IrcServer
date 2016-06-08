@@ -56,6 +56,7 @@ public class Connection implements Runnable {
 	}
 
 	public void send(String message) throws IOException {
+		System.out.println("[DeBug]" + message);
 		byte[] block = message.getBytes();
 
 		socket.getOutputStream().write(block);

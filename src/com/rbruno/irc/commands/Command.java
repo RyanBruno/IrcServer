@@ -65,23 +65,26 @@ public class Command {
 
 	public static boolean isCommand(String command) {
 		for (Command curret : commands) {
-			if (curret.getCommand().equalsIgnoreCase(command)) return true;
+			if (curret.getCommand().equalsIgnoreCase(command))
+				return true;
 		}
 		return false;
 	}
 
 	public static Command getCommand(String command) {
 		for (Command current : commands) {
-			if (current.getCommand().equalsIgnoreCase(command)) return current;
+			if (current.getCommand().equalsIgnoreCase(command))
+				return current;
 		}
 		return null;
 	}
 
 	public static void runCommand(Request request) throws Exception {
-		request.getClient().setLastCheckin(System.currentTimeMillis());
+		if (request.getClient() != null)
+			request.getClient().setLastCheckin(System.currentTimeMillis());
 		Command command = getCommand(request.getCommand());
 		if (command == null) {
-			if (request.getClient() != null) 
+			if (request.getClient() != null)
 				request.getConnection().send(Error.ERR_UNKNOWNCOMMAND, request.getClient(), request.getCommand() + " :Unknown command");
 			return;
 		}

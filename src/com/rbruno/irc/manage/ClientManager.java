@@ -27,13 +27,14 @@ public class ClientManager implements Runnable {
 				try {
 					for (Client client : clients)
 						if (client.getConnection().isClient())
-							if (System.currentTimeMillis() - client.getLastCheckin() >= 20000)
-								client.getConnection().send(Server.getServer().getConfig().getProperty("ServerName"), "PING", client.getNickname());
+							if (System.currentTimeMillis() - client.getLastCheckin() >= 10000) {
+								client.getConnection().send(Server.getServer().getConfig().getProperty("hostname"), "PING", client.getNickname());
+							}
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
 			}
-		}, 1000);
+		}, 1000, 1000);
 	}
 
 	public void broadcastLocal(Reply reply, String args) throws IOException {
