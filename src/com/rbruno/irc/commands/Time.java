@@ -2,9 +2,9 @@ package com.rbruno.irc.commands;
 
 import java.sql.Timestamp;
 
-import com.rbruno.irc.Reply;
-import com.rbruno.irc.Request;
 import com.rbruno.irc.Server;
+import com.rbruno.irc.reply.Reply;
+import com.rbruno.irc.templates.Request;
 
 public class Time extends Command {
 

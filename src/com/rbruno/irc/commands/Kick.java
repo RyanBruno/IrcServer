@@ -1,10 +1,10 @@
 package com.rbruno.irc.commands;
 
-import com.rbruno.irc.Channel;
-import com.rbruno.irc.Error;
-import com.rbruno.irc.Request;
 import com.rbruno.irc.Server;
-import com.rbruno.irc.net.Client;
+import com.rbruno.irc.reply.Error;
+import com.rbruno.irc.templates.Channel;
+import com.rbruno.irc.templates.Client;
+import com.rbruno.irc.templates.Request;
 
 public class Kick extends Command {
 

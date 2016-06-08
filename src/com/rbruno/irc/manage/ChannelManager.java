@@ -1,6 +1,8 @@
-package com.rbruno.irc;
+package com.rbruno.irc.manage;
 
 import java.util.ArrayList;
+
+import com.rbruno.irc.templates.Channel;
 
 public class ChannelManager {
 

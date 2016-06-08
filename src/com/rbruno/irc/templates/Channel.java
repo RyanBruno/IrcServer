@@ -1,10 +1,10 @@
-package com.rbruno.irc;
+package com.rbruno.irc.templates;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.rbruno.irc.net.Client;
+import com.rbruno.irc.reply.Reply;
 
 public class Channel {
 

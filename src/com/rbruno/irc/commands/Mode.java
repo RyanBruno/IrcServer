@@ -1,12 +1,12 @@
 package com.rbruno.irc.commands;
 
-import com.rbruno.irc.Channel;
-import com.rbruno.irc.Channel.ChannelMode;
-import com.rbruno.irc.Error;
-import com.rbruno.irc.Reply;
-import com.rbruno.irc.Request;
 import com.rbruno.irc.Server;
-import com.rbruno.irc.net.Client;
+import com.rbruno.irc.reply.Error;
+import com.rbruno.irc.reply.Reply;
+import com.rbruno.irc.templates.Channel;
+import com.rbruno.irc.templates.Client;
+import com.rbruno.irc.templates.Request;
+import com.rbruno.irc.templates.Channel.ChannelMode;
 
 public class Mode extends Command {
 

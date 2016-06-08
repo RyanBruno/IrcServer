@@ -1,8 +1,8 @@
 package com.rbruno.irc.commands;
 
-import com.rbruno.irc.Request;
 import com.rbruno.irc.Server;
-import com.rbruno.irc.net.Client;
+import com.rbruno.irc.templates.Client;
+import com.rbruno.irc.templates.Request;
 
 public class User extends Command {
 

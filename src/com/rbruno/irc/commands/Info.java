@@ -3,8 +3,8 @@ package com.rbruno.irc.commands;
 import java.io.IOException;
 import java.io.InputStream;
 
-import com.rbruno.irc.Reply;
-import com.rbruno.irc.Request;
+import com.rbruno.irc.reply.Reply;
+import com.rbruno.irc.templates.Request;
 
 public class Info extends Command {
 

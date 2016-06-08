@@ -5,6 +5,9 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 import com.rbruno.irc.commands.Command;
+import com.rbruno.irc.config.Config;
+import com.rbruno.irc.manage.ChannelManager;
+import com.rbruno.irc.manage.ClientManager;
 import com.rbruno.irc.net.Connection;
 
 public class Server implements Runnable {

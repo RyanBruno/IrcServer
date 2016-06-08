@@ -1,11 +1,11 @@
-package com.rbruno.irc.net;
+package com.rbruno.irc.templates;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.rbruno.irc.Channel;
-import com.rbruno.irc.Reply;
+import com.rbruno.irc.net.Connection;
+import com.rbruno.irc.reply.Reply;
 
 public class Client {
 
@@ -15,6 +15,8 @@ public class Client {
 	private String hostname;
 	private String servername;
 	private String realName;
+	
+	private long lastCheckin;
 
 	private ArrayList<Channel> channels = new ArrayList<Channel>();
 	private HashMap<ClientMode, Boolean> modes = new HashMap<ClientMode, Boolean>();
@@ -120,6 +122,14 @@ public class Client {
 
 	public boolean isServerOP() {
 		return modes.get(ClientMode.OPERATOR);
+	}
+
+	public long getLastCheckin() {
+		return lastCheckin;
+	}
+
+	public void setLastCheckin(long lastCheckin) {
+		this.lastCheckin = lastCheckin;
 	}
 
 }

@@ -1,11 +1,13 @@
-package com.rbruno.irc;
+package com.rbruno.irc.manage;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import com.rbruno.irc.net.Client;
+import com.rbruno.irc.Server;
+import com.rbruno.irc.reply.Reply;
+import com.rbruno.irc.templates.Client;
 
 public class ClientManager implements Runnable {
 
@@ -25,7 +27,8 @@ public class ClientManager implements Runnable {
 				try {
 					for (Client client : clients)
 						if (client.getConnection().isClient())
-							client.getConnection().send(Server.getServer().getConfig().getProperty("ServerName"), "PING", client.getNickname());
+							if (System.currentTimeMillis() - client.getLastCheckin() >= 20000)
+								client.getConnection().send(Server.getServer().getConfig().getProperty("ServerName"), "PING", client.getNickname());
 				} catch (IOException e) {
 					e.printStackTrace();
 				}

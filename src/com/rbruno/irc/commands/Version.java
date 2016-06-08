@@ -1,8 +1,8 @@
 package com.rbruno.irc.commands;
 
-import com.rbruno.irc.Reply;
-import com.rbruno.irc.Request;
 import com.rbruno.irc.Server;
+import com.rbruno.irc.reply.Reply;
+import com.rbruno.irc.templates.Request;
 
 public class Version extends Command {
 

@@ -1,6 +1,6 @@
 package com.rbruno.irc.commands;
 
-import com.rbruno.irc.Request;
+import com.rbruno.irc.templates.Request;
 
 public class Quit extends Command {
 

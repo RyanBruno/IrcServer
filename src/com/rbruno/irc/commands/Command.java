@@ -2,8 +2,8 @@ package com.rbruno.irc.commands;
 
 import java.util.ArrayList;
 
-import com.rbruno.irc.Error;
-import com.rbruno.irc.Request;
+import com.rbruno.irc.reply.Error;
+import com.rbruno.irc.templates.Request;
 
 public class Command {
 
@@ -78,6 +78,7 @@ public class Command {
 	}
 
 	public static void runCommand(Request request) throws Exception {
+		request.getClient().setLastCheckin(System.currentTimeMillis());
 		Command command = getCommand(request.getCommand());
 		if (command == null) {
 			if (request.getClient() != null) 

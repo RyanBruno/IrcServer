@@ -5,11 +5,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 
-import com.rbruno.irc.Error;
-import com.rbruno.irc.Reply;
-import com.rbruno.irc.Request;
 import com.rbruno.irc.Server;
 import com.rbruno.irc.commands.Command;
+import com.rbruno.irc.reply.Error;
+import com.rbruno.irc.reply.Reply;
+import com.rbruno.irc.templates.Client;
+import com.rbruno.irc.templates.Request;
 
 public class Connection implements Runnable {
 

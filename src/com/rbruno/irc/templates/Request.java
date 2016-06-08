@@ -1,6 +1,6 @@
-package com.rbruno.irc;
+package com.rbruno.irc.templates;
 
-import com.rbruno.irc.net.Client;
+import com.rbruno.irc.Server;
 import com.rbruno.irc.net.Connection;
 
 public class Request {

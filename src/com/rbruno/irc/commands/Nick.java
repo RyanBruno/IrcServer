@@ -2,10 +2,10 @@ package com.rbruno.irc.commands;
 
 import java.io.IOException;
 
-import com.rbruno.irc.Error;
-import com.rbruno.irc.Request;
 import com.rbruno.irc.Server;
-import com.rbruno.irc.net.Client;
+import com.rbruno.irc.reply.Error;
+import com.rbruno.irc.templates.Client;
+import com.rbruno.irc.templates.Request;
 
 public class Nick extends Command {
 

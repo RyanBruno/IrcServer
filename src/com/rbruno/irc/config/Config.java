@@ -1,4 +1,4 @@
-package com.rbruno.irc;
+package com.rbruno.irc.config;
 
 
 import java.io.File;

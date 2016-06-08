@@ -1,8 +1,8 @@
 package com.rbruno.irc.commands;
 
-import com.rbruno.irc.Channel;
-import com.rbruno.irc.Request;
 import com.rbruno.irc.Server;
+import com.rbruno.irc.templates.Channel;
+import com.rbruno.irc.templates.Request;
 
 public class Part extends Command {
 
