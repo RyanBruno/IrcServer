@@ -2,21 +2,47 @@ package com.rbruno.irc;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import com.rbruno.irc.net.Client;
 
-public class ClientManager {
+public class ClientManager implements Runnable {
 
 	ArrayList<Client> clients = new ArrayList<Client>();
 
 	public ClientManager() {
+		Thread clientHandler = new Thread(this, "Client Handler");
+		clientHandler.run();
+	}
+
+	@Override
+	public void run() {
+		Timer timer = new Timer();
+		timer.schedule(new TimerTask() {
+			@Override
+			public void run() {
+				try {
+					for (Client client : clients)
+						if (client.getConnection().isClient())
+							client.getConnection().send(Server.getServer().getConfig().getProperty("ServerName"), "PING", client.getNickname());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}, 1000);
 	}
 
 	public void broadcastLocal(Reply reply, String args) throws IOException {
-		for (Client client : clients) {
+		for (Client client : clients)
 			if (client.getConnection().isClient())
 				client.getConnection().send(reply, client, args);
-		}
+	}
+
+	public void broadcastLocal(String prefix, String command, String args) throws IOException {
+		for (Client client : clients)
+			if (client.getConnection().isClient())
+				client.getConnection().send(prefix, command, args);
 	}
 
 	public void addClient(Client client) {

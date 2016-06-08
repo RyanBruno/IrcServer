@@ -9,7 +9,7 @@ import com.rbruno.irc.net.Connection;
 
 public class Server implements Runnable {
 
-	private static final String VERSION = "v0.9-SNAPSHOT";
+	private static final String VERSION = "v0.10-SNAPSHOT";
 
 	private static Server server;
 
