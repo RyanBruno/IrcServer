@@ -1,0 +1,25 @@
+<project>
+	<modelVersion>4.0.0</modelVersion>
+	
+  	<build>
+    		<plugins>
+      			<plugin>
+        			<groupId>org.apache.maven.plugins</groupId>
+        			<artifactId>maven-jar-plugin</artifactId>
+			        <configuration>
+          				<archive>
+            					<manifest>
+              						<addClasspath>true</addClasspath>
+              						<mainClass>com.rbruno.irc.Server</mainClass>
+            					</manifest>
+					</archive>
+				</configuration>
+      			</plugin>
+    		</plugins>
+	</build>
+
+	<groupId>com.rbruno.irc</groupId>
+	<artifactId>IrcServer</artifactId>
+	<version>v0.10-SNAPSHOT</version>
+	<packaging>jar</packaging>
+</project>
