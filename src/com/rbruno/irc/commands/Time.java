@@ -16,7 +16,7 @@ public class Time extends Command {
 	public void execute(Request request) throws Exception {
 		if (request.getArgs().length == 0) {
 			java.util.Date date = new java.util.Date();
-			request.getConnection().send(Reply.RPL_TIME, request.getClient(), Server.getServer().getConfig().getProperty("ServerName") + " :" + new Timestamp(date.getTime()));
+			request.getConnection().send(Reply.RPL_TIME, request.getClient(), Server.getServer().getConfig().getProperty("networkname") + " :" + new Timestamp(date.getTime()));
 		} else {
 			//TODO: Servers
 		}

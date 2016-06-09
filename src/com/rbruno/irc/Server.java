@@ -1,5 +1,6 @@
 package com.rbruno.irc;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -10,6 +11,9 @@ import com.rbruno.irc.logger.Logger;
 import com.rbruno.irc.manage.ChannelManager;
 import com.rbruno.irc.manage.ClientManager;
 import com.rbruno.irc.net.Connection;
+import com.rbruno.irc.reply.Reply;
+import com.rbruno.irc.templates.Client;
+import com.rbruno.irc.util.Utilities;
 
 public class Server implements Runnable {
 
@@ -73,6 +77,17 @@ public class Server implements Runnable {
 
 	public static String getVersion() {
 		return VERSION;
+	}
+
+	public void sendMOTD(Client client) throws IOException {
+		client.getConnection().send(Reply.RPL_MOTDSTART, client, "Message Of the Day!");
+		File motd = new File("motd.txt");
+		if (!motd.exists())
+			Utilities.makeFile("motd.txt");
+		for (String line : Utilities.read("motd.txt"))
+			client.getConnection().send(Reply.RPL_MOTD, client, ":" + line);
+		client.getConnection().send(Reply.RPL_ENDOFMOTD, client, "End of /MOTD command");
+
 	}
 
 }

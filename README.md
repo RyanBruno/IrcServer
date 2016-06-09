@@ -9,8 +9,7 @@ java -jar <JarName>.jar
 ```
 ## Todo
 1. Error Handling
-2. Maven Support
-3. Way to add channels
-4. Plugins
-5. JavaDoc
-6. Add the rest of the IRC commands
+2. Way to add channels
+3. Plugins
+4. JavaDoc
+5. Add the rest of the IRC commands

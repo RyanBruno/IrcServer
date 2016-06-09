@@ -17,10 +17,7 @@ public class Channel {
 	private ArrayList<Client> invitedUsers = new ArrayList<Client>();
 	private int userLimit = 100;
 	private String topic = "";
-
-	public Channel() {
-	}
-
+	
 	public enum ChannelMode {
 		PRIVATE("p"), SECRET("s"), INVITE_ONLY("i"), TOPIC("t"), NO_MESSAGE_BY_OUTSIDE("n"), MODERATED_CHANNEL("m");
 		private String symbol;

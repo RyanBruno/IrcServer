@@ -5,10 +5,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 import java.util.Properties;
+
+import com.rbruno.irc.util.Utilities;
 
 public class Config {
 
@@ -19,20 +18,15 @@ public class Config {
 		File config = new File("config.txt");
 		File ops = new File("ops.txt");
 		if(!config.exists()){
-			makeFile("config.txt");
+			Utilities.makeFile("/config.txt");
 		}
 		if(!ops.exists()){
-			makeFile("ops.txt");
+			Utilities.makeFile("/ops.txt");
 		}
 		this.config = new Properties();
 		this.config.load(new FileReader(config));
 		this.ops = new Properties();
 		this.ops.load(new FileReader(ops));
-	}
-	
-	private void makeFile(String fileName) throws IOException {
-		InputStream inputStream = Config.class.getResourceAsStream("/" + fileName);
-		Files.copy(inputStream, new File(fileName).toPath(), StandardCopyOption.REPLACE_EXISTING);
 	}
 
 	public String getProperty(String key) {

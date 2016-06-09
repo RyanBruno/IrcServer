@@ -1,6 +1,9 @@
 package com.rbruno.irc.commands;
 
+import java.io.IOException;
+
 import com.rbruno.irc.Server;
+import com.rbruno.irc.reply.Reply;
 import com.rbruno.irc.templates.Client;
 import com.rbruno.irc.templates.Request;
 
@@ -11,10 +14,10 @@ public class User extends Command {
 	}
 
 	@Override
-	public void execute(Request request) {
+	public void execute(Request request) throws IOException {
 		switch (request.getConnection().getType()) {
 		case LOGGIN_IN:
-			//TODO Error Must send nick 1st
+			// TODO Error Must send nick 1st
 			break;
 		case CLIENT:
 			Client client = request.getClient();
@@ -24,11 +27,17 @@ public class User extends Command {
 			client.setRealName(request.getArgs()[3]);
 			Server.getServer().getClientManager().addClient(client);
 			request.getConnection().setClient(client);
+			request.getConnection().send(Reply.RPL_LUSERCLIENT, client, ":There are " + Server.getServer().getClientManager().getUserCount() + " users and " + Server.getServer().getClientManager().getInvisibleUserCount() + " invisible on 1 servers");
+			request.getConnection().send(Reply.RPL_LUSEROP, client, Server.getServer().getClientManager().getOps() + " :operator(s) online");
+			request.getConnection().send(Reply.RPL_LUSERUNKNOWN, client, "0 :unknown connection(s)");
+			request.getConnection().send(Reply.RPL_LUSERCHANNELS, client, "0 :channels formed");
+			request.getConnection().send(Reply.RPL_LUSERME, client, ":I have " + Server.getServer().getClientManager().getUserCount() + " clients and 1 servers");
+			Server.getServer().sendMOTD(client);
 			break;
 		case SERVER:
-			//TODO Server
+			// TODO Server
 			break;
 		}
-		
+
 	}
 }

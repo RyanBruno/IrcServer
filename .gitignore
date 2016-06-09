@@ -1,3 +1,6 @@
 .classpath
 .project
 bin/
+log.txt
+pom.xml
+target/

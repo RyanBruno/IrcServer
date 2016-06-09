@@ -15,7 +15,7 @@ public class Client {
 	private String hostname;
 	private String servername;
 	private String realName;
-	
+
 	private long lastCheckin;
 
 	private ArrayList<Channel> channels = new ArrayList<Channel>();
@@ -41,10 +41,10 @@ public class Client {
 
 		private String symbol;
 
-		ClientMode (String letter) {
+		ClientMode(String letter) {
 			this.symbol = letter;
 		}
-		
+
 		public String getSymbol() {
 			return symbol;
 		}
@@ -55,8 +55,8 @@ public class Client {
 	}
 
 	public void setMode(ClientMode mode, boolean add, Client sender) throws IOException {
-		connection.send(Reply.RPL_UMODEIS, this, sender + " sets mode " + (add ? "+" : "-") +mode.getSymbol() + " on " + getNickname());
-		
+		connection.send(Reply.RPL_UMODEIS, this, sender + " sets mode " + (add ? "+" : "-") + mode.getSymbol() + " on " + getNickname());
+
 		modes.put(mode, add);
 	}
 
@@ -117,10 +117,14 @@ public class Client {
 	}
 
 	public boolean hasMode(ClientMode mode) {
+		if (!modes.containsKey(mode))
+			return false;
 		return modes.get(mode);
 	}
 
 	public boolean isServerOP() {
+		if (!modes.containsKey(ClientMode.OPERATOR))
+			return false;
 		return modes.get(ClientMode.OPERATOR);
 	}
 

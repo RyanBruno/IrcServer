@@ -8,6 +8,7 @@ import java.util.TimerTask;
 import com.rbruno.irc.Server;
 import com.rbruno.irc.reply.Reply;
 import com.rbruno.irc.templates.Client;
+import com.rbruno.irc.templates.Client.ClientMode;
 
 public class ClientManager implements Runnable {
 
@@ -79,5 +80,29 @@ public class ClientManager implements Runnable {
 				return true;
 		}
 		return false;
+	}
+
+	public int getUserCount() {
+		int users = 0;
+		for (Client current : clients)
+			if (!current.hasMode(ClientMode.INVISIBLE))
+				users++;
+		return users;
+	}
+
+	public int getInvisibleUserCount() {
+		int users = 0;
+		for (Client current : clients)
+			if (current.hasMode(ClientMode.INVISIBLE))
+				users++;
+		return users;
+	}
+
+	public int getOps() {
+		int ops = 0;
+		for (Client current : clients)
+			if (current.isServerOP())
+				ops++;
+		return ops;
 	}
 }
