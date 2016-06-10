@@ -13,7 +13,7 @@ public class Version extends Command {
 	@Override
 	public void execute(Request request) throws Exception {
 		if (request.getArgs().length == 0) {
-			request.getConnection().send(Reply.RPL_VERSION, request.getClient(), Server.getVersion() + " " + Server.getServer().getConfig().getProperty("networkname"));
+			request.getConnection().send(Reply.RPL_VERSION, request.getClient(), Server.getVersion() + " " + Server.getServer().getConfig().getProperty("hostname"));
 		} else {
 			//TODO: Server
 		}

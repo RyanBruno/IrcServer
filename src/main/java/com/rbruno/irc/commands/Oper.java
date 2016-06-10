@@ -15,15 +15,15 @@ public class Oper extends Command {
 	@Override
 	public void execute(Request request) throws Exception {
 		if (Server.getServer().getConfig().getProperty("DisableOps").equals("true")) {
-			request.getConnection().send(Error.ERR_NOOPERHOST, request.getConnection().getClient(), "No O-lines for your host");
+			request.getConnection().send(Error.ERR_NOOPERHOST, request.getConnection().getClient(), ":No O-lines for your host");
 			return;
 		}
 		if (Server.getServer().getConfig().checkOpPassword(request.getArgs()[0], request.getArgs()[1])) {
 			// TODO: Tell all clients and servers of the new OP
 			request.getClient().setMode(com.rbruno.irc.templates.Client.ClientMode.OPERATOR, true, request.getClient());
-			request.getConnection().send(Reply.RPL_YOUREOPER, request.getConnection().getClient(), "You are now an IRC operator");
+			request.getConnection().send(Reply.RPL_YOUREOPER, request.getConnection().getClient(), ":You are now an IRC operator");
 		} else {
-			request.getConnection().send(Error.ERR_PASSWDMISMATCH, request.getConnection().getClient(), "Password incorrect");
+			request.getConnection().send(Error.ERR_PASSWDMISMATCH, request.getConnection().getClient(), ":Password incorrect");
 		}
 	}
 }

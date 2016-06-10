@@ -15,8 +15,8 @@ public class ClientManager implements Runnable {
 	ArrayList<Client> clients = new ArrayList<Client>();
 
 	public ClientManager() {
-		Thread clientHandler = new Thread(this, "Client Handler");
-		clientHandler.run();
+		//Thread clientHandler = new Thread(this, "Client Handler");
+		//clientHandler.run();
 	}
 
 	@Override
@@ -29,7 +29,7 @@ public class ClientManager implements Runnable {
 					for (Client client : clients)
 						if (client.getConnection().isClient())
 							if (System.currentTimeMillis() - client.getLastCheckin() >= 10000) {
-								client.getConnection().send(Server.getServer().getConfig().getProperty("hostname"), "PING", client.getNickname());
+								client.getConnection().send(Server.getServer().getConfig().getProperty("hostname"), "PING", ":" + Server.getServer().getConfig().getProperty("hostname"));
 							}
 				} catch (IOException e) {
 					e.printStackTrace();

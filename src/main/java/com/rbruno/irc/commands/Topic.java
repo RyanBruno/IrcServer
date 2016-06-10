@@ -17,7 +17,7 @@ public class Topic extends Command {
 	public void execute(Request request) throws Exception {
 		Channel channel = Server.getServer().getChannelManger().getChannel(request.getArgs()[0]);
 		if (channel == null) {
-			request.getConnection().send(Error.ERR_NOSUCHCHANNEL, request.getClient(), request.getArgs()[0] + " No such channel");
+			request.getConnection().send(Error.ERR_NOSUCHCHANNEL, request.getClient(), request.getArgs()[0] + " :No such channel");
 			return;
 		}
 		if (channel.getMode(ChannelMode.TOPIC) && !channel.checkOP(request.getClient())){

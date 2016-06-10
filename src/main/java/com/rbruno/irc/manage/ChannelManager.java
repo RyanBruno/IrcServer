@@ -7,6 +7,10 @@ import com.rbruno.irc.templates.Channel;
 public class ChannelManager {
 
 	private ArrayList<Channel> channels = new ArrayList<Channel>();
+	
+	public ChannelManager() {
+		channels.add(new Channel("#test", ""));
+	}
 
 	public ArrayList<Channel> getChannels() {
 		return channels;

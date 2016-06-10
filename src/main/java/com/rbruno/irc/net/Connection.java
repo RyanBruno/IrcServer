@@ -70,13 +70,19 @@ public class Connection implements Runnable {
 		send(message);
 	}
 
-	public void send(String prefix, int code, String nickname, String args) throws IOException {
+	public void send(String prefix, String code, String nickname, String args) throws IOException {
 		String message = ":" + prefix + " " + code + " " + nickname + " " + args;
 		send(message);
 	}
 
 	public void send(int code, String nickname, String args) throws IOException {
-		send(Server.getServer().getConfig().getProperty("hostname"), code, nickname, args);
+		String stringCode = code + "";
+		if (stringCode.length() < 2)
+			stringCode = "0" + stringCode;
+		if (stringCode.length() < 3)
+			stringCode = "0" + stringCode;
+		
+		send(Server.getServer().getConfig().getProperty("hostname"), stringCode, nickname, args);
 	}
 
 	public void send(Reply reply, String nickname, String args) throws IOException {

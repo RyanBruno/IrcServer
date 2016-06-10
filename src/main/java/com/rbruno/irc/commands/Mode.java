@@ -34,49 +34,49 @@ public class Mode extends Command {
 						if (request.getClient().isServerOP() || target.checkOP(request.getClient())) {
 							target.addOP(Server.getServer().getClientManager().getClient(request.getArgs()[1]));
 						} else {
-							request.getConnection().send(Error.ERR_NOPRIVILEGES, request.getClient(), "Permission Denied- You're not an IRC operator");
+							request.getConnection().send(Error.ERR_NOPRIVILEGES, request.getClient(), ":Permission Denied- You're not an IRC operator");
 						}
 						break;
 					case 'p':
 						if (request.getClient().isServerOP() || target.checkOP(request.getClient())) {
 							target.setMode(ChannelMode.PRIVATE, add, request.getClient());
 						} else {
-							request.getConnection().send(Error.ERR_NOPRIVILEGES, request.getClient(), "Permission Denied- You're not an IRC operator");
+							request.getConnection().send(Error.ERR_NOPRIVILEGES, request.getClient(), ":Permission Denied- You're not an IRC operator");
 						}
 						break;
 					case 's':
 						if (request.getClient().isServerOP() || target.checkOP(request.getClient())) {
 							target.setMode(ChannelMode.SECRET, add, request.getClient());
 						} else {
-							request.getConnection().send(Error.ERR_NOPRIVILEGES, request.getClient(), "Permission Denied- You're not an IRC operator");
+							request.getConnection().send(Error.ERR_NOPRIVILEGES, request.getClient(), ":Permission Denied- You're not an IRC operator");
 						}
 						break;
 					case 'i':
 						if (request.getClient().isServerOP() || target.checkOP(request.getClient())) {
 							target.setMode(ChannelMode.INVITE_ONLY, add, request.getClient());
 						} else {
-							request.getConnection().send(Error.ERR_NOPRIVILEGES, request.getClient(), "Permission Denied- You're not an IRC operator");
+							request.getConnection().send(Error.ERR_NOPRIVILEGES, request.getClient(), ":Permission Denied- You're not an IRC operator");
 						}
 						break;
 					case 't':
 						if (request.getClient().isServerOP() || target.checkOP(request.getClient())) {
 							target.setMode(ChannelMode.TOPIC, add, request.getClient());
 						} else {
-							request.getConnection().send(Error.ERR_NOPRIVILEGES, request.getClient(), "Permission Denied- You're not an IRC operator");
+							request.getConnection().send(Error.ERR_NOPRIVILEGES, request.getClient(), ":Permission Denied- You're not an IRC operator");
 						}
 						break;
 					case 'n':
 						if (request.getClient().isServerOP() || target.checkOP(request.getClient())) {
 							target.setMode(ChannelMode.NO_MESSAGE_BY_OUTSIDE, add, request.getClient());
 						} else {
-							request.getConnection().send(Error.ERR_NOPRIVILEGES, request.getClient(), "Permission Denied- You're not an IRC operator");
+							request.getConnection().send(Error.ERR_NOPRIVILEGES, request.getClient(), ":Permission Denied- You're not an IRC operator");
 						}
 						break;
 					case 'm':
 						if (request.getClient().isServerOP() || target.checkOP(request.getClient())) {
 							target.setMode(ChannelMode.MODERATED_CHANNEL, add, request.getClient());
 						} else {
-							request.getConnection().send(Error.ERR_NOPRIVILEGES, request.getClient(), "Permission Denied- You're not an IRC operator");
+							request.getConnection().send(Error.ERR_NOPRIVILEGES, request.getClient(), ":Permission Denied- You're not an IRC operator");
 						}
 						break;
 					case 'l':
@@ -85,11 +85,11 @@ public class Mode extends Command {
 								int limit = Integer.parseInt(request.getArgs()[2]);
 								target.setUserLimit(limit);
 							} catch (NumberFormatException e) {
-								request.getConnection().send(Error.ERR_NEEDMOREPARAMS, request.getClient(), "Not enough parameters");
+								request.getConnection().send(Error.ERR_NEEDMOREPARAMS, request.getClient(), ":Not enough parameters");
 							}
 
 						} else {
-							request.getConnection().send(Error.ERR_NOPRIVILEGES, request.getClient(), "Permission Denied- You're not an IRC operator");
+							request.getConnection().send(Error.ERR_NOPRIVILEGES, request.getClient(), ":Permission Denied- You're not an IRC operator");
 						}
 						break;
 					case 'b':
@@ -100,10 +100,10 @@ public class Mode extends Command {
 							if (voicee != null) {
 								target.giveVoice(voicee);
 							} else {
-								request.getConnection().send(Error.ERR_NOSUCHNICK, request.getClient(), "No such channel");
+								request.getConnection().send(Error.ERR_NOSUCHNICK, request.getClient(), ":No such channel");
 							}
 						} else {
-							request.getConnection().send(Error.ERR_NOPRIVILEGES, request.getClient(), "Permission Denied- You're not an IRC operator");
+							request.getConnection().send(Error.ERR_NOPRIVILEGES, request.getClient(), ":Permission Denied- You're not an IRC operator");
 						}
 						break;
 					case 'k':
@@ -111,7 +111,7 @@ public class Mode extends Command {
 							target.setPassword(request.getArgs()[2]);
 
 						} else {
-							request.getConnection().send(Error.ERR_NOPRIVILEGES, request.getClient(), "Permission Denied- You're not an IRC operator");
+							request.getConnection().send(Error.ERR_NOPRIVILEGES, request.getClient(), ":Permission Denied- You're not an IRC operator");
 						}
 						break;
 					}
@@ -130,30 +130,30 @@ public class Mode extends Command {
 						if (target == request.getClient() || request.getClient().getMode(Client.ClientMode.OPERATOR)) {
 							target.setMode(Client.ClientMode.INVISIBLE, add, request.getClient());
 						} else {
-							request.getConnection().send(Error.ERR_NOPRIVILEGES, request.getClient(), "Permission Denied- You're not an IRC operator");
+							request.getConnection().send(Error.ERR_NOPRIVILEGES, request.getClient(), ":Permission Denied- You're not an IRC operator");
 						}
 						break;
 					case 's':
 						if (target == request.getClient() || request.getClient().getMode(Client.ClientMode.OPERATOR)) {
 							target.setMode(Client.ClientMode.SERVER_NOTICES, add, request.getClient());
 						} else {
-							request.getConnection().send(Error.ERR_NOPRIVILEGES, request.getClient(), "Permission Denied- You're not an IRC operator");
+							request.getConnection().send(Error.ERR_NOPRIVILEGES, request.getClient(), ":Permission Denied- You're not an IRC operator");
 						}
 						break;
 					case 'w':
 						if (request.getClient().getMode(Client.ClientMode.OPERATOR)) {
 							target.setMode(Client.ClientMode.WALLOPS, add, request.getClient());
 						} else {
-							request.getConnection().send(Error.ERR_NOPRIVILEGES, request.getClient(), "Permission Denied- You're not an IRC operator");
+							request.getConnection().send(Error.ERR_NOPRIVILEGES, request.getClient(), ":Permission Denied- You're not an IRC operator");
 						}
 
 						break;
 					case 'o':
 						if (request.getClient().hasMode(Client.ClientMode.OPERATOR)) {
 							target.setMode(Client.ClientMode.OPERATOR, add, request.getClient());
-							target.getConnection().send(Reply.RPL_YOUREOPER, request.getConnection().getClient(), "You are now an IRC operator");
+							target.getConnection().send(Reply.RPL_YOUREOPER, request.getConnection().getClient(), ":You are now an IRC operator");
 						} else {
-							request.getConnection().send(Error.ERR_NOPRIVILEGES, request.getClient(), "Permission Denied- You're not an IRC operator");
+							request.getConnection().send(Error.ERR_NOPRIVILEGES, request.getClient(), ":Permission Denied- You're not an IRC operator");
 						}
 						break;
 					}

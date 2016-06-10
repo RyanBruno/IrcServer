@@ -30,7 +30,7 @@ public class Invite extends Command {
 			return;
 		}
 		channel.inviteUser(target);
-		request.getConnection().send(Reply.RPL_INVITING, request.getClient(), channel.getName() + " " + target.getNickname());
+		request.getConnection().send(Reply.RPL_INVITING, request.getClient(), ":" + channel.getName() + " " + target.getNickname());
 		
 	}
 

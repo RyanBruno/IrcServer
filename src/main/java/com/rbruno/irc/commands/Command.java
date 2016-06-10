@@ -89,7 +89,7 @@ public class Command {
 			return;
 		}
 		if (request.getArgs().length < command.getParameters()) {
-			request.getConnection().send(Error.ERR_NEEDMOREPARAMS, request.getConnection().getClient(), "Not enough parameters");
+			request.getConnection().send(Error.ERR_NEEDMOREPARAMS, request.getConnection().getClient(), ":Not enough parameters");
 			return;
 		}
 		command.execute(request);

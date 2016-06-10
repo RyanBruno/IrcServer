@@ -17,7 +17,12 @@ public class Channel {
 	private ArrayList<Client> invitedUsers = new ArrayList<Client>();
 	private int userLimit = 100;
 	private String topic = "";
-	
+
+	public Channel(String name, String password) {
+		this.name = name;
+		this.password = password;
+	}
+
 	public enum ChannelMode {
 		PRIVATE("p"), SECRET("s"), INVITE_ONLY("i"), TOPIC("t"), NO_MESSAGE_BY_OUTSIDE("n"), MODERATED_CHANNEL("m");
 		private String symbol;
@@ -41,29 +46,39 @@ public class Channel {
 	}
 
 	private void send(Reply reply, String message) throws IOException {
-		for (Client current : clients){
+		for (Client current : clients) {
 			current.getConnection().send(reply, current.getNickname(), message);
 		}
 	}
 
 	public void sendMessage(Client sender, String message) throws IOException {
-		for (Client current : clients){
+		for (Client current : clients)
 			current.getConnection().send(current.getNickname(), "PRIVMSG", sender.getNickname() + " :" + message);
-		}
 	}
 
 	public String getName() {
 		return name;
 	}
 
-	public void addClient(Client client) {
+	public void addClient(Client client) throws IOException {
 		clients.add(client);
+		client.getConnection().send(Reply.RPL_TOPIC, client, this.getName() + " :" + this.getTopic());
+		String message = this.getName() + " :";
+		ArrayList<Client> clients = this.getClients();
+		for (Client current : clients) {
+			if (this.checkOP(client) || current.isServerOP()) {
+				message = message + "+" + current.getNickname() + " ";
+			} else {
+				message = message + "@" + current.getNickname() + " ";
+			}
+		}
+		client.getConnection().send(Reply.RPL_NAMREPLY, client, message);
 	}
 
 	public void removeClient(Client client) {
 		clients.remove(client);
 	}
-	
+
 	public ArrayList<Client> getClients() {
 		return clients;
 	}
@@ -71,8 +86,8 @@ public class Channel {
 	public boolean checkPassword(String password) {
 		return this.password == password;
 	}
-	
-	public void setPassword(String password){
+
+	public void setPassword(String password) {
 		this.password = password;
 	}
 
@@ -109,21 +124,23 @@ public class Channel {
 	}
 
 	public String getTopic() {
-		return topic ;
+		if (topic.equals("") || topic == null)
+			return "Default Topic";
+		return topic;
 	}
-	
+
 	public void setTopic(String topic) {
 		this.topic = topic;
 	}
-	
+
 	public void inviteUser(Client client) {
 		this.invitedUsers.add(client);
 	}
-	
+
 	public void unInviteUser(Client client) {
 		this.invitedUsers.remove(client);
 	}
-	
+
 	public boolean isUserInvited(Client client) {
 		return invitedUsers.contains(client);
 	}
