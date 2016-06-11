@@ -29,7 +29,7 @@ public class ClientManager implements Runnable {
 					for (Client client : clients)
 						if (client.getConnection().isClient())
 							if (System.currentTimeMillis() - client.getLastCheckin() >= 10000) {
-								client.getConnection().send(Server.getServer().getConfig().getProperty("hostname"), "PING", ":" + Server.getServer().getConfig().getProperty("hostname"));
+								client.getConnection().send(Server.getServer().getConfig().getProperty("hostname"), "PING", ":" + client.getNickname());
 							}
 				} catch (IOException e) {
 					e.printStackTrace();

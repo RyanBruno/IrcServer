@@ -59,7 +59,7 @@ public class Connection implements Runnable {
 
 	public void send(String message) throws IOException {
 		System.out.println("[DeBug]" + message);
-		byte[] block = message.getBytes();
+		byte[] block = message.concat("\r\n").getBytes();
 
 		socket.getOutputStream().write(block);
 		socket.getOutputStream().flush();

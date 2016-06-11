@@ -20,7 +20,6 @@ public class Mode extends Command {
 
 		if (!(argument.startsWith("+") || argument.startsWith("-"))) request.getConnection().send(Error.ERR_UMODEUNKNOWNFLAG, request.getClient(), "Unknown MODE flag");
 		boolean add = true;
-		if (argument.startsWith("+")) add = true;
 		if (argument.startsWith("-")) add = false;
 
 		if (request.getArgs()[0].startsWith("#") || request.getArgs()[0].startsWith("&")) {

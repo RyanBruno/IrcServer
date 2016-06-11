@@ -37,6 +37,9 @@ public class Command {
 		commands.add(new Admin());
 		commands.add(new Info());
 		commands.add(new Privmsg());
+		
+		
+		commands.add(new Ping());
 	}
 
 	public Command(String command, int parameters) {

@@ -52,8 +52,14 @@ public class Channel {
 	}
 
 	public void sendMessage(Client sender, String message) throws IOException {
+		for (@SuppressWarnings("unused")
+		Client current : clients)
+			send(sender, "PRIVMSG " + sender.getNickname() + " :" + message);
+	}
+
+	public void send(Client sender, String message) throws IOException {
 		for (Client current : clients)
-			current.getConnection().send(current.getNickname(), "PRIVMSG", sender.getNickname() + " :" + message);
+			current.getConnection().send(message);
 	}
 
 	public String getName() {
@@ -62,17 +68,20 @@ public class Channel {
 
 	public void addClient(Client client) throws IOException {
 		clients.add(client);
-		client.getConnection().send(Reply.RPL_TOPIC, client, this.getName() + " :" + this.getTopic());
+		this.send(client, ":" + client.getNickname() + "!" + client.getUsername() + "@" + client.getHostname() + " JOIN " + this.getName());
+		client.getConnection().send(Reply.RPL_LISTSTART, client, "Channel :Users  Name");
+		client.getConnection().send(Reply.RPL_LIST, client, this.getName() + " :" + this.getTopic());
 		String message = this.getName() + " :";
 		ArrayList<Client> clients = this.getClients();
 		for (Client current : clients) {
 			if (this.checkOP(client) || current.isServerOP()) {
-				message = message + "+" + current.getNickname() + " ";
-			} else {
 				message = message + "@" + current.getNickname() + " ";
+			} else {
+				message = message + "+" + current.getNickname() + " ";
 			}
 		}
 		client.getConnection().send(Reply.RPL_NAMREPLY, client, message);
+		client.getConnection().send(Reply.RPL_ENDOFNAMES, client, this.getName() + " :End of /NAMES list.");
 	}
 
 	public void removeClient(Client client) {
