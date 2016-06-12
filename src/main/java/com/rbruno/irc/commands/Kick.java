@@ -19,7 +19,7 @@ public class Kick extends Command {
 			request.getConnection().send(Error.ERR_NOSUCHCHANNEL, request.getClient(), request.getArgs()[1] + " :No such channel");
 			return;
 		}
-		if (!channel.checkOP(request.getClient())) {
+		if (!channel.checkOP(request.getClient()) && !request.getClient().isServerOP()) {
 			request.getConnection().send(Error.ERR_CHANOPRIVSNEEDED, request.getClient(), request.getArgs()[1] + " :You're not channel operator");
 			return;
 		}
@@ -32,6 +32,7 @@ public class Kick extends Command {
 			request.getConnection().send(Error.ERR_USERNOTINCHANNEL, request.getClient(), target.getNickname() + " " + channel.getName() + " :User is not on that channel");
 			return;
 		}
+		//TODO Send kick msg to target
 		channel.removeClient(target);
 		target.removeChannel(channel);
 		

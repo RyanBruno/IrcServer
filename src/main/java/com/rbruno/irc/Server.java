@@ -44,15 +44,25 @@ public class Server implements Runnable {
 
 	public void run() {
 		while (running) {
-			Socket socket;
 			try {
-				socket = serverSocket.accept();
+				Socket socket = serverSocket.accept();
 				Thread connection = new Thread(new Connection(socket));
 				connection.run();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	public void sendMOTD(Client client) throws IOException {
+		client.getConnection().send(Reply.RPL_MOTDSTART, client, ":- " + getConfig().getProperty("hostname") + " Message of the day - ");
+		File motd = new File("motd.txt");
+		if (!motd.exists())
+			Utilities.makeFile("motd.txt");
+		for (String line : Utilities.read("motd.txt"))
+			client.getConnection().send(Reply.RPL_MOTD, client, ":- " + line);
+		client.getConnection().send(Reply.RPL_MOTD, client, ":- ");
+		client.getConnection().send(Reply.RPL_ENDOFMOTD, client, ":End of /MOTD command");
 	}
 
 	public static void main(String args[]) throws Exception {
@@ -77,18 +87,6 @@ public class Server implements Runnable {
 
 	public static String getVersion() {
 		return VERSION;
-	}
-
-	public void sendMOTD(Client client) throws IOException {
-		client.getConnection().send(Reply.RPL_MOTDSTART, client, ":- " + getConfig().getProperty("hostname") + " Message of the day - ");
-		File motd = new File("motd.txt");
-		if (!motd.exists())
-			Utilities.makeFile("motd.txt");
-		for (String line : Utilities.read("motd.txt"))
-			client.getConnection().send(Reply.RPL_MOTD, client, ":- " + line);
-		client.getConnection().send(Reply.RPL_MOTD, client, ":- ");
-		client.getConnection().send(Reply.RPL_ENDOFMOTD, client, ":End of /MOTD command");
-
 	}
 
 }

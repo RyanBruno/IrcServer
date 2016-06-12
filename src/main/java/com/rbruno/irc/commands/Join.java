@@ -21,7 +21,7 @@ public class Join extends Command {
 				request.getConnection().send(Error.ERR_NOSUCHCHANNEL, request.getClient(), channelName + " :No such channel");
 				continue;
 			}
-			if (channel.getUserLimit() > channel.getCurrentNumberOfUsers() || request.getClient().isServerOP() || channel.checkOP(request.getClient())) {
+			if (channel.getUserLimit() == -1 || channel.getUserLimit() > channel.getCurrentNumberOfUsers() || request.getClient().isServerOP() || channel.checkOP(request.getClient())) {
 				channel.addClient(request.getConnection().getClient());
 				request.getConnection().getClient().addChannels(channel);
 			} else {
