@@ -17,7 +17,7 @@ import com.rbruno.irc.util.Utilities;
 
 public class Server implements Runnable {
 
-	private static final String VERSION = "v0.10-SNAPSHOT";
+	private static final String VERSION = "v0.11-SNAPSHOT";
 
 	private static Server server;
 
