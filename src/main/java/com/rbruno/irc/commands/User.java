@@ -24,7 +24,7 @@ public class User extends Command {
 			client.setUsername(request.getArgs()[0]);
 			client.setHostname(request.getArgs()[1]);
 			client.setServername(request.getArgs()[2]);
-			client.setRealName(request.getArgs()[3]);
+			client.setRealName(request.getArgs()[3].substring(1));
 			Server.getServer().getClientManager().addClient(client);
 			request.getConnection().setClient(client);
 			request.getConnection().send(1, client.getNickname(), ":Welcome to the " + Server.getServer().getConfig().getProperty("networkname") + " Internet Relay Chat Network " + client.getNickname());

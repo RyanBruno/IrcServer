@@ -136,4 +136,8 @@ public class Client {
 		this.lastCheckin = lastCheckin;
 	}
 
+	public int getHopCount() {
+		return 0;
+	}
+
 }

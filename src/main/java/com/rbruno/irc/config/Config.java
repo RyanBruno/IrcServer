@@ -18,10 +18,10 @@ public class Config {
 		File config = new File("config.txt");
 		File ops = new File("ops.txt");
 		if(!config.exists()){
-			Utilities.makeFile("/config.txt");
+			Utilities.makeFile("config.txt");
 		}
 		if(!ops.exists()){
-			Utilities.makeFile("/ops.txt");
+			Utilities.makeFile("ops.txt");
 		}
 		this.config = new Properties();
 		this.config.load(new FileReader(config));

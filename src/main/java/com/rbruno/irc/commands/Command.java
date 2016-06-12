@@ -38,7 +38,7 @@ public class Command {
 		commands.add(new Info());
 		commands.add(new Privmsg());
 		
-		
+		commands.add(new Who());
 		commands.add(new Ping());
 	}
 

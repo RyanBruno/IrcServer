@@ -14,6 +14,7 @@ public class Info extends Command {
 	public void execute(Request request) throws Exception {
 		if (request.getArgs().length == 0) {
 			for (String current : Utilities.read("/info.txt"))
+				//TODO check if info existes
 				request.getConnection().send(Reply.RPL_INFO, request.getClient(), ":" + current);
 			request.getConnection().send(Reply.RPL_ENDOFINFO, request.getClient(), ":End of /INFO list");
 		} else {
