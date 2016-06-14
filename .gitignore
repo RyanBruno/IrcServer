@@ -3,3 +3,7 @@
 bin/
 log.txt
 target/
+config.txt
+ops.txt
+channels.txt
+motd.txt
