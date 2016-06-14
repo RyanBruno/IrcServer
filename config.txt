@@ -1,0 +1,3 @@
+port=6697
+networkname=RBruno Network
+hostname=localhost

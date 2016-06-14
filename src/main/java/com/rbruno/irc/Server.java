@@ -15,7 +15,7 @@ import com.rbruno.irc.reply.Reply;
 import com.rbruno.irc.templates.Client;
 import com.rbruno.irc.util.Utilities;
 
-public class Server implements Runnable {
+public class Server implements Runnable{
 
 	private static final String VERSION = "v0.11-SNAPSHOT";
 
@@ -36,23 +36,23 @@ public class Server implements Runnable {
 
 		Command.init();
 		serverSocket = new ServerSocket(Integer.parseInt(config.getProperty("port")));
-		Thread run = new Thread(this, "Running Thread");
 		running = true;
 		Logger.log("Started Server on port: " + serverSocket.getLocalPort());
-		run.start();
+		new Thread(this, "Running Thread").start();
 	}
-
-	public void run() {
+	
+	public void run(){
 		while (running) {
 			try {
 				Socket socket = serverSocket.accept();
 				Thread connection = new Thread(new Connection(socket));
-				connection.run();
+				connection.start();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
 	}
+
 	
 	public void sendMOTD(Client client) throws IOException {
 		client.getConnection().send(Reply.RPL_MOTDSTART, client, ":- " + getConfig().getProperty("hostname") + " Message of the day - ");

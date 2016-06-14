@@ -22,8 +22,8 @@ public class User extends Command {
 		case CLIENT:
 			Client client = request.getClient();
 			client.setUsername(request.getArgs()[0]);
-			client.setHostname(request.getArgs()[1]);
-			client.setServername(request.getArgs()[2]);
+			client.setHostname(Server.getServer().getConfig().getProperty("hostname"));
+			client.setServername(Server.getServer().getConfig().getProperty("hostname"));
 			client.setRealName(request.getArgs()[3].substring(1));
 			Server.getServer().getClientManager().addClient(client);
 			request.getConnection().setClient(client);

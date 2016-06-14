@@ -17,7 +17,7 @@ public class List extends Command {
 	public void execute(Request request) throws Exception {
 		if (request.getArgs().length == 0) {
 			ArrayList<Channel> channels = Server.getServer().getChannelManger().getChannels();
-			request.getConnection().send(Reply.RPL_LISTSTART, request.getClient(), "Channel :Users  Name");
+			request.getConnection().send(Reply.RPL_LISTSTART, request.getClient(), "Channel :Users Name");
 			for (Channel current : channels) {
 				request.getConnection().send(Reply.RPL_LIST, request.getClient(), current.getName() + " " + current.getCurrentNumberOfUsers() + " :" + current.getTopic());
 			}

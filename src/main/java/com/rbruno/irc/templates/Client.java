@@ -139,5 +139,9 @@ public class Client {
 	public int getHopCount() {
 		return 0;
 	}
+	
+	public String getAbsoluteName() {
+		return this.getNickname() + "!" + this.getUsername() + "@" + this.getHostname();
+	}
 
 }

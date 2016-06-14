@@ -2,6 +2,7 @@ package com.rbruno.irc.commands;
 
 import com.rbruno.irc.Server;
 import com.rbruno.irc.reply.Error;
+import com.rbruno.irc.reply.Reply;
 import com.rbruno.irc.templates.Channel;
 import com.rbruno.irc.templates.Request;
 
@@ -24,6 +25,7 @@ public class Join extends Command {
 			if (channel.getUserLimit() == -1 || channel.getUserLimit() > channel.getCurrentNumberOfUsers() || request.getClient().isServerOP() || channel.checkOP(request.getClient())) {
 				channel.addClient(request.getConnection().getClient());
 				request.getConnection().getClient().addChannels(channel);
+				request.getConnection().send(Reply.RPL_TOPIC, request.getClient(), channel.getName() + " :" + channel.getTopic());
 			} else {
 				request.getConnection().send(Error.ERR_CHANNELISFULL, request.getClient(), channel.getName() + " :Cannot join channel (+l)");
 			}

@@ -1,12 +1,15 @@
 package com.rbruno.irc.commands;
 
+import java.util.HashMap;
+import java.util.Iterator;
+
 import com.rbruno.irc.Server;
 import com.rbruno.irc.reply.Error;
 import com.rbruno.irc.reply.Reply;
 import com.rbruno.irc.templates.Channel;
+import com.rbruno.irc.templates.Channel.ChannelMode;
 import com.rbruno.irc.templates.Client;
 import com.rbruno.irc.templates.Request;
-import com.rbruno.irc.templates.Channel.ChannelMode;
 
 public class Mode extends Command {
 
@@ -19,17 +22,30 @@ public class Mode extends Command {
 		if (request.getArgs().length <= 1) {
 			String target = request.getArgs()[0];
 			if (request.getArgs()[0].startsWith("#") || request.getArgs()[0].startsWith("&")) {
-				// Channel
-				//TODO list channel modes
+				Channel channel = Server.getServer().getChannelManger().getChannel(target);
+				if (channel == null) {
+					request.getConnection().send(Error.ERR_NOSUCHCHANNEL, request.getClient(), target + " :No such channel");
+				}
+				HashMap<ChannelMode, Boolean> modeMap = channel.getModeMap();
+				Iterator<ChannelMode> modeKey = modeMap.keySet().iterator();
+				String modes = "";
+				while (modeKey.hasNext()) {
+					ChannelMode mode = modeKey.next();
+					if (modeMap.get(mode))
+						modes = modes + mode.getSymbol();
+				}
+				request.getConnection().send(Reply.RPL_CHANNELMODEIS, request.getClient(), target + " +" + modes);
 			} else {
 				// Not Channel
-				//TODO list user modes
+				// TODO list user modes
 			}
 		} else {
 			String modeFlag = request.getArgs()[1];
-			if (!(modeFlag.startsWith("+") || modeFlag.startsWith("-"))) request.getConnection().send(Error.ERR_UMODEUNKNOWNFLAG, request.getClient(), "Unknown MODE flag");
+			if (!(modeFlag.startsWith("+") || modeFlag.startsWith("-")))
+				request.getConnection().send(Error.ERR_UMODEUNKNOWNFLAG, request.getClient(), "Unknown MODE flag");
 			boolean add = true;
-			if (modeFlag.startsWith("-")) add = false;
+			if (modeFlag.startsWith("-"))
+				add = false;
 			if (request.getArgs()[0].startsWith("#") || request.getArgs()[0].startsWith("&")) {
 				// Channels
 				if (Server.getServer().getChannelManger().getChannel(request.getArgs()[0]) != null) {
