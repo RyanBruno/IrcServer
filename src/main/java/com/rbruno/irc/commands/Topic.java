@@ -28,7 +28,6 @@ public class Topic extends Command {
 			request.getConnection().send(Reply.RPL_TOPIC, request.getClient(), channel.getName() + " " + channel.getTopic());
 		} else {
 			channel.setTopic(request.getArgs()[1]);
-			request.getConnection().send(Reply.RPL_TOPIC, request.getClient(), channel.getName() + " " + channel.getTopic());
 		}
 	}
 

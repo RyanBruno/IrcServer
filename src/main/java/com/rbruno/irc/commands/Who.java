@@ -18,7 +18,7 @@ public class Who extends Command {
 		if (target.startsWith("#") || target.startsWith("&")) {
 			Channel channel = Server.getServer().getChannelManger().getChannel(target);
 			for (Client client : channel.getClients())
-				request.getConnection().send(Reply.RPL_WHOREPLY, request.getClient(), channel.getName() + " " + client.getNickname() + " " + client.getConnection().getSocket().getInetAddress() + " " + client.getHostname() + " " + client.getNickname() + " H+ :" + client.getHopCount() + " " + client.getRealName());
+				request.getConnection().send(Reply.RPL_WHOREPLY, request.getClient(), channel.getName() + " " + client.getUsername() + " * " + client.getHostname() + " " + client.getNickname() + " H+ :" + client.getHopCount() + " " + client.getRealName());
 			request.getConnection().send(Reply.RPL_ENDOFWHO, request.getClient(), target + " :End of /WHO list");
 		}
 		//TODO Servers and wildcards

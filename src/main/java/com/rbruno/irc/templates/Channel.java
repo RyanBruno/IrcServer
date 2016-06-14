@@ -37,8 +37,7 @@ public class Channel {
 	}
 
 	public boolean getMode(ChannelMode mode) {
-		if (!modes.containsKey(mode))
-			return false;
+		if (!modes.containsKey(mode)) return false;
 		return modes.get(mode);
 	}
 
@@ -55,15 +54,14 @@ public class Channel {
 
 	public void sendMessage(Client sender, String message) throws IOException {
 		for (Client current : clients)
-			if (current != sender)
-				send(current, sender.getAbsoluteName() + ": PRIVMSG " + this.getName() + " " + message);
-	}
-	
-	public void send(Client target, String message) throws IOException {
-			target.getConnection().send(message);
+			if (current != sender) send(current, sender.getAbsoluteName() + ": PRIVMSG " + this.getName() + " " + message);
 	}
 
-	public void sendToAll(Client sender, String message) throws IOException {
+	public void send(Client target, String message) throws IOException {
+		target.getConnection().send(message);
+	}
+
+	public void sendToAll(String message) throws IOException {
 		for (Client current : clients)
 			current.getConnection().send(message);
 	}
@@ -74,7 +72,7 @@ public class Channel {
 
 	public void addClient(Client client) throws IOException {
 		clients.add(client);
-		this.sendToAll(client, ":" + client.getNickname() + "!" + client.getUsername() + "@" + client.getHostname() + ": JOIN " + this.getName());
+		this.sendToAll(":" + client.getNickname() + "!" + client.getUsername() + "@" + client.getHostname() + ": JOIN " + this.getName());
 
 		String message = this.getName() + " :";
 		ArrayList<Client> clients = this.getClients();
@@ -138,12 +136,14 @@ public class Channel {
 	}
 
 	public String getTopic() {
-		if (topic.equals("") || topic == null)
-			return "Default Topic";
+		if (topic.equals("") || topic == null) return "Default Topic";
 		return topic;
 	}
 
-	public void setTopic(String topic) {
+	public void setTopic(String topic) throws IOException {
+		for (Client current : clients)
+			current.getConnection().send(Reply.RPL_TOPIC, current, this.getName() + " " + this.getTopic());
+
 		this.topic = topic;
 	}
 

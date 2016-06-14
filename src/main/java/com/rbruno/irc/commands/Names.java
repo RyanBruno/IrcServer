@@ -23,9 +23,9 @@ public class Names extends Command {
 				ArrayList<Client> clients = current.getClients();
 				for (Client client : clients) {
 					if (current.checkOP(client) || client.isServerOP()) {
-						message = message + "+" + client.getNickname() + " ";
-					} else {
 						message = message + "@" + client.getNickname() + " ";
+					} else {
+						message = message + "+" + client.getNickname() + " ";
 					}
 				}
 				request.getConnection().send(Reply.RPL_NAMREPLY, request.getClient(), message);
@@ -38,9 +38,9 @@ public class Names extends Command {
 				ArrayList<Client> clients = channel.getClients();
 				for (Client client : clients) {
 					if (channel.checkOP(client) || client.isServerOP()) {
-						message = message + "+" + client.getNickname() + " ";
-					} else {
 						message = message + "@" + client.getNickname() + " ";
+					} else {
+						message = message + "+" + client.getNickname() + " ";
 					}
 				}
 				request.getConnection().send(Reply.RPL_NAMREPLY, request.getClient(), message);
