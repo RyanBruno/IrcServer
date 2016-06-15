@@ -42,7 +42,7 @@ public class Channel {
 	}
 
 	public void setMode(ChannelMode mode, boolean add, Client sender) throws IOException {
-		send(Reply.RPL_CHANNELMODEIS, sender + " sets mode " + (add ? "+" : "-") + mode.getSymbol() + " on " + name);
+		send(Reply.RPL_CHANNELMODEIS, sender.getAbsoluteName() + " sets mode " + (add ? "+" : "-") + mode.getSymbol() + " on " + name);
 		modes.put(mode, add);
 	}
 

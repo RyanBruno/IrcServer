@@ -3,6 +3,7 @@ package com.rbruno.irc.commands;
 import com.rbruno.irc.Server;
 import com.rbruno.irc.reply.Error;
 import com.rbruno.irc.templates.Channel;
+import com.rbruno.irc.templates.Channel.ChannelMode;
 import com.rbruno.irc.templates.Client;
 import com.rbruno.irc.templates.Request;
 
@@ -19,6 +20,10 @@ public class Privmsg extends Command {
 				// TODO: Server
 			} else if (reciver.startsWith("#") || reciver.startsWith("&")) {
 				Channel channel = Server.getServer().getChannelManger().getChannel(reciver);
+				if (!request.getClient().getChannels().contains(channel) && channel.getMode(ChannelMode.NO_MESSAGE_BY_OUTSIDE)) {
+					request.getConnection().send(Error.ERR_CANNOTSENDTOCHAN, request.getClient(), channel.getName() + " :Cannot send to channel");
+					return;
+				}
 				channel.sendMessage(request.getClient(), request.getArgs()[1]);
 			} else {
 				Client client = Server.getServer().getClientManager().getClient(reciver);

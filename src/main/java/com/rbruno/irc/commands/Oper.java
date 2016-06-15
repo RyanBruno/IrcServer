@@ -5,7 +5,6 @@ import com.rbruno.irc.reply.Error;
 import com.rbruno.irc.reply.Reply;
 import com.rbruno.irc.templates.Request;
 
-
 public class Oper extends Command {
 
 	public Oper() {

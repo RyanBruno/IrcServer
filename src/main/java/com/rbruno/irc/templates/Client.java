@@ -55,7 +55,7 @@ public class Client {
 	}
 
 	public void setMode(ClientMode mode, boolean add, Client sender) throws IOException {
-		connection.send(Reply.RPL_UMODEIS, this, sender + " sets mode " + (add ? "+" : "-") + mode.getSymbol() + " on " + getNickname());
+		connection.send(Reply.RPL_UMODEIS, this, sender.getAbsoluteName() + " sets mode " + (add ? "+" : "-") + mode.getSymbol() + " on " + getNickname());
 
 		modes.put(mode, add);
 	}
@@ -108,7 +108,7 @@ public class Client {
 		return channels;
 	}
 
-	public void addChannels(Channel channel) {
+	public void addChannel(Channel channel) {
 		channels.add(channel);
 	}
 

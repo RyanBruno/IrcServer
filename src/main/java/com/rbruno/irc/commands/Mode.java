@@ -31,8 +31,7 @@ public class Mode extends Command {
 				String modes = "";
 				while (modeKey.hasNext()) {
 					ChannelMode mode = modeKey.next();
-					if (modeMap.get(mode))
-						modes = modes + mode.getSymbol();
+					if (modeMap.get(mode)) modes = modes + mode.getSymbol();
 				}
 				request.getConnection().send(Reply.RPL_CHANNELMODEIS, request.getClient(), target + " +" + modes);
 			} else {
@@ -41,11 +40,9 @@ public class Mode extends Command {
 			}
 		} else {
 			String modeFlag = request.getArgs()[1];
-			if (!(modeFlag.startsWith("+") || modeFlag.startsWith("-")))
-				request.getConnection().send(Error.ERR_UMODEUNKNOWNFLAG, request.getClient(), "Unknown MODE flag");
+			if (!(modeFlag.startsWith("+") || modeFlag.startsWith("-"))) request.getConnection().send(Error.ERR_UMODEUNKNOWNFLAG, request.getClient(), "Unknown MODE flag");
 			boolean add = true;
-			if (modeFlag.startsWith("-"))
-				add = false;
+			if (modeFlag.startsWith("-")) add = false;
 			if (request.getArgs()[0].startsWith("#") || request.getArgs()[0].startsWith("&")) {
 				// Channels
 				if (Server.getServer().getChannelManger().getChannel(request.getArgs()[0]) != null) {
