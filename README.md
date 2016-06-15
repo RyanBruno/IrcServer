@@ -25,3 +25,4 @@ java -jar <JarName>.jar
 3. Plugins
 4. JavaDoc
 5. Add the rest of the IRC commands
+6. Allow changing Nicknames

@@ -23,7 +23,7 @@ public class Privmsg extends Command {
 			} else {
 				Client client = Server.getServer().getClientManager().getClient(reciver);
 				if (client != null) {
-					client.getConnection().send("PRIVMSG " + client.getNickname() + " :" + request.getArgs()[1]);
+					client.getConnection().send(":" + request.getClient().getAbsoluteName() + " PRIVMSG " + client.getNickname() + " " + request.getArgs()[1]);
 				} else {
 					request.getClient().getConnection().send(Error.ERR_NOSUCHNICK, client, reciver + " :No such nick");
 				}

@@ -61,7 +61,6 @@ public class Server implements Runnable{
 			Utilities.makeFile("motd.txt");
 		for (String line : Utilities.read("motd.txt"))
 			client.getConnection().send(Reply.RPL_MOTD, client, ":- " + line);
-		client.getConnection().send(Reply.RPL_MOTD, client, ":- ");
 		client.getConnection().send(Reply.RPL_ENDOFMOTD, client, ":End of /MOTD command");
 	}
 

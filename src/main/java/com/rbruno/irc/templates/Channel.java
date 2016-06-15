@@ -54,7 +54,7 @@ public class Channel {
 
 	public void sendMessage(Client sender, String message) throws IOException {
 		for (Client current : clients)
-			if (current != sender) send(current, sender.getAbsoluteName() + ": PRIVMSG " + this.getName() + " " + message);
+			if (current != sender) send(current, ":" + sender.getAbsoluteName() + " PRIVMSG " + this.getName() + " " + message);
 	}
 
 	public void send(Client target, String message) throws IOException {
@@ -74,7 +74,7 @@ public class Channel {
 		clients.add(client);
 		this.sendToAll(":" + client.getNickname() + "!" + client.getUsername() + "@" + client.getHostname() + ": JOIN " + this.getName());
 
-		String message = this.getName() + " :";
+		String message = "@ " + this.getName() + " :";
 		ArrayList<Client> clients = this.getClients();
 		for (Client current : clients) {
 			if (this.checkOP(client) || current.isServerOP()) {
