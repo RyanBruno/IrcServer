@@ -17,7 +17,7 @@ cp target/IrcServer-<Version>.jar ~/IrcServer
 ```
 4) Run the jar
 ```
-java -jar <JarName>.jar
+java -jar IrcServer-<Version>.jar
 ```
 ## Todo
 1. Error Handling
