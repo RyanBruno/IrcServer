@@ -72,7 +72,7 @@ public class Channel {
 
 	public void addClient(Client client) throws IOException {
 		clients.add(client);
-		this.sendToAll(":" + client.getNickname() + "!" + client.getUsername() + "@" + client.getHostname() + ": JOIN " + this.getName());
+		this.sendToAll(":" + client.getNickname() + "!" + client.getUsername() + "@" + client.getHostname() + " JOIN " + this.getName());
 
 		String message = "@ " + this.getName() + " :";
 		ArrayList<Client> clients = this.getClients();

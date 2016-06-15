@@ -16,14 +16,15 @@ public class Part extends Command {
 		String[] channels = request.getArgs()[0].split(",");
 		for (String channelName : channels) {
 			Channel channel = Server.getServer().getChannelManger().getChannel(channelName);
-			channel.removeClient(request.getConnection().getClient());
-			request.getConnection().getClient().removeChannel(channel);
-
 			String message = "Leaving";
 			if (request.getArgs().length != 0)
 				message = request.getArgs()[0];
 			for (Client client : channel.getClients())
 				client.getConnection().send(":" + request.getClient().getAbsoluteName() + " PART " + message);
+			channel.removeClient(request.getConnection().getClient());
+			request.getConnection().getClient().removeChannel(channel);
+
+
 		}
 
 	}
