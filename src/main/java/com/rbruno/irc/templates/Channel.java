@@ -45,6 +45,10 @@ public class Channel {
 		send(Reply.RPL_CHANNELMODEIS, sender.getAbsoluteName() + " sets mode " + (add ? "+" : "-") + mode.getSymbol() + " on " + name);
 		modes.put(mode, add);
 	}
+	
+	public void setMode(ChannelMode mode, boolean add) throws IOException {
+		modes.put(mode, add);
+	}
 
 	private void send(Reply reply, String message) throws IOException {
 		for (Client current : clients) {

@@ -1,2 +1,2 @@
 //#Name:password:limit:modes:topic
-#test:password:100:n:This is a test channel
+#test:password:100:tn:This is a test channel
