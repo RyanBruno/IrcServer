@@ -1,5 +1,8 @@
 package com.rbruno.irc.reply;
 
+/**
+ * All standard Irc error messages.
+ */
 public enum Error {
 	ERR_NOSUCHNICK (401),
 	ERR_NOSUCHSERVER (402),

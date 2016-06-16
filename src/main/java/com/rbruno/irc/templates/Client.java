@@ -7,6 +7,9 @@ import java.util.HashMap;
 import com.rbruno.irc.net.Connection;
 import com.rbruno.irc.reply.Reply;
 
+/**
+ * Stores information on a client local and remote.
+ */
 public class Client {
 
 	private Connection connection;
@@ -182,6 +185,7 @@ public class Client {
 
 	/**
 	 * Returns Nickname!Username@Hostname
+	 * 
 	 * @return Nickname!Username@Hostname
 	 */
 	public String getAbsoluteName() {

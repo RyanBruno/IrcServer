@@ -5,6 +5,10 @@ import java.util.ArrayList;
 import com.rbruno.irc.reply.Error;
 import com.rbruno.irc.templates.Request;
 
+/**
+ * A command that can be called when requested by a client. Also statically hold
+ * all commands in an array.
+ */
 public class Command {
 
 	private String command;

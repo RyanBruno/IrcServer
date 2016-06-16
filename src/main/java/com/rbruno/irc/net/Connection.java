@@ -14,6 +14,9 @@ import com.rbruno.irc.reply.Reply;
 import com.rbruno.irc.templates.Client;
 import com.rbruno.irc.templates.Request;
 
+/**
+ * An object that listens to a socket and process its requests.
+ */
 public class Connection implements Runnable {
 
 	private Socket socket;
@@ -63,7 +66,7 @@ public class Connection implements Runnable {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public enum Type {
 		LOGGIN_IN, SERVER, CLIENT
 	}
@@ -71,7 +74,8 @@ public class Connection implements Runnable {
 	/**
 	 * Sends message to the socket
 	 * 
-	 * @param message Message to be sent to connection.
+	 * @param message
+	 *            Message to be sent to connection.
 	 * @throws IOException
 	 */
 	public void send(String message) throws IOException {

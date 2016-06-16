@@ -8,6 +8,9 @@ import java.util.Properties;
 
 import com.rbruno.irc.util.Utilities;
 
+/**
+ * Manages and gives access to the config and ops file.
+ */
 public class Config {
 
 	private Properties config;

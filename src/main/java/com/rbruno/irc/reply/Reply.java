@@ -1,5 +1,8 @@
 package com.rbruno.irc.reply;
 
+/**
+ * All standard Irc reply messages.
+ */
 public enum Reply {
 	/**
 	* Dummy reply number. Not used.

@@ -8,6 +8,9 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
 
+/**
+ * Utilities for any use.
+ */
 public class Utilities {
 
 	public static List<String> read(String fileName) throws IOException {

@@ -7,6 +7,9 @@ import com.rbruno.irc.reply.Reply;
 import com.rbruno.irc.templates.Client;
 import com.rbruno.irc.templates.Client.ClientMode;
 
+/**
+ * Manages all clients local and remote.
+ */
 public class ClientManager {
 
 	private ArrayList<Client> clients = new ArrayList<Client>();

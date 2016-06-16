@@ -15,6 +15,10 @@ import com.rbruno.irc.reply.Reply;
 import com.rbruno.irc.templates.Client;
 import com.rbruno.irc.util.Utilities;
 
+/**
+ * Contains main method. The main class creates a new Server object which starts
+ * everything up.
+ */
 public class Server implements Runnable {
 
 	private static final String VERSION = "v0.12-SNAPSHOT";
@@ -29,7 +33,7 @@ public class Server implements Runnable {
 	private ChannelManager channelManger;
 
 	/**
-	 * Server constructor. Starts all managers, opens socket and starts the
+	 * Server constructor. Starts all managers, opens the socket and starts the
 	 * running thread.
 	 * 
 	 * @throws Exception

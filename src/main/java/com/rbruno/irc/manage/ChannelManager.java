@@ -12,6 +12,9 @@ import com.rbruno.irc.templates.Channel;
 import com.rbruno.irc.templates.Channel.ChannelMode;
 import com.rbruno.irc.util.Utilities;
 
+/**
+ * Manages all channels. Also adds channels from channels.txt file.
+ */
 public class ChannelManager {
 
 	private ArrayList<Channel> channels = new ArrayList<Channel>();
@@ -98,6 +101,7 @@ public class ChannelManager {
 
 	/**
 	 * Returns the number of channels that do not have the secret flag.
+	 * 
 	 * @return The number of channels that do not have the secret flag.
 	 */
 	public int getNonSecretChannels() {

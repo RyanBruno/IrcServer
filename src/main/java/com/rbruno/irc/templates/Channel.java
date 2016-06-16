@@ -6,6 +6,9 @@ import java.util.HashMap;
 
 import com.rbruno.irc.reply.Reply;
 
+/**
+ * An object that stores all the information on a Channel including its clients.
+ */
 public class Channel {
 
 	private String name;

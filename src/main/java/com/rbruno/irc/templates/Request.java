@@ -3,6 +3,9 @@ package com.rbruno.irc.templates;
 import com.rbruno.irc.Server;
 import com.rbruno.irc.net.Connection;
 
+/**
+ * Phrases and stores information on a request made by a client.
+ */
 public class Request {
 
 	private Connection connection;
