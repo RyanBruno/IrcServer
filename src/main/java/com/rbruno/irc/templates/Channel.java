@@ -136,6 +136,7 @@ public class Channel {
 	 */
 	public void addClient(Client client) throws IOException {
 		clients.add(client);
+		if (!this.getMode(ChannelMode.MODERATED_CHANNEL)) this.voiceList.add(client);
 		this.sendToAll(":" + client.getNickname() + "!" + client.getUsername() + "@" + client.getHostname() + " JOIN " + this.getName());
 
 		String message = "@ " + this.getName() + " :";
@@ -143,8 +144,11 @@ public class Channel {
 		for (Client current : clients) {
 			if (this.checkOP(client) || current.isServerOP()) {
 				message = message + "@" + current.getNickname() + " ";
-			} else {
+			} else if (this.hasVoice(current)) {
 				message = message + "+" + current.getNickname() + " ";
+
+			} else {
+				message = message + current.getNickname() + " ";
 			}
 		}
 		client.getConnection().send(Reply.RPL_NAMREPLY, client, message);
@@ -152,6 +156,8 @@ public class Channel {
 	}
 
 	public void removeClient(Client client) {
+		ops.remove(client);
+		voiceList.remove(client);
 		clients.remove(client);
 	}
 

@@ -24,7 +24,12 @@ public class Privmsg extends Command {
 					request.getConnection().send(Error.ERR_CANNOTSENDTOCHAN, request.getClient(), channel.getName() + " :Cannot send to channel");
 					return;
 				}
+				if (!channel.hasVoice(request.getClient())) {
+					request.getConnection().send(Error.ERR_CANNOTSENDTOCHAN, request.getClient(), channel.getName() + " :Cannot send to channel");
+					return;
+				}
 				channel.sendMessage(request.getClient(), request.getArgs()[1]);
+
 			} else {
 				Client client = Server.getServer().getClientManager().getClient(reciver);
 				if (client != null) {
