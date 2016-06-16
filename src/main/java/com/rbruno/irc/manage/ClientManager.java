@@ -2,107 +2,135 @@ package com.rbruno.irc.manage;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
 
-import com.rbruno.irc.Server;
 import com.rbruno.irc.reply.Reply;
 import com.rbruno.irc.templates.Client;
 import com.rbruno.irc.templates.Client.ClientMode;
 
-public class ClientManager implements Runnable {
+public class ClientManager {
 
-	ArrayList<Client> clients = new ArrayList<Client>();
+	private ArrayList<Client> clients = new ArrayList<Client>();
 
-	public ClientManager() {
-		//Thread clientHandler = new Thread(this, "Client Handler");
-		//clientHandler.run();
-	}
-
-	@Override
-	public void run() {
-		Timer timer = new Timer();
-		timer.schedule(new TimerTask() {
-			@Override
-			public void run() {
-				try {
-					for (Client client : clients)
-						if (client.getConnection().isClient())
-							if (System.currentTimeMillis() - client.getLastCheckin() >= 10000) {
-								client.getConnection().send(Server.getServer().getConfig().getProperty("hostname"), "PING", ":" + client.getNickname());
-							}
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}, 1000, 1000);
-	}
-
+	/**
+	 * Sends a message to all clients connected that are directly connected to
+	 * this server.
+	 * 
+	 * @param reply
+	 * @param args
+	 * @throws IOException
+	 */
 	public void broadcastLocal(Reply reply, String args) throws IOException {
 		for (Client client : clients)
-			if (client.getConnection().isClient())
-				client.getConnection().send(reply, client, args);
+			if (client.getConnection().isClient()) client.getConnection().send(reply, client, args);
 	}
 
+	/**
+	 * Sends a message to all clients connected that are directly connected to
+	 * this server.
+	 * 
+	 * @param prefix
+	 *            The prefix with out a preceding :
+	 * @param command
+	 * @param args
+	 * @throws IOException
+	 */
 	public void broadcastLocal(String prefix, String command, String args) throws IOException {
 		for (Client client : clients)
-			if (client.getConnection().isClient())
-				client.getConnection().send(prefix, command, args);
+			if (client.getConnection().isClient()) client.getConnection().send(prefix, command, args);
 	}
 
+	/**
+	 * Adds client to array. Will not check for nick names.
+	 * 
+	 * @param client
+	 *            Client to add.
+	 */
 	public void addClient(Client client) {
 		// TODO: Check if nick is in use
 		clients.add(client);
 	}
 
+	/**
+	 * Returns Client object the matches the given nickname. Returns null is no
+	 * client has the given nickname.
+	 * 
+	 * @param nickname
+	 *            Nickname of client that is being requested.
+	 * @return Client that matches given nickname. Returns null if no client has
+	 *         that nickname.
+	 */
 	public Client getClient(String nickname) {
-		for (Client client : clients) {
-			if (client.getNickname().equals(nickname))
-				return client;
-		}
+		for (Client client : clients)
+			if (client.getNickname().equals(nickname)) return client;
 		return null;
 	}
 
+	/**
+	 * Removes client from clients array.
+	 * 
+	 * @param client
+	 *            Client to be removed.
+	 */
 	public void removeClient(Client client) {
 		clients.remove(client);
 	}
 
+	/**
+	 * Removes Client that has given nickname from array.
+	 * 
+	 * @param nickname
+	 *            Nickname of client that will be removed.
+	 */
 	public void removeClient(String nickname) {
-		for (Client client : clients) {
-			if (client.getNickname().equals(nickname))
-				removeClient(client);
-		}
+		for (Client client : clients)
+			if (client.getNickname().equals(nickname)) removeClient(client);
 	}
 
+	/**
+	 * Returns weather or not a Client with given nickname exists.
+	 * 
+	 * @param nickname
+	 * @return True if client exists false if not.
+	 */
 	public boolean isNick(String nickname) {
-		for (Client client : clients) {
-			if (client.getNickname().equals(nickname))
-				return true;
-		}
+		for (Client client : clients)
+			if (client.getNickname().equals(nickname)) return true;
 		return false;
 	}
 
-	public int getUserCount() {
+	/**
+	 * Returns the amount of clients that are not invisible.
+	 * 
+	 * @return The amount of Clients that are not invisible.
+	 */
+	public int getClientCount() {
 		int users = 0;
 		for (Client current : clients)
-			if (!current.hasMode(ClientMode.INVISIBLE))
-				users++;
+			if (!current.hasMode(ClientMode.INVISIBLE)) users++;
 		return users;
 	}
 
-	public int getInvisibleUserCount() {
+	/**
+	 * Returns the amount of clients that are invisible.
+	 * 
+	 * @return The amount of Clients that are invisible.
+	 */
+	public int getInvisibleClientCount() {
 		int users = 0;
 		for (Client current : clients)
-			if (current.hasMode(ClientMode.INVISIBLE))
-				users++;
+			if (current.hasMode(ClientMode.INVISIBLE)) users++;
 		return users;
 	}
 
+	/**
+	 * Returns the amount of Server Operators online.
+	 * 
+	 * @return The amount of Server Operators online.
+	 */
 	public int getOps() {
 		int ops = 0;
 		for (Client current : clients)
-			if (current.isServerOP())
-				ops++;
+			if (current.isServerOP()) ops++;
 		return ops;
 	}
 }

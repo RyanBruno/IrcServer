@@ -21,11 +21,36 @@ public class Client {
 	private ArrayList<Channel> channels = new ArrayList<Channel>();
 	private HashMap<ClientMode, Boolean> modes = new HashMap<ClientMode, Boolean>();
 
+	/**
+	 * Creates a new Client object. Will not add to ClientManager.
+	 * 
+	 * @param connection
+	 *            The client's connection.
+	 * @param nickname
+	 *            Nickname of the client.
+	 */
 	public Client(Connection connection, String nickname) {
 		this.connection = connection;
 		this.nickname = nickname;
 	}
 
+	/**
+	 * 
+	 * Creates a new Client object. Will not add to ClientManager.
+	 * 
+	 * @param connection
+	 *            The client's connection.
+	 * @param nickname
+	 *            Nickname of the client.
+	 * @param username
+	 *            User Name of client.
+	 * @param hostname
+	 *            Host Name of client.
+	 * @param servername
+	 *            Server Name of client.
+	 * @param realName
+	 *            Real Name of client.
+	 */
 	public Client(Connection connection, String nickname, String username, String hostname, String servername, String realName) {
 		this.connection = connection;
 		this.nickname = nickname;
@@ -50,10 +75,27 @@ public class Client {
 		}
 	}
 
+	/**
+	 * Gets mode of user.
+	 * 
+	 * @param mode
+	 * @return True if Mode is set to user False if not.
+	 */
 	public boolean getMode(ClientMode mode) {
 		return modes.get(mode);
 	}
 
+	/**
+	 * Sets mode to add and send the change to the user.
+	 * 
+	 * @param mode
+	 *            Client mode to be set.
+	 * @param add
+	 *            What to set mode to.
+	 * @param sender
+	 *            Who requested the mode change.
+	 * @throws IOException
+	 */
 	public void setMode(ClientMode mode, boolean add, Client sender) throws IOException {
 		connection.send(Reply.RPL_UMODEIS, this, sender.getAbsoluteName() + " sets mode " + (add ? "+" : "-") + mode.getSymbol() + " on " + getNickname());
 
@@ -117,14 +159,12 @@ public class Client {
 	}
 
 	public boolean hasMode(ClientMode mode) {
-		if (!modes.containsKey(mode))
-			return false;
+		if (!modes.containsKey(mode)) return false;
 		return modes.get(mode);
 	}
 
 	public boolean isServerOP() {
-		if (!modes.containsKey(ClientMode.OPERATOR))
-			return false;
+		if (!modes.containsKey(ClientMode.OPERATOR)) return false;
 		return modes.get(ClientMode.OPERATOR);
 	}
 
@@ -139,7 +179,11 @@ public class Client {
 	public int getHopCount() {
 		return 0;
 	}
-	
+
+	/**
+	 * Returns Nickname!Username@Hostname
+	 * @return Nickname!Username@Hostname
+	 */
 	public String getAbsoluteName() {
 		return this.getNickname() + "!" + this.getUsername() + "@" + this.getHostname();
 	}

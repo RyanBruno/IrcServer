@@ -21,8 +21,7 @@ java -jar IrcServer-<Version>.jar
 ```
 ## Todo
 1. Error Handling
-2. Way to add channels
-3. Plugins
-4. JavaDoc
-5. Add the rest of the IRC commands
-6. Allow changing Nicknames
+2. Plugins
+3. JavaDoc
+4. Add the rest of the IRC commands
+5. Allow changing Nicknames

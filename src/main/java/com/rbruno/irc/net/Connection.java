@@ -25,10 +25,21 @@ public class Connection implements Runnable {
 
 	private Type type = Type.LOGGIN_IN;
 
+	/**
+	 * Creates a new Connection object. Will not start listing to socket until
+	 * Connection.run() is called.
+	 * 
+	 * @param socket
+	 * @see Connection.run()
+	 */
 	public Connection(Socket socket) {
 		this.socket = socket;
 	}
 
+	/**
+	 * Start listing on socket. When a line is received it creates a new Request
+	 * object and send to Command.runCommnd(Request)
+	 */
 	public void run() {
 		try {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"));
@@ -52,11 +63,17 @@ public class Connection implements Runnable {
 			e.printStackTrace();
 		}
 	}
-
+	
 	public enum Type {
 		LOGGIN_IN, SERVER, CLIENT
 	}
 
+	/**
+	 * Sends message to the socket
+	 * 
+	 * @param message Message to be sent to connection.
+	 * @throws IOException
+	 */
 	public void send(String message) throws IOException {
 		System.out.println("[DeBug]" + message);
 		byte[] block = message.concat("\r\n").getBytes();
@@ -77,11 +94,9 @@ public class Connection implements Runnable {
 
 	public void send(int code, String nickname, String args) throws IOException {
 		String stringCode = code + "";
-		if (stringCode.length() < 2)
-			stringCode = "0" + stringCode;
-		if (stringCode.length() < 3)
-			stringCode = "0" + stringCode;
-		
+		if (stringCode.length() < 2) stringCode = "0" + stringCode;
+		if (stringCode.length() < 3) stringCode = "0" + stringCode;
+
 		send(Server.getServer().getConfig().getProperty("hostname"), stringCode, nickname, args);
 	}
 

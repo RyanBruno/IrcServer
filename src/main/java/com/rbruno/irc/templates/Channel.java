@@ -18,6 +18,15 @@ public class Channel {
 	private int userLimit = 100;
 	private String topic = "";
 
+	/**
+	 * Creates a new a new Channels object. Will not add to ChannelManger.
+	 * 
+	 * @param name
+	 *            Name of channel should start with '#' or '&'.
+	 * @param password
+	 *            Password of channel. If blank then no password is needed.
+	 * @see ChannelManger.addChannel(Channel)
+	 */
 	public Channel(String name, String password) {
 		this.name = name;
 		this.password = password;
@@ -36,44 +45,92 @@ public class Channel {
 		}
 	}
 
+	/**
+	 * Returns weather or not a mode is set.
+	 * 
+	 * @param mode
+	 * @return True if mode is set false if not.
+	 */
 	public boolean getMode(ChannelMode mode) {
 		if (!modes.containsKey(mode)) return false;
 		return modes.get(mode);
 	}
 
+	/**
+	 * Sets mode to add. Also tells all users of the new change.
+	 * 
+	 * @param mode
+	 *            ChannelMode to be set.
+	 * @param add
+	 *            What mode should be set to.
+	 * @param sender
+	 *            Who requested this mode change. To be used when sending to all
+	 *            Clients.
+	 * @throws IOException
+	 */
 	public void setMode(ChannelMode mode, boolean add, Client sender) throws IOException {
 		send(Reply.RPL_CHANNELMODEIS, sender.getAbsoluteName() + " sets mode " + (add ? "+" : "-") + mode.getSymbol() + " on " + name);
 		modes.put(mode, add);
 	}
-	
+
+	/**
+	 * Sets mode to add.
+	 * 
+	 * @param mode
+	 *            ChannelMode to be set.
+	 * @param add
+	 *            What mode should be set to.
+	 * @throws IOException
+	 */
 	public void setMode(ChannelMode mode, boolean add) throws IOException {
 		modes.put(mode, add);
 	}
 
 	private void send(Reply reply, String message) throws IOException {
-		for (Client current : clients) {
+		for (Client current : clients)
 			current.getConnection().send(reply, current.getNickname(), message);
-		}
 	}
 
+	/**
+	 * Sends a PRIVMSG to all clients on channel.
+	 * 
+	 * @param sender
+	 *            Who sent the message.
+	 * @param message
+	 *            Message to be sent.
+	 * @throws IOException
+	 */
 	public void sendMessage(Client sender, String message) throws IOException {
 		for (Client current : clients)
 			if (current != sender) send(current, ":" + sender.getAbsoluteName() + " PRIVMSG " + this.getName() + " " + message);
 	}
 
-	public void send(Client target, String message) throws IOException {
+	private void send(Client target, String message) throws IOException {
 		target.getConnection().send(message);
 	}
 
-	public void sendToAll(String message) throws IOException {
+	private void sendToAll(String message) throws IOException {
 		for (Client current : clients)
 			current.getConnection().send(message);
 	}
 
+	/**
+	 * Returns the channel's name.
+	 * 
+	 * @return The name of the channel.
+	 */
 	public String getName() {
 		return name;
 	}
 
+	/**
+	 * Adds client to channel. Sends the client a NAMES command and sends a JOIN
+	 * message to all clients.
+	 * 
+	 * @param client
+	 *            Client to be added to the channel.
+	 * @throws IOException
+	 */
 	public void addClient(Client client) throws IOException {
 		clients.add(client);
 		this.sendToAll(":" + client.getNickname() + "!" + client.getUsername() + "@" + client.getHostname() + " JOIN " + this.getName());
@@ -144,10 +201,16 @@ public class Channel {
 		return topic;
 	}
 
+	/**
+	 * Sets topic and tell all clients on channel of the change.
+	 * 
+	 * @param topic
+	 *            New topic.
+	 * @throws IOException
+	 */
 	public void setTopic(String topic) throws IOException {
 		for (Client current : clients)
 			current.getConnection().send(Reply.RPL_TOPIC, current, this.getName() + " " + this.getTopic());
-
 		this.topic = topic;
 	}
 

@@ -11,23 +11,33 @@ public class Request {
 	private String[] args = new String[0];
 	private Client client;
 
-	public Request(Connection connection, String request) throws Exception {
+	/**
+	 * Creates a new Request object. Phrases the line into prefix, command and
+	 * arguments. KNOWN BUG: Everything after the last ':' will be put in one
+	 * arguments but will keep it ':'.
+	 * 
+	 * @param connection
+	 *            Connection the request came from.
+	 * @param line
+	 *            The line that was sent.
+	 * @throws Exception
+	 */
+	public Request(Connection connection, String line) throws Exception {
 		this.connection = connection;
-		if (request.startsWith(":")) {
-			this.prefix = request.split(" ")[0].substring(1);
-			request = request.substring(prefix.length() + 1);
+		if (line.startsWith(":")) {
+			this.prefix = line.split(" ")[0].substring(1);
+			line = line.substring(prefix.length() + 1);
 		}
-		this.command = request.split(" ")[0];
+		this.command = line.split(" ")[0];
 
-		if (request.length() != command.length()) {
-			request = request.substring(command.length() + 1);
+		if (line.length() != command.length()) {
+			line = line.substring(command.length() + 1);
 		} else {
-			request = request.substring(command.length());
+			line = line.substring(command.length());
 		}
-		String postDelimiter = request.substring(request.split(":")[0].length());
-		request = request.substring(0, request.length() - postDelimiter.length());
-		if (request.length() > 0)
-			this.args = request.split(" ");
+		String postDelimiter = line.substring(line.split(":")[0].length());
+		line = line.substring(0, line.length() - postDelimiter.length());
+		if (line.length() > 0) this.args = line.split(" ");
 		if (postDelimiter.length() > 0) {
 			String[] newArgs = new String[args.length + 1];
 			for (int i = 0; i < args.length; i++) {
@@ -45,22 +55,49 @@ public class Request {
 		}
 	}
 
+	/**
+	 * Returns the connection that the request was sent through.
+	 * 
+	 * @return The connection that the request was sent through.
+	 */
 	public Connection getConnection() {
 		return connection;
 	}
 
+	/**
+	 * Returns the prefix of the that was sent. The prefix should only be used
+	 * when sent by server.
+	 * 
+	 * @return The prefix of the that was sent.
+	 */
 	public String getPrefix() {
 		return prefix;
 	}
 
+	/**
+	 * Returns the command that was sent.
+	 * 
+	 * @return The command that was sent.
+	 */
 	public String getCommand() {
 		return command;
 	}
 
+	/**
+	 * Returns the arguments that were sent. If a ':' delimiter was used then
+	 * the last argument will start with a ':'.
+	 * 
+	 * @return The array of arguments.
+	 */
 	public String[] getArgs() {
 		return args;
 	}
 
+	/**
+	 * Returns the client that sent the request.
+	 * 
+	 * @return The client that sent the request.
+	 */
 	public Client getClient() {
 		return client;
 	}

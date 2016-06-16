@@ -16,11 +16,16 @@ public class ChannelManager {
 
 	private ArrayList<Channel> channels = new ArrayList<Channel>();
 
-
+	/**
+	 * Creates a new ClientManager object. Reads and process channels.txt. If
+	 * channels.txt does not exist it will create one.
+	 * 
+	 * @throws IOException
+	 */
 	public ChannelManager() throws IOException {
 		File channels = new File("channels.txt");
 		if (!channels.exists()) Utilities.makeFile("channels.txt");
-		
+
 		BufferedReader reader = new BufferedReader(new FileReader(channels));
 		while (reader.ready()) {
 			String line = reader.readLine();
@@ -37,16 +42,16 @@ public class ChannelManager {
 					break;
 				case 's':
 					channel.setMode(ChannelMode.SECRET, true);
-					break;	
+					break;
 				case 'i':
 					channel.setMode(ChannelMode.INVITE_ONLY, true);
-					break;	
+					break;
 				case 't':
 					channel.setMode(ChannelMode.TOPIC, true);
 					break;
 				case 'n':
 					channel.setMode(ChannelMode.NO_MESSAGE_BY_OUTSIDE, true);
-					break;	
+					break;
 				case 'm':
 					channel.setMode(ChannelMode.MODERATED_CHANNEL, true);
 					break;
@@ -58,27 +63,47 @@ public class ChannelManager {
 		reader.close();
 	}
 
+	/**
+	 * Returns an ArrayList of all the channels.
+	 * 
+	 * @return an ArrayList of all the channels.
+	 */
 	public ArrayList<Channel> getChannels() {
 		return channels;
 	}
 
+	/**
+	 * Adds a channel to the Array.
+	 * 
+	 * @param channel
+	 *            Channel to be added.
+	 */
 	public void addChannel(Channel channel) {
 		channels.add(channel);
 	}
 
+	/**
+	 * Returns channel with the given name.
+	 * 
+	 * @param name
+	 *            Name of channel that is returned.
+	 * @return Returns Channel with the given name or null if channel does not
+	 *         exist.
+	 */
 	public Channel getChannel(String name) {
-		for (Channel channel : channels) {
-			if (channel.getName().equals(name))
-				return channel;
-		}
+		for (Channel channel : channels)
+			if (channel.getName().equals(name)) return channel;
 		return null;
 	}
 
+	/**
+	 * Returns the number of channels that do not have the secret flag.
+	 * @return The number of channels that do not have the secret flag.
+	 */
 	public int getNonSecretChannels() {
 		int channels = 0;
-		for (Channel channel : this.channels) 
-			if (!channel.getMode(ChannelMode.SECRET))
-				channels++;
+		for (Channel channel : this.channels)
+			if (!channel.getMode(ChannelMode.SECRET)) channels++;
 		return channels;
 	}
 

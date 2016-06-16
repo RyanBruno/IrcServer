@@ -37,58 +37,64 @@ public class Command {
 		commands.add(new Admin());
 		commands.add(new Info());
 		commands.add(new Privmsg());
-		
+
 		commands.add(new Who());
 		commands.add(new Ping());
 	}
 
+	/**
+	 * Creates a new Command object.
+	 * 
+	 * @param command
+	 *            Name of the Command. Not cap sensitive.
+	 * @param parameters
+	 *            Required number of parameters.
+	 */
 	public Command(String command, int parameters) {
 		this.command = command;
 		this.parameters = parameters;
 	}
 
+	/**
+	 * Override this.
+	 * 
+	 * @param request
+	 *            Request that was sent.
+	 * @throws Exception
+	 */
 	public void execute(Request request) throws Exception {
 	}
 
+	/**
+	 * Returns the command.
+	 * 
+	 * @return The command.
+	 */
 	public String getCommand() {
 		return command;
 	}
 
+	/**
+	 * Returns the required number of parameters.
+	 * 
+	 * @return The required number of parameters.
+	 */
 	public int getParameters() {
 		return parameters;
 	}
 
-	public void setCommand(String command) {
-		this.command = command;
-	}
-
-	public void setParameters(int parameters) {
-		this.parameters = parameters;
-	}
-
-	public static boolean isCommand(String command) {
-		for (Command curret : commands) {
-			if (curret.getCommand().equalsIgnoreCase(command))
-				return true;
-		}
-		return false;
-	}
-
-	public static Command getCommand(String command) {
-		for (Command current : commands) {
-			if (current.getCommand().equalsIgnoreCase(command))
-				return current;
-		}
-		return null;
-	}
-
+	/**
+	 * Searches for the command that the request was asking for and runs it
+	 * passing request.
+	 * 
+	 * @param request
+	 * @throws Exception
+	 */
 	public static void runCommand(Request request) throws Exception {
-		if (request.getClient() != null)
-			request.getClient().setLastCheckin(System.currentTimeMillis());
+		if (request.getClient() != null) request.getClient().setLastCheckin(System.currentTimeMillis());
 		Command command = getCommand(request.getCommand());
 		if (command == null) {
-			if (request.getClient() != null)
-				request.getConnection().send(Error.ERR_UNKNOWNCOMMAND, request.getClient(), request.getCommand() + " :Unknown command");
+			if (request.getClient() != null) request.getConnection().send(Error.ERR_UNKNOWNCOMMAND, request.getClient(), request.getCommand() + " :Unknown command");
 			return;
 		}
 		if (request.getArgs().length < command.getParameters()) {
@@ -96,6 +102,11 @@ public class Command {
 			return;
 		}
 		command.execute(request);
+	}
 
+	private static Command getCommand(String command) {
+		for (Command current : commands)
+			if (current.getCommand().equalsIgnoreCase(command)) return current;
+		return null;
 	}
 }

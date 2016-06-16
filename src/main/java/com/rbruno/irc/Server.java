@@ -15,7 +15,7 @@ import com.rbruno.irc.reply.Reply;
 import com.rbruno.irc.templates.Client;
 import com.rbruno.irc.util.Utilities;
 
-public class Server implements Runnable{
+public class Server implements Runnable {
 
 	private static final String VERSION = "v0.12-SNAPSHOT";
 
@@ -28,6 +28,12 @@ public class Server implements Runnable{
 	private ClientManager clientManager;
 	private ChannelManager channelManger;
 
+	/**
+	 * Server constructor. Starts all managers, opens socket and starts the
+	 * running thread.
+	 * 
+	 * @throws Exception
+	 */
 	public Server() throws Exception {
 		config = new Config();
 		clientManager = new ClientManager();
@@ -40,8 +46,12 @@ public class Server implements Runnable{
 		Logger.log("Started Server on port: " + serverSocket.getLocalPort());
 		new Thread(this, "Running Thread").start();
 	}
-	
-	public void run(){
+
+	/**
+	 * Main running thread. Waits for sockets then creates a new Connection
+	 * object on a new thread.
+	 */
+	public void run() {
 		while (running) {
 			try {
 				Socket socket = serverSocket.accept();
@@ -53,12 +63,17 @@ public class Server implements Runnable{
 		}
 	}
 
-	
+	/**
+	 * Sends MOTD to client. Reads from motd.txt. If not found will create one.
+	 * 
+	 * @param client
+	 *            Client to send MOTD.
+	 * @throws IOException
+	 */
 	public void sendMOTD(Client client) throws IOException {
 		client.getConnection().send(Reply.RPL_MOTDSTART, client, ":- " + getConfig().getProperty("hostname") + " Message of the day - ");
 		File motd = new File("motd.txt");
-		if (!motd.exists())
-			Utilities.makeFile("motd.txt");
+		if (!motd.exists()) Utilities.makeFile("motd.txt");
 		for (String line : Utilities.read("motd.txt"))
 			client.getConnection().send(Reply.RPL_MOTD, client, ":- " + line);
 		client.getConnection().send(Reply.RPL_ENDOFMOTD, client, ":End of /MOTD command");
@@ -68,22 +83,47 @@ public class Server implements Runnable{
 		new Server();
 	}
 
+	/**
+	 * Gets current Server instance.
+	 * 
+	 * @return Server instance.
+	 */
 	public static Server getServer() {
 		return server;
 	}
 
+	/**
+	 * Gets Config object.
+	 * 
+	 * @return Config.
+	 */
 	public Config getConfig() {
 		return config;
 	}
 
+	/**
+	 * Returns the ClientManager.
+	 * 
+	 * @return ClientManager.
+	 */
 	public ClientManager getClientManager() {
 		return clientManager;
 	}
 
+	/**
+	 * Returns the ChannelManager.
+	 * 
+	 * @return ChannelManager.
+	 */
 	public ChannelManager getChannelManger() {
 		return channelManger;
 	}
 
+	/**
+	 * Returns current server version.
+	 * 
+	 * @return Current server version.
+	 */
 	public static String getVersion() {
 		return VERSION;
 	}
