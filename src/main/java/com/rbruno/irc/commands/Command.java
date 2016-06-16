@@ -41,8 +41,10 @@ public class Command {
 		commands.add(new Admin());
 		commands.add(new Info());
 		commands.add(new Privmsg());
-
+		commands.add(new Notice());
 		commands.add(new Who());
+		commands.add(new Whois());
+		
 		commands.add(new Ping());
 	}
 
