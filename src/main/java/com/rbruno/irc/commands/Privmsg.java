@@ -39,7 +39,6 @@ public class Privmsg extends Command {
 				}
 			}
 		}
-
 	}
 
 }

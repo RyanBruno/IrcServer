@@ -21,23 +21,18 @@ public class Mode extends Command {
 	public void execute(Request request) throws Exception {
 		if (request.getArgs().length <= 1) {
 			String target = request.getArgs()[0];
-			if (request.getArgs()[0].startsWith("#") || request.getArgs()[0].startsWith("&")) {
-				Channel channel = Server.getServer().getChannelManger().getChannel(target);
-				if (channel == null) {
-					request.getConnection().send(Error.ERR_NOSUCHCHANNEL, request.getClient(), target + " :No such channel");
-				}
-				HashMap<ChannelMode, Boolean> modeMap = channel.getModeMap();
-				Iterator<ChannelMode> modeKey = modeMap.keySet().iterator();
-				String modes = "";
-				while (modeKey.hasNext()) {
-					ChannelMode mode = modeKey.next();
-					if (modeMap.get(mode)) modes = modes + mode.getSymbol();
-				}
-				request.getConnection().send(Reply.RPL_CHANNELMODEIS, request.getClient(), target + " +" + modes);
-			} else {
-				// Not Channel
-				// TODO list user modes
+			Channel channel = Server.getServer().getChannelManger().getChannel(target);
+			if (channel == null) {
+				request.getConnection().send(Error.ERR_NOSUCHCHANNEL, request.getClient(), target + " :No such channel");
 			}
+			HashMap<ChannelMode, Boolean> modeMap = channel.getModeMap();
+			Iterator<ChannelMode> modeKey = modeMap.keySet().iterator();
+			String modes = "";
+			while (modeKey.hasNext()) {
+				ChannelMode mode = modeKey.next();
+				if (modeMap.get(mode)) modes = modes + mode.getSymbol();
+			}
+			request.getConnection().send(Reply.RPL_CHANNELMODEIS, request.getClient(), target + " +" + modes);
 		} else {
 			String modeFlag = request.getArgs()[1];
 			if (!(modeFlag.startsWith("+") || modeFlag.startsWith("-"))) request.getConnection().send(Error.ERR_UMODEUNKNOWNFLAG, request.getClient(), "Unknown MODE flag");
@@ -51,8 +46,13 @@ public class Mode extends Command {
 						if (request.getClient().isServerOP() || target.checkOP(request.getClient())) {
 							switch (mode) {
 							case 'o':
-								// TODO op
-								target.addOP(Server.getServer().getClientManager().getClient(request.getArgs()[1]));
+								Client clientTarget = Server.getServer().getClientManager().getClient(request.getArgs()[1]);
+								if (add) {
+									target.addOP(clientTarget);
+								} else {
+									target.takeOP(clientTarget);
+								}
+								target.send(Reply.RPL_CHANNELMODEIS, target.getName() + (add ? " +" : " -") + "o " + clientTarget.getNickname());
 								break;
 							case 'p':
 								target.setMode(ChannelMode.PRIVATE, add, request.getClient());
@@ -85,10 +85,15 @@ public class Mode extends Command {
 							case 'v':
 								Client voicee = Server.getServer().getClientManager().getClient(request.getArgs()[2]);
 								if (voicee != null) {
-									target.giveVoice(voicee);
+									if (add) {
+										target.giveVoice(voicee);
+									} else {
+										target.takeVoice(voicee);
+									}
 								} else {
 									request.getConnection().send(Error.ERR_NOSUCHNICK, request.getClient(), ":No such channel");
 								}
+								target.send(Reply.RPL_CHANNELMODEIS, target.getName() + (add ? " +" : " -") + "v " + voicee.getNickname());
 								break;
 							case 'k':
 								target.setPassword(request.getArgs()[2]);

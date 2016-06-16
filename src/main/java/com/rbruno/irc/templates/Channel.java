@@ -89,7 +89,16 @@ public class Channel {
 		modes.put(mode, add);
 	}
 
-	private void send(Reply reply, String message) throws IOException {
+	/**
+	 * Sends a reply to all clients on channel.
+	 * 
+	 * @param reply
+	 *            Reply code to use.
+	 * @param message
+	 *            Message to send.
+	 * @throws IOException
+	 */
+	public void send(Reply reply, String message) throws IOException {
 		for (Client current : clients)
 			current.getConnection().send(reply, current.getNickname(), message);
 	}
@@ -136,9 +145,15 @@ public class Channel {
 	 */
 	public void addClient(Client client) throws IOException {
 		clients.add(client);
-		if (!this.getMode(ChannelMode.MODERATED_CHANNEL)) this.voiceList.add(client);
-		this.sendToAll(":" + client.getNickname() + "!" + client.getUsername() + "@" + client.getHostname() + " JOIN " + this.getName());
+		if (!this.getMode(ChannelMode.MODERATED_CHANNEL) || client.isServerOP()) this.voiceList.add(client);
 
+		this.sendToAll(":" + client.getNickname() + "!" + client.getUsername() + "@" + client.getHostname() + " JOIN " + this.getName());
+		if (this.checkOP(client) || client.isServerOP()) {
+			this.send(Reply.RPL_CHANNELMODEIS, this.getName() + " +o " + client.getNickname());
+		} else if (this.hasVoice(client)) {
+			this.send(Reply.RPL_CHANNELMODEIS, this.getName() + " +v " + client.getNickname());
+		}
+		
 		String message = "@ " + this.getName() + " :";
 		ArrayList<Client> clients = this.getClients();
 		for (Client current : clients) {
@@ -146,7 +161,6 @@ public class Channel {
 				message = message + "@" + current.getNickname() + " ";
 			} else if (this.hasVoice(current)) {
 				message = message + "+" + current.getNickname() + " ";
-
 			} else {
 				message = message + current.getNickname() + " ";
 			}
@@ -179,6 +193,10 @@ public class Channel {
 
 	public void addOP(Client client) {
 		ops.add(client);
+	}
+
+	public void takeOP(Client client) {
+		ops.remove(client);
 	}
 
 	public void setUserLimit(int limit) {
