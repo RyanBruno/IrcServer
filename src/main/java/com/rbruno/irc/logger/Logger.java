@@ -8,13 +8,18 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
 
+/**
+ * Logs messages to console and file with a time stamp.
+ */
 public class Logger {
 
 	/**
 	 * Logs a message to the console and the log file.
 	 * 
-	 * @param message The message in which needs to be logged.
-	 * @param level The level of the log.
+	 * @param message
+	 *            The message in which needs to be logged.
+	 * @param level
+	 *            The level of the log.
 	 */
 	public static void log(String message, Level level) {
 		Date date = new Date();
@@ -35,7 +40,8 @@ public class Logger {
 	 * Logs a message with the console and the log file. Defaults to using the
 	 * INFO level.
 	 * 
-	 * @param string The message in which needs to be logged.
+	 * @param string
+	 *            The message in which needs to be logged.
 	 */
 	public static void log(String string) {
 		log(string, Level.INFO);

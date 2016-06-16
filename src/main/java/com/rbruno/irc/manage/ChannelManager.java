@@ -5,9 +5,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.logging.Level;
 
-import com.rbruno.irc.logger.Logger;
 import com.rbruno.irc.templates.Channel;
 import com.rbruno.irc.templates.Channel.ChannelMode;
 import com.rbruno.irc.util.Utilities;
@@ -33,7 +31,6 @@ public class ChannelManager {
 		while (reader.ready()) {
 			String line = reader.readLine();
 			if (line.startsWith("//")) continue;
-			Logger.log(line, Level.FINEST);
 			String[] lineArray = line.split(":");
 			if (lineArray.length < 5) continue;
 			Channel channel = new Channel(lineArray[0], lineArray[1]);
