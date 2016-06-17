@@ -17,7 +17,7 @@ public class User extends Command {
 	public void execute(Request request) throws IOException {
 		switch (request.getConnection().getType()) {
 		case LOGGIN_IN:
-			// TODO Error Must send nick 1st
+			request.getConnection().close();
 			break;
 		case CLIENT:
 			Client client = request.getClient();

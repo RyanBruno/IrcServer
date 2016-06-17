@@ -91,7 +91,7 @@ public class ChannelManager {
 	 *         exist.
 	 */
 	public Channel getChannel(String name) {
-		for (Channel channel : channels)
+		for (Channel channel : this.getChannels())
 			if (channel.getName().equals(name)) return channel;
 		return null;
 	}
@@ -103,7 +103,7 @@ public class ChannelManager {
 	 */
 	public int getNonSecretChannels() {
 		int channels = 0;
-		for (Channel channel : this.channels)
+		for (Channel channel : this.getChannels())
 			if (!channel.getMode(ChannelMode.SECRET)) channels++;
 		return channels;
 	}

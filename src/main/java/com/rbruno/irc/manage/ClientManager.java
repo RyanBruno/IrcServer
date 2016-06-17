@@ -2,9 +2,7 @@ package com.rbruno.irc.manage;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.logging.Level;
 
-import com.rbruno.irc.logger.Logger;
 import com.rbruno.irc.reply.Reply;
 import com.rbruno.irc.templates.Client;
 import com.rbruno.irc.templates.Client.ClientMode;
@@ -25,7 +23,7 @@ public class ClientManager {
 	 * @throws IOException
 	 */
 	public void broadcastLocal(Reply reply, String args) throws IOException {
-		for (Client client : clients)
+		for (Client client : this.getClients())
 			if (client.getConnection().isClient()) client.getConnection().send(reply, client, args);
 	}
 
@@ -40,7 +38,7 @@ public class ClientManager {
 	 * @throws IOException
 	 */
 	public void broadcastLocal(String prefix, String command, String args) throws IOException {
-		for (Client client : clients)
+		for (Client client : this.getClients())
 			if (client.getConnection().isClient()) client.getConnection().send(prefix, command, args);
 	}
 
@@ -52,7 +50,6 @@ public class ClientManager {
 	 * @throws Exception 
 	 */
 	public void addClient(Client client) {
-		Logger.log(client.getAbsoluteName(), Level.ALL);
 		clients.add(client);
 	}
 
@@ -66,7 +63,7 @@ public class ClientManager {
 	 *         that nickname.
 	 */
 	public Client getClient(String nickname) {
-		for (Client client : clients)
+		for (Client client : this.getClients())
 			if (client.getNickname().equals(nickname)) return client;
 		return null;
 	}
@@ -88,7 +85,7 @@ public class ClientManager {
 	 *            Nickname of client that will be removed.
 	 */
 	public void removeClient(String nickname) {
-		for (Client client : clients)
+		for (Client client : this.getClients())
 			if (client.getNickname().equals(nickname)) removeClient(client);
 	}
 
@@ -99,7 +96,7 @@ public class ClientManager {
 	 * @return True if client exists false if not.
 	 */
 	public boolean isNick(String nickname) {
-		for (Client client : clients)
+		for (Client client : this.getClients())
 			if (client.getNickname().equals(nickname)) return true;
 		return false;
 	}
@@ -111,7 +108,7 @@ public class ClientManager {
 	 */
 	public int getClientCount() {
 		int users = 0;
-		for (Client current : clients)
+		for (Client current : this.getClients())
 			if (!current.hasMode(ClientMode.INVISIBLE)) users++;
 		return users;
 	}
@@ -123,7 +120,7 @@ public class ClientManager {
 	 */
 	public int getInvisibleClientCount() {
 		int users = 0;
-		for (Client current : clients)
+		for (Client current : this.getClients())
 			if (current.hasMode(ClientMode.INVISIBLE)) users++;
 		return users;
 	}
@@ -135,8 +132,12 @@ public class ClientManager {
 	 */
 	public int getOps() {
 		int ops = 0;
-		for (Client current : clients)
+		for (Client current : this.getClients())
 			if (current.isServerOP()) ops++;
 		return ops;
+	}
+	
+	private ArrayList<Client> getClients(){
+		return new ArrayList<Client>(clients);
 	}
 }
