@@ -40,72 +40,77 @@ public class Mode extends Command {
 			if (modeFlag.startsWith("-")) add = false;
 			if (request.getArgs()[0].startsWith("#") || request.getArgs()[0].startsWith("&")) {
 				// Channels
-				if (Server.getServer().getChannelManger().getChannel(request.getArgs()[0]) != null) {
-					Channel target = Server.getServer().getChannelManger().getChannel(request.getArgs()[0]);
-					for (char mode : modeFlag.toLowerCase().toCharArray()) {
-						if (request.getClient().isServerOP() || target.checkOP(request.getClient())) {
-							switch (mode) {
-							case 'o':
-								Client clientTarget = Server.getServer().getClientManager().getClient(request.getArgs()[1]);
-								if (add) {
-									target.addOP(clientTarget);
-								} else {
-									target.takeOP(clientTarget);
-								}
-								target.send(Reply.RPL_CHANNELMODEIS, target.getName() + (add ? " +" : " -") + "o " + clientTarget.getNickname());
-								break;
-							case 'p':
-								target.setMode(ChannelMode.PRIVATE, add, request.getClient());
-								break;
-							case 's':
-								target.setMode(ChannelMode.SECRET, add, request.getClient());
-								break;
-							case 'i':
-								target.setMode(ChannelMode.INVITE_ONLY, add, request.getClient());
-								break;
-							case 't':
-								target.setMode(ChannelMode.TOPIC, add, request.getClient());
-								break;
-							case 'n':
-								target.setMode(ChannelMode.NO_MESSAGE_BY_OUTSIDE, add, request.getClient());
-								break;
-							case 'm':
-								target.setMode(ChannelMode.MODERATED_CHANNEL, add, request.getClient());
-								break;
-							case 'l':
-								try {
-									int limit = Integer.parseInt(request.getArgs()[2]);
-									target.setUserLimit(limit);
-								} catch (NumberFormatException e) {
-									request.getConnection().send(Error.ERR_NEEDMOREPARAMS, request.getClient(), ":Not enough parameters");
-								}
-								break;
-							case 'b':
-								break;
-							case 'v':
-								Client voicee = Server.getServer().getClientManager().getClient(request.getArgs()[2]);
-								if (voicee != null) {
-									if (add) {
-										target.giveVoice(voicee);
-									} else {
-										target.takeVoice(voicee);
-									}
-								} else {
-									request.getConnection().send(Error.ERR_NOSUCHNICK, request.getClient(), ":No such channel");
-								}
-								target.send(Reply.RPL_CHANNELMODEIS, target.getName() + (add ? " +" : " -") + "v " + voicee.getNickname());
-								break;
-							case 'k':
-								target.setPassword(request.getArgs()[2]);
-								break;
-							}
-						} else {
-							request.getConnection().send(Error.ERR_NOPRIVILEGES, request.getClient(), ":Permission Denied- You're not an IRC operator");
-						}
-					}
-				} else {
+				Channel target = Server.getServer().getChannelManger().getChannel(request.getArgs()[0]);
+				if (target == null) {
 					request.getConnection().send(Error.ERR_NOSUCHCHANNEL, request.getClient(), modeFlag + " :No such channel");
+					return;
 				}
+				for (char mode : modeFlag.toLowerCase().toCharArray()) {
+					if (request.getClient().isServerOP() || target.checkOP(request.getClient())) {
+						switch (mode) {
+						case 'o':
+							Client clientTarget = Server.getServer().getClientManager().getClient(request.getArgs()[2]);
+							if (clientTarget == null) {
+								request.getConnection().send(Error.ERR_NOSUCHNICK, request.getClient(), request.getArgs()[2] + " :No such nick");
+								continue;
+							}
+							if (add) {
+								target.addOP(clientTarget);
+							} else {
+								target.takeOP(clientTarget);
+							}
+							target.send(Reply.RPL_CHANNELMODEIS, target.getName() + (add ? " +" : " -") + "o " + clientTarget.getNickname());
+							break;
+						case 'p':
+							target.setMode(ChannelMode.PRIVATE, add, request.getClient());
+							break;
+						case 's':
+							target.setMode(ChannelMode.SECRET, add, request.getClient());
+							break;
+						case 'i':
+							target.setMode(ChannelMode.INVITE_ONLY, add, request.getClient());
+							break;
+						case 't':
+							target.setMode(ChannelMode.TOPIC, add, request.getClient());
+							break;
+						case 'n':
+							target.setMode(ChannelMode.NO_MESSAGE_BY_OUTSIDE, add, request.getClient());
+							break;
+						case 'm':
+							target.setMode(ChannelMode.MODERATED_CHANNEL, add, request.getClient());
+							break;
+						case 'l':
+							try {
+								int limit = Integer.parseInt(request.getArgs()[2]);
+								target.setUserLimit(limit);
+							} catch (NumberFormatException e) {
+								request.getConnection().send(Error.ERR_NEEDMOREPARAMS, request.getClient(), ":Not enough parameters");
+							}
+							break;
+						case 'b':
+							break;
+						case 'v':
+							Client voicee = Server.getServer().getClientManager().getClient(request.getArgs()[2]);
+							if (voicee != null) {
+								if (add) {
+									target.giveVoice(voicee);
+								} else {
+									target.takeVoice(voicee);
+								}
+							} else {
+								request.getConnection().send(Error.ERR_NOSUCHNICK, request.getClient(), ":No such channel");
+							}
+							target.send(Reply.RPL_CHANNELMODEIS, target.getName() + (add ? " +" : " -") + "v " + voicee.getNickname());
+							break;
+						case 'k':
+							target.setPassword(request.getArgs()[2]);
+							break;
+						}
+					} else {
+						request.getConnection().send(Error.ERR_NOPRIVILEGES, request.getClient(), ":Permission Denied- You're not an IRC operator");
+					}
+				}
+
 			} else {
 				// Not channel
 				if (Server.getServer().getClientManager().getClient(request.getArgs()[0]) != null) {

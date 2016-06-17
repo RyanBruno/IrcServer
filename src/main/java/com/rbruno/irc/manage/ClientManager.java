@@ -2,7 +2,9 @@ package com.rbruno.irc.manage;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
 
+import com.rbruno.irc.logger.Logger;
 import com.rbruno.irc.reply.Reply;
 import com.rbruno.irc.templates.Client;
 import com.rbruno.irc.templates.Client.ClientMode;
@@ -47,9 +49,10 @@ public class ClientManager {
 	 * 
 	 * @param client
 	 *            Client to add.
+	 * @throws Exception 
 	 */
 	public void addClient(Client client) {
-		// TODO: Check if nick is in use
+		Logger.log(client.getAbsoluteName(), Level.ALL);
 		clients.add(client);
 	}
 

@@ -22,10 +22,15 @@ public class Join extends Command {
 				request.getConnection().send(Error.ERR_NOSUCHCHANNEL, request.getClient(), channelName + " :No such channel");
 				continue;
 			}
-			if (channel.getUserLimit() == -1 || channel.getUserLimit() > channel.getCurrentNumberOfUsers() || request.getClient().isServerOP() || channel.checkOP(request.getClient())) {
-				channel.addClient(request.getConnection().getClient());
-				request.getConnection().getClient().addChannel(channel);
-				request.getConnection().send(Reply.RPL_TOPIC, request.getClient(), channel.getName() + " :" + channel.getTopic());
+			if (channel.getUserLimit() == -1 || channel.getUserLimit() > channel.getCurrentNumberOfUsers() || request.getClient().isServerOP()) {
+				if (channel.checkPassword((request.getArgs().length >= 2) ? request.getArgs()[1] : "")) {
+					channel.addClient(request.getConnection().getClient());
+					request.getConnection().getClient().addChannel(channel);
+					request.getConnection().send(Reply.RPL_TOPIC, request.getClient(), channel.getName() + " :" + channel.getTopic());
+				} else {
+					request.getConnection().send(Error.ERR_BADCHANNELKEY, request.getClient(), channel.getName() + " :Cannot join channel (+k)");
+				}
+
 			} else {
 				request.getConnection().send(Error.ERR_CHANNELISFULL, request.getClient(), channel.getName() + " :Cannot join channel (+l)");
 			}
@@ -33,5 +38,4 @@ public class Join extends Command {
 		}
 
 	}
-
 }

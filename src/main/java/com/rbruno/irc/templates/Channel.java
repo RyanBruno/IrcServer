@@ -153,7 +153,7 @@ public class Channel {
 		} else if (this.hasVoice(client)) {
 			this.send(Reply.RPL_CHANNELMODEIS, this.getName() + " +v " + client.getNickname());
 		}
-		
+
 		String message = "@ " + this.getName() + " :";
 		ArrayList<Client> clients = this.getClients();
 		for (Client current : clients) {
@@ -180,7 +180,8 @@ public class Channel {
 	}
 
 	public boolean checkPassword(String password) {
-		return this.password == password;
+		if (this.password == null || this.password.equals("")) return true;
+		return this.password.equals(password);
 	}
 
 	public void setPassword(String password) {
