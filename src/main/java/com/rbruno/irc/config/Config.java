@@ -25,11 +25,15 @@ public class Config {
 	public Config() throws Exception {
 		File config = new File("config.txt");
 		File ops = new File("ops.txt");
+		File info = new File("info.txt");
 		if (!config.exists()) {
 			Utilities.makeFile("config.txt");
 		}
 		if (!ops.exists()) {
 			Utilities.makeFile("ops.txt");
+		}
+		if (!info.exists()) {
+			Utilities.makeFile("info.txt");
 		}
 		this.config = new Properties();
 		this.config.load(new FileReader(config));
