@@ -49,7 +49,7 @@ public class Connection implements Runnable {
 			while (open) {
 				try {
 					String line = reader.readLine();
-					Logger.log(line, Level.FINE);
+					if (Server.getServer().getConfig().getProperty("debug").equals("ture")) Logger.log(line, Level.FINE);
 					if (line == null) {
 						close();
 						continue;
@@ -84,7 +84,7 @@ public class Connection implements Runnable {
 	 * @throws IOException
 	 */
 	public void send(String message) throws IOException {
-		System.out.println("[DeBug]" + message);
+		if (Server.getServer().getConfig().getProperty("debug").equals("ture")) System.out.println("[DeBug]" + message);
 		byte[] block = message.concat("\r\n").getBytes();
 
 		socket.getOutputStream().write(block);
