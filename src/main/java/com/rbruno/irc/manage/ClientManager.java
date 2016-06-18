@@ -47,7 +47,7 @@ public class ClientManager {
 	 * 
 	 * @param client
 	 *            Client to add.
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public void addClient(Client client) {
 		clients.add(client);
@@ -136,8 +136,8 @@ public class ClientManager {
 			if (current.isServerOP()) ops++;
 		return ops;
 	}
-	
-	private ArrayList<Client> getClients(){
+
+	private ArrayList<Client> getClients() {
 		return new ArrayList<Client>(clients);
 	}
 }

@@ -4,9 +4,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import java.util.logging.Level;
 
 import com.rbruno.irc.Server;
 import com.rbruno.irc.commands.Command;
+import com.rbruno.irc.logger.Logger;
 import com.rbruno.irc.reply.Error;
 import com.rbruno.irc.reply.Reply;
 import com.rbruno.irc.templates.Client;
@@ -47,7 +49,7 @@ public class Connection implements Runnable {
 			while (open) {
 				try {
 					String line = reader.readLine();
-					// Logger.log(line, Level.FINE);
+					Logger.log(line, Level.FINE);
 					if (line == null) {
 						close();
 						continue;
@@ -82,7 +84,7 @@ public class Connection implements Runnable {
 	 * @throws IOException
 	 */
 	public void send(String message) throws IOException {
-		// System.out.println("[DeBug]" + message);
+		System.out.println("[DeBug]" + message);
 		byte[] block = message.concat("\r\n").getBytes();
 
 		socket.getOutputStream().write(block);

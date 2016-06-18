@@ -2,3 +2,4 @@ port=6697
 networkname=RBruno Network
 hostname=localhost
 DisableOps=fasle
+CreateOnJoin=true

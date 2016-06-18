@@ -157,7 +157,7 @@ public class Channel {
 		String message = "@ " + this.getName() + " :";
 		ArrayList<Client> clients = this.getClients();
 		for (Client current : clients) {
-			if (this.checkOP(client) || current.isServerOP()) {
+			if (this.checkOP(current) || current.isServerOP()) {
 				message = message + "@" + current.getNickname() + " ";
 			} else if (this.hasVoice(current)) {
 				message = message + "+" + current.getNickname() + " ";
@@ -237,9 +237,9 @@ public class Channel {
 	 * @throws IOException
 	 */
 	public void setTopic(String topic) throws IOException {
+		this.topic = topic;
 		for (Client current : clients)
 			current.getConnection().send(Reply.RPL_TOPIC, current, this.getName() + " " + this.getTopic());
-		this.topic = topic;
 	}
 
 	public void inviteUser(Client client) {

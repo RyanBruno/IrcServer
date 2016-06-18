@@ -49,6 +49,7 @@ public class Config {
 	 * @return Value of the given key or null if key does not exist.
 	 */
 	public String getProperty(String key) {
+		if (config.getProperty(key) == null) return "";
 		return config.getProperty(key);
 	}
 
