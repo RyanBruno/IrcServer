@@ -4,12 +4,20 @@ import com.rbruno.irc.templates.Request;
 
 public class Plugin {
 
-	public Plugin(String name) {}
-	
-	public void onEnable() {}
+	private String name;
 
-	public void onDisable() {}
+	public void onEnable() {
+	}
+
+	public void onRequest(Request request) {
+	}
 	
-	public boolean onRequest(Request request) {return true;}
+	public void setName(String name) {
+		this.name = name;
+	}
 	
+	public String getName() {
+		return name;
+	}
+
 }
