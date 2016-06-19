@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.logging.Level;
 
 import com.rbruno.irc.commands.Command;
 import com.rbruno.irc.config.Config;
@@ -39,13 +40,28 @@ public class Server implements Runnable {
 	 * @throws Exception
 	 */
 	public Server() throws Exception {
-		config = new Config();
+		try {
+			config = new Config();
+		} catch (Exception e) {
+			Logger.log("There has been a fatal error while parsing the config.", Level.SEVERE);
+			throw e;
+		}
 		clientManager = new ClientManager();
-		channelManger = new ChannelManager();
+		try {
+			channelManger = new ChannelManager();
+		} catch (Exception e) {
+			Logger.log("There has been a fatal error while parsing the channels file.", Level.SEVERE);
+			throw e;
+		}
 		server = this;
 
 		Command.init();
-		serverSocket = new ServerSocket(Integer.parseInt(config.getProperty("port")));
+		try {
+			serverSocket = new ServerSocket(Integer.parseInt(config.getProperty("port")));
+		} catch (Exception e) {
+			Logger.log("There has been a fatal error while opening the Server socket. Check if a server is already using port: " + config.getProperty("port"), Level.SEVERE);
+			throw e;
+		}
 		running = true;
 		Logger.log("Started Server on port: " + serverSocket.getLocalPort());
 		new Thread(this, "Running Thread").start();

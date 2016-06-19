@@ -47,28 +47,38 @@ public class Connection implements Runnable {
 		try {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"));
 			while (open) {
+				String line = null;
 				try {
-					String line = reader.readLine();
-					if (Server.getServer().getConfig().getProperty("debug").equals("true")) Logger.log(line, Level.FINE);
-					if (line == null) {
-						close();
+					line = reader.readLine();
+				} catch (Exception e) {
+					if (e.getMessage() != null) if (e.getMessage().contains("Connection reset")) {
+						this.close();
 						continue;
 					}
-					Request request = new Request(this, line);
+				}
+				if (Server.getServer().getConfig().getProperty("debug").equals("true")) Logger.log(line, Level.FINE);
+				if (line == null) {
+					close();
+					continue;
+				}
+				Request request = null;
+				try {
+					request = new Request(this, line);
+				} catch (Exception e) {
+					Logger.log(socket.getInetAddress() + " sent an unparseable line: " + line, Level.FINE);
+					continue;
+				}
+				try {
 					Command.runCommand(request);
 				} catch (Exception e) {
-					if (e.getMessage() != null) {
-						if (e.getMessage().contains("Connection reset")) {
-							this.close();
-							continue;
-						}
-					}
-					e.printStackTrace();
+					Logger.log(socket.getInetAddress() + " ran a command that resulted in an error: " + line, Level.FINE);
 				}
+
 			}
 			reader.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			Logger.log(socket.getInetAddress() + " closed in an error state.", Level.FINE);
+			this.close();
 		}
 	}
 
@@ -125,8 +135,11 @@ public class Connection implements Runnable {
 		send(error, client.getNickname(), args);
 	}
 
-	public void close() throws IOException {
-		socket.close();
+	public void close() {
+		try {
+			socket.close();
+		} catch (IOException e) {
+		}
 		Server.getServer().getClientManager().removeClient(client);
 		open = false;
 	}

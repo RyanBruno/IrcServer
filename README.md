@@ -20,5 +20,4 @@ cp target/IrcServer-<Version>.jar ~/IrcServer
 java -jar IrcServer-<Version>.jar
 ```
 ## Todo
-1. Error Handling
-2. Plugins
+1. Plugins
