@@ -44,8 +44,13 @@ public class Command {
 		commands.add(new Notice());
 		commands.add(new Who());
 		commands.add(new Whois());
-		
+		//commands.add(new Whowas());
+		//commands.add(new Kill());
 		commands.add(new Ping());
+		commands.add(new Pong());
+		//commands.add(new Error());
+		// Optional Commands
+		commands.add(new Away());
 	}
 
 	/**

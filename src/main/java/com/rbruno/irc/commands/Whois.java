@@ -20,7 +20,8 @@ public class Whois extends Command {
 			request.getConnection().send(Reply.RPL_WHOISUSER, request.getClient(), target.getNickname() + " " + target.getUsername() + " " + Server.getServer().getConfig().getProperty("hostname") + " * :" + target.getRealName());
 			// TODO Whois server
 			if (target.isServerOP()) request.getConnection().send(Reply.RPL_WHOISOPERATOR, request.getClient(), target.getNickname() + " :is an IRC operator");
-			request.getConnection().send(Reply.RPL_WHOISIDLE, request.getClient(), target.getNickname() + " 0 :seconds idle");
+			if (!target.getAwayMessage().equals(""))request.getConnection().send(Reply.RPL_AWAY, request.getClient(), target.getNickname() + " :" + target.getAwayMessage());
+			//request.getConnection().send(Reply.RPL_WHOISIDLE, request.getClient(), target.getNickname() + " 0 :seconds idle");
 			request.getConnection().send(Reply.RPL_ENDOFWHOIS, request.getClient(), target.getNickname() + " :End of /WHOIS list");
 			String channels = "";
 			for (Channel channel : target.getChannels()) {

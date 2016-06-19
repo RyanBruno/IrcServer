@@ -23,6 +23,7 @@ public class Client {
 
 	private ArrayList<Channel> channels = new ArrayList<Channel>();
 	private HashMap<ClientMode, Boolean> modes = new HashMap<ClientMode, Boolean>();
+	private String awayMessage = "";
 
 	/**
 	 * Creates a new Client object. Will not add to ClientManager.
@@ -190,6 +191,25 @@ public class Client {
 	 */
 	public String getAbsoluteName() {
 		return this.getNickname() + "!" + this.getUsername() + "@" + this.getHostname();
+	}
+
+	/**
+	 * Sets away message. If away message is "" then the user is not away.
+	 * 
+	 * @param message
+	 *            The away message.
+	 */
+	public void setAwayMessage(String message) {
+		this.awayMessage = message;
+	}
+
+	/**
+	 * Returns away message. If away message is "" then the user is not away.
+	 * 
+	 * @return Away message.
+	 */
+	public String getAwayMessage() {
+		return awayMessage;
 	}
 
 }

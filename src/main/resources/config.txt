@@ -1,5 +1,4 @@
-port=6697
-networkname=RBruno Network
+port=6669
 hostname=localhost
-DisableOps=fasle
+DisableOps=false
 CreateOnJoin=true
