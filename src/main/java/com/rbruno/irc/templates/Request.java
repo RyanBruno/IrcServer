@@ -14,6 +14,8 @@ public class Request {
 	private String[] args = new String[0];
 	private Client client;
 
+	private boolean cancelled;
+
 	/**
 	 * Creates a new Request object. Phrases the line into prefix, command and
 	 * arguments. KNOWN BUG: Everything after the last ':' will be put in one
@@ -103,6 +105,27 @@ public class Request {
 	 */
 	public Client getClient() {
 		return client;
+	}
+
+	/**
+	 * Return weather or not this request is cancelled. When a request is
+	 * cancelled it will not be run by the server.
+	 * 
+	 * @return Weather or not this request is cancelled.
+	 */
+	public boolean isCancelled() {
+		return cancelled;
+	}
+
+	/**
+	 * Sets the cancelled status of this request. When a request is cancelled it
+	 * will not be run by the server.
+	 * 
+	 * @param cancelled
+	 *            Cancelled status.
+	 */
+	public void setCancelled(boolean cancelled) {
+		this.cancelled = cancelled;
 	}
 
 }

@@ -106,6 +106,7 @@ public class Command {
 	public static void runCommand(Request request) throws Exception {
 		if (request.getClient() != null) request.getClient().setLastCheckin(System.currentTimeMillis());
 		Server.getServer().getPluginManager().runOnRequest(request);
+		if (request.isCancelled()) return;
 		Command command = getCommand(request.getCommand());
 		if (command == null) {
 			if (request.getClient() != null) request.getConnection().send(Error.ERR_UNKNOWNCOMMAND, request.getClient(), request.getCommand() + " :Unknown command");
