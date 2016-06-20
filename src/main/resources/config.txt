@@ -1,4 +1,4 @@
-port=6669
+port=6667
 hostname=localhost
 DisableOps=false
 CreateOnJoin=true

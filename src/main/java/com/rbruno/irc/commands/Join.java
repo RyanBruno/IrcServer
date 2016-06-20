@@ -4,6 +4,7 @@ import com.rbruno.irc.Server;
 import com.rbruno.irc.reply.Error;
 import com.rbruno.irc.reply.Reply;
 import com.rbruno.irc.templates.Channel;
+import com.rbruno.irc.templates.Channel.ChannelMode;
 import com.rbruno.irc.templates.Request;
 
 public class Join extends Command {
@@ -31,6 +32,10 @@ public class Join extends Command {
 			}
 			if (channel.getUserLimit() == -1 || channel.getUserLimit() > channel.getCurrentNumberOfUsers() || request.getClient().isServerOP()) {
 				if (channel.checkPassword((request.getArgs().length >= 2) ? request.getArgs()[1] : "")) {
+					if (channel.getMode(ChannelMode.INVITE_ONLY) && !channel.isUserInvited(request.getClient()) && !request.getClient().isServerOP()) {
+						request.getConnection().send(Error.ERR_INVITEONLYCHAN, request.getClient(), channel.getName() + " :Cannot join channel (+i)");
+						continue;
+					}
 					channel.addClient(request.getConnection().getClient());
 					request.getConnection().getClient().addChannel(channel);
 					request.getConnection().send(Reply.RPL_TOPIC, request.getClient(), channel.getName() + " :" + channel.getTopic());
