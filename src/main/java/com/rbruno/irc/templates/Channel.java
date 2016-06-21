@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.rbruno.irc.Server;
 import com.rbruno.irc.reply.Reply;
 
 /**
@@ -20,6 +21,7 @@ public class Channel {
 	private ArrayList<Client> invitedUsers = new ArrayList<Client>();
 	private int userLimit = 100;
 	private String topic = "";
+	private boolean temporary;
 
 	/**
 	 * Creates a new a new Channels object. Will not add to ChannelManger.
@@ -30,9 +32,10 @@ public class Channel {
 	 *            Password of channel. If blank then no password is needed.
 	 * @see ChannelManger.addChannel(Channel)
 	 */
-	public Channel(String name, String password) {
+	public Channel(String name, String password, boolean temporary) {
 		this.name = name;
 		this.password = password;
+		this.temporary = temporary;
 	}
 
 	public enum ChannelMode {
@@ -173,6 +176,9 @@ public class Channel {
 		ops.remove(client);
 		voiceList.remove(client);
 		clients.remove(client);
+		if (this.clients.size() == 0 && this.isTemporary() && Server.getServer().getConfig().getProperty("RemoveChannelOnEmpty").equals("true")) {
+			Server.getServer().getChannelManger().removeChannel(this);
+		}
 	}
 
 	public ArrayList<Client> getClients() {
@@ -260,6 +266,10 @@ public class Channel {
 
 	public HashMap<ChannelMode, Boolean> getModeMap() {
 		return modes;
+	}
+
+	public boolean isTemporary() {
+		return temporary;
 	}
 
 }

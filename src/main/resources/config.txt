@@ -2,3 +2,4 @@ port=6667
 hostname=localhost
 DisableOps=false
 CreateOnJoin=true
+RemoveChannelOnEmpty=true
