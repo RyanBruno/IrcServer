@@ -55,6 +55,10 @@ public class PluginManager {
 				Logger.log(path + " was not loaded because no plugin name was found.", Level.FINE);
 				continue;
 			}
+			if (this.getPlugin(name) != null) {
+				Logger.log(path + " was not loaded because a plugin with the same name is already loaded.", Level.FINE);
+				continue;
+			}
 			Class<?> mainClass;
 			try {
 				mainClass = loader.loadClass(main);
