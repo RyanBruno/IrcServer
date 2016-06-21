@@ -43,7 +43,6 @@ public class PluginManager {
 			String name = null;
 			while (inputStream.ready()) {
 				String line = inputStream.readLine();
-				Logger.log(line);
 				if (line.startsWith("main") && line.split("=").length > 1) main = line.split("=")[1];
 				if (line.startsWith("name") && line.split("=").length > 1) name = line.split("=")[1];
 			}
@@ -67,7 +66,6 @@ public class PluginManager {
 				continue;
 			}
 			Plugin plugin = null;
-			Logger.log(mainClass.toString(), Level.FINE);
 			try {
 				plugin = (Plugin) mainClass.newInstance();
 			} catch (ClassCastException e) {
