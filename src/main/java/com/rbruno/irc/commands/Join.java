@@ -26,7 +26,7 @@ public class Join extends Command {
 				}
 				String password = "";
 				if (request.getArgs().length >= 2) password = request.getArgs()[1];
-				channel = new Channel(request.getArgs()[0], password);
+				channel = new Channel(request.getArgs()[0], password, false);
 				channel.addOP(request.getClient());
 				Server.getServer().getChannelManger().addChannel(channel);
 			}
