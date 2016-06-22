@@ -22,6 +22,7 @@ public class Topic extends Command {
 		}
 		if (channel.getMode(ChannelMode.TOPIC) && !channel.checkOP(request.getClient())) {
 			request.getConnection().send(Error.ERR_CHANOPRIVSNEEDED, request.getClient(), channel.getName() + " :You're not channel operator");
+			request.getConnection().send(Reply.RPL_TOPIC, request.getClient(), channel.getName() + " " + channel.getTopic());
 			return;
 		}
 		if (request.getArgs().length == 1) {
