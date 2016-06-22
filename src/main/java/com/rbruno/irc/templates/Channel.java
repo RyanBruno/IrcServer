@@ -151,7 +151,7 @@ public class Channel {
 		if (!this.getMode(ChannelMode.MODERATED_CHANNEL) || client.isServerOP()) this.voiceList.add(client);
 
 		this.sendToAll(":" + client.getNickname() + "!" + client.getUsername() + "@" + client.getHostname() + " JOIN " + this.getName());
-		if (this.checkOP(client) || client.isServerOP()) {
+		if (this.checkOP(client)) {
 			this.send(Reply.RPL_CHANNELMODEIS, this.getName() + " +o " + client.getNickname());
 		} else if (this.hasVoice(client)) {
 			this.send(Reply.RPL_CHANNELMODEIS, this.getName() + " +v " + client.getNickname());
@@ -160,7 +160,7 @@ public class Channel {
 		String message = "@ " + this.getName() + " :";
 		ArrayList<Client> clients = this.getClients();
 		for (Client current : clients) {
-			if (this.checkOP(current) || current.isServerOP()) {
+			if (this.checkOP(current)) {
 				message = message + "@" + current.getNickname() + " ";
 			} else if (this.hasVoice(current)) {
 				message = message + "+" + current.getNickname() + " ";
@@ -173,7 +173,7 @@ public class Channel {
 	}
 
 	public void removeClient(Client client) {
-		ops.remove(client);
+		//ops.remove(client);
 		voiceList.remove(client);
 		clients.remove(client);
 		if (this.clients.size() == 0 && this.isTemporary() && Server.getServer().getConfig().getProperty("RemoveChannelOnEmpty").equals("true")) {
