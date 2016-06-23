@@ -21,7 +21,6 @@ public class Who extends Command {
 				request.getConnection().send(Reply.RPL_WHOREPLY, request.getClient(), channel.getName() + " " + client.getUsername() + " * " + client.getHostname() + " " + client.getNickname() + " H+ :" + client.getHopCount() + " " + client.getRealName());
 			request.getConnection().send(Reply.RPL_ENDOFWHO, request.getClient(), target + " :End of /WHO list");
 		}
-		//TODO Servers and wildcards
 	}
 
 }

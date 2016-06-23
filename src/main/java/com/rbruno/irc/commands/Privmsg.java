@@ -20,6 +20,10 @@ public class Privmsg extends Command {
 				// TODO: Server
 			} else if (reciver.startsWith("#") || reciver.startsWith("&")) {
 				Channel channel = Server.getServer().getChannelManger().getChannel(reciver);
+				if (channel == null) {
+					request.getConnection().send(Error.ERR_NOSUCHCHANNEL, request.getClient(), reciver + " :No such channel");
+					return;
+				}
 				if (!request.getClient().getChannels().contains(channel) && channel.getMode(ChannelMode.NO_MESSAGE_BY_OUTSIDE)) {
 					request.getConnection().send(Error.ERR_CANNOTSENDTOCHAN, request.getClient(), channel.getName() + " :Cannot send to channel");
 					return;

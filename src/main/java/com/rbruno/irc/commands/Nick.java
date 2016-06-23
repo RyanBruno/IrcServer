@@ -21,7 +21,6 @@ public class Nick extends Command {
 			return;
 		}
 		request.getConnection().setClient(new Client(request.getConnection(), request.getArgs()[0]));
-		//request.getConnection().send(":" + Server.getServer().getConfig().getProperty("hostname") + " NOTICE * :*** No Ident response");
 	}
 
 }

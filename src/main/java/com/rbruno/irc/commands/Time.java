@@ -1,6 +1,7 @@
 package com.rbruno.irc.commands;
 
 import java.sql.Timestamp;
+import java.util.Date;
 
 import com.rbruno.irc.Server;
 import com.rbruno.irc.reply.Reply;
@@ -15,8 +16,8 @@ public class Time extends Command {
 	@Override
 	public void execute(Request request) throws Exception {
 		if (request.getArgs().length == 0) {
-			java.util.Date date = new java.util.Date();
-			request.getConnection().send(Reply.RPL_TIME, request.getClient(), Server.getServer().getConfig().getProperty("networkname") + " :" + new Timestamp(date.getTime()));
+			Date date = new Date();
+			request.getConnection().send(Reply.RPL_TIME, request.getClient(), Server.getServer().getConfig().getProperty("hostname") + " :" + new Timestamp(date.getTime()));
 		} else {
 			//TODO: Servers
 		}

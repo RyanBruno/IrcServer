@@ -14,7 +14,6 @@ public class Whois extends Command {
 
 	@Override
 	public void execute(Request request) throws Exception {
-		// TODO Servers
 		for (String current : request.getArgs()[1].split(",")) {
 			Client target = Server.getServer().getClientManager().getClient(current);
 			request.getConnection().send(Reply.RPL_WHOISUSER, request.getClient(), target.getNickname() + " " + target.getUsername() + " " + Server.getServer().getConfig().getProperty("hostname") + " * :" + target.getRealName());
