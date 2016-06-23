@@ -101,78 +101,188 @@ public class Connection implements Runnable {
 		socket.getOutputStream().flush();
 	}
 
+	/**
+	 * Creates a formated string from the given arguments and passes them to
+	 * send(String). EX: :(prefix) (command) (args)
+	 * 
+	 * @param prefix
+	 *            The prefix to be used in the message.
+	 * @param command
+	 *            The command to be used in the message.
+	 * @param args
+	 *            The args to be used in the message.
+	 * @throws IOException
+	 */
 	public void send(String prefix, String command, String args) throws IOException {
 		String message = ":" + prefix + " " + command + " " + args;
 		send(message);
 	}
 
-	public void send(String prefix, String code, String nickname, String args) throws IOException {
-		String message = ":" + prefix + " " + code + " " + nickname + " " + args;
-		send(message);
-	}
-
+	/**
+	 * Creates a formated string from the given arguments and passes them to
+	 * send(String).
+	 * 
+	 * @param code
+	 *            The code to be used in the message.
+	 * @param nickname
+	 *            The nickname to be used in the message.
+	 * @param args
+	 *            The arguments to be used in the message.
+	 * @throws IOException
+	 */
 	public void send(int code, String nickname, String args) throws IOException {
 		String stringCode = code + "";
 		if (stringCode.length() < 2) stringCode = "0" + stringCode;
 		if (stringCode.length() < 3) stringCode = "0" + stringCode;
 
-		send(Server.getServer().getConfig().getProperty("hostname"), stringCode, nickname, args);
+		String message = ":" + Server.getServer().getConfig().getProperty("hostname") + " " + stringCode + " " + nickname + " " + args;
+		send(message);
 	}
 
+	/**
+	 * Passes arguments to send(int, String, String).
+	 * 
+	 * @param reply
+	 *            The reply to be used in the message.
+	 * @param nickname
+	 *            The nickname to be used in the message.
+	 * @param args
+	 *            The args to be used in the message.
+	 * @throws IOException
+	 */
 	public void send(Reply reply, String nickname, String args) throws IOException {
 		send(reply.getCode(), nickname, args);
 	}
 
+	/**
+	 * Passes arguments to send(int, String, String).
+	 * 
+	 * @param reply
+	 *            The reply to be used in the message.
+	 * @param client
+	 *            The client to be used in the message.
+	 * @param args
+	 *            The args to be used in the message.
+	 * @throws IOException
+	 */
 	public void send(Reply reply, Client client, String args) throws IOException {
-		send(reply, client.getNickname(), args);
+		send(reply.getCode(), client.getNickname(), args);
 	}
 
+	/**
+	 * Passes arguments to send(int, String, String).
+	 * 
+	 * @param error
+	 *            The error to be used in the message.
+	 * @param nickname
+	 *            The nickname to be used in the message.
+	 * @param args
+	 *            The args to be used in the message.
+	 * @throws IOException
+	 */
 	public void send(Error error, String nickname, String args) throws IOException {
 		send(error.getCode(), nickname, args);
 	}
 
+	/**
+	 * Passes arguments to send(int, String, String).
+	 * 
+	 * @param error
+	 *            The error to be used in the message.
+	 * @param client
+	 *            The client to be used in the message.
+	 * @param args
+	 *            The args to be used in the message.
+	 * @throws IOException
+	 */
 	public void send(Error error, Client client, String args) throws IOException {
-		send(error, client.getNickname(), args);
+		send(error.getCode(), client.getNickname(), args);
 	}
 
+	/**
+	 * Closes the socket and removes the removes the client from the
+	 * ClientManager.
+	 */
 	public void close() {
+		open = false;
 		try {
 			socket.close();
+			if (client != null) Server.getServer().getClientManager().removeClient(client);
 		} catch (IOException e) {
 		}
-		Server.getServer().getClientManager().removeClient(client);
-		open = false;
 	}
 
+	/**
+	 * Returns the Socket.
+	 * 
+	 * @return The Socket.
+	 */
 	public Socket getSocket() {
 		return socket;
 	}
 
+	/**
+	 * Returns the connection password or "" is none was given.
+	 * 
+	 * @return The connection password
+	 */
 	public String getConnectionPassword() {
+		if (connectionPassword == null) return "";
 		return connectionPassword;
 	}
 
+	/**
+	 * Sets the connection password.
+	 * 
+	 * @param connectionPassword
+	 *            The password for the connection.
+	 */
 	public void setConnectionPassword(String connectionPassword) {
 		this.connectionPassword = connectionPassword;
 	}
 
+	/**
+	 * Returns weather or not the connection is a client.
+	 * 
+	 * @return Weather or not the connection is a client.
+	 */
 	public boolean isClient() {
 		return type == Type.CLIENT;
 	}
 
+	/**
+	 * Returns the Client or null if one is not set.
+	 * 
+	 * @return The Client
+	 */
 	public Client getClient() {
 		return client;
 	}
 
+	/**
+	 * Sets the Client and sets the connection type to Client.
+	 * 
+	 * @param client
+	 *            The Client this connection is connected to.
+	 */
 	public void setClient(Client client) {
 		type = Type.CLIENT;
 		this.client = client;
 	}
 
+	/**
+	 * Returns weather or not the connection is a Server.
+	 * 
+	 * @return Weather or not the connection is a Server.
+	 */
 	public boolean isServer() {
 		return type == Type.SERVER;
 	}
 
+	/**
+	 * Returns what type of connection it is.
+	 * @return What type of connection it is.
+	 */
 	public Type getType() {
 		return type;
 	}

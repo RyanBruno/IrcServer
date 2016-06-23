@@ -103,7 +103,7 @@ public class Channel {
 	 */
 	public void send(Reply reply, String message) throws IOException {
 		for (Client current : clients)
-			current.getConnection().send(reply, current.getNickname(), message);
+			current.getConnection().send(reply, current, message);
 	}
 
 	/**
