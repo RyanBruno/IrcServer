@@ -3,3 +3,7 @@ hostname=localhost
 DisableOps=false
 CreateOnJoin=true
 RemoveChannelOnEmpty=true
+# Admin Info
+AdminName=Ryan Bruno
+AdminNick=JRoll506
+AdminEmail=RyanBruno506@gmail.com
