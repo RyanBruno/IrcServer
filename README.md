@@ -19,5 +19,3 @@ cp target/IrcServer-<Version>.jar ~/IrcServer
 ```
 java -jar IrcServer-<Version>.jar
 ```
-## Todo
-1. Plugins
