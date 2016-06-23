@@ -173,7 +173,6 @@ public class Channel {
 	}
 
 	public void removeClient(Client client) {
-		//ops.remove(client);
 		voiceList.remove(client);
 		clients.remove(client);
 		if (this.clients.size() == 0 && this.isTemporary() && Server.getServer().getConfig().getProperty("RemoveChannelOnEmpty").equals("true")) {
