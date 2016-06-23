@@ -2,6 +2,7 @@ package com.rbruno.irc.commands;
 
 import java.util.ArrayList;
 
+import com.rbruno.irc.Server;
 import com.rbruno.irc.reply.Error;
 import com.rbruno.irc.templates.Request;
 
@@ -44,11 +45,11 @@ public class Command {
 		commands.add(new Notice());
 		commands.add(new Who());
 		commands.add(new Whois());
-		//commands.add(new Whowas());
-		//commands.add(new Kill());
+		// commands.add(new Whowas());
+		// commands.add(new Kill());
 		commands.add(new Ping());
 		commands.add(new Pong());
-		//commands.add(new Error());
+		// commands.add(new Error());
 		// Optional Commands
 		commands.add(new Away());
 	}
@@ -99,10 +100,13 @@ public class Command {
 	 * passing request.
 	 * 
 	 * @param request
+	 *            The request sent by the client.
 	 * @throws Exception
 	 */
 	public static void runCommand(Request request) throws Exception {
 		if (request.getClient() != null) request.getClient().setLastCheckin(System.currentTimeMillis());
+		Server.getServer().getPluginManager().runOnRequest(request);
+		if (request.isCancelled()) return;
 		Command command = getCommand(request.getCommand());
 		if (command == null) {
 			if (request.getClient() != null) request.getConnection().send(Error.ERR_UNKNOWNCOMMAND, request.getClient(), request.getCommand() + " :Unknown command");

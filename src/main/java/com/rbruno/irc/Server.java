@@ -12,6 +12,7 @@ import com.rbruno.irc.logger.Logger;
 import com.rbruno.irc.manage.ChannelManager;
 import com.rbruno.irc.manage.ClientManager;
 import com.rbruno.irc.net.Connection;
+import com.rbruno.irc.plugin.PluginManager;
 import com.rbruno.irc.reply.Reply;
 import com.rbruno.irc.templates.Client;
 import com.rbruno.irc.util.Utilities;
@@ -32,6 +33,7 @@ public class Server implements Runnable {
 	private Config config;
 	private ClientManager clientManager;
 	private ChannelManager channelManger;
+	private PluginManager pluginManager;
 
 	/**
 	 * Server constructor. Starts all managers, opens the socket and starts the
@@ -51,6 +53,12 @@ public class Server implements Runnable {
 			channelManger = new ChannelManager();
 		} catch (Exception e) {
 			Logger.log("There has been a fatal error while parsing the channels file.", Level.SEVERE);
+			throw e;
+		}
+		try {
+			pluginManager = new PluginManager();
+		} catch (IOException e) {
+			Logger.log("There has been a fatal error while reading the plugins folder. Check your permissions.", Level.SEVERE);
 			throw e;
 		}
 		server = this;
@@ -148,4 +156,12 @@ public class Server implements Runnable {
 		return VERSION;
 	}
 
+	/**
+	 * Returns the PluginManager
+	 * 
+	 * @return PluginManager
+	 */
+	public PluginManager getPluginManager() {
+		return pluginManager;
+	}
 }
