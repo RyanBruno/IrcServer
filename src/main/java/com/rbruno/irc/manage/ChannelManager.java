@@ -33,7 +33,7 @@ public class ChannelManager {
 			if (line.startsWith("//")) continue;
 			String[] lineArray = line.split(":");
 			if (lineArray.length < 5) continue;
-			Channel channel = new Channel(lineArray[0], lineArray[1], true);
+			Channel channel = new Channel(lineArray[0], lineArray[1], false);
 			channel.setUserLimit(Integer.parseInt(lineArray[2]));
 			for (char c : lineArray[3].toCharArray()) {
 				switch (c) {
