@@ -21,6 +21,6 @@
 
 	<groupId>com.rbruno.irc</groupId>
 	<artifactId>IrcServer</artifactId>
-	<version>v0.12-SNAPSHOT</version>
+	<version>v1.0-RELEASE</version>
 	<packaging>jar</packaging>
 </project>

@@ -1,2 +1,2 @@
-RBruno's IRCd (v0.12-SNAPSHOT)
+RBruno's IRCd (v1.0-RELEASE)
 Developer: Ryan Bruno <ryanbruno506@gmail.com>
