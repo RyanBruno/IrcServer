@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 
 import com.rbruno.irc.logger.Logger;
+import com.rbruno.irc.templates.Client;
 import com.rbruno.irc.templates.Request;
 
 /**
@@ -108,12 +109,22 @@ public class PluginManager {
 				Logger.log("An error occured while passing a request to a plugin.", Level.FINE);
 				e.printStackTrace();
 			}
-
 		}
 	}
 
 	public ArrayList<Plugin> getPlugins() {
 		return new ArrayList<Plugin>(plugins);
+	}
+
+	public void runOnClientLogin(Client client) {
+		for (Plugin current : getPlugins()) {
+			try {
+				current.onClientLogin(client);
+			} catch (Exception e) {
+				Logger.log("An error occured while passing a new client to a plugin.", Level.FINE);
+				e.printStackTrace();
+			}
+		}		
 	}
 
 }

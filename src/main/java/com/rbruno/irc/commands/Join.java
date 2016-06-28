@@ -20,10 +20,11 @@ public class Join extends Command {
 		for (String channelName : channels) {
 			Channel channel = Server.getServer().getChannelManger().getChannel(channelName);
 			if (channel == null) {
-				if (!Server.getServer().getConfig().getProperty("CreateOnJoin").equals("true")){
+				if (!Server.getServer().getConfig().getProperty("CreateOnJoin").equals("true")) {
 					request.getConnection().send(Error.ERR_NOSUCHCHANNEL, request.getClient(), channelName + " :No such channel");
 					continue;
 				}
+				if (!channelName.startsWith("#") && !channelName.startsWith("&")) continue;
 				String password = "";
 				if (request.getArgs().length >= 2) password = request.getArgs()[1];
 				channel = new Channel(request.getArgs()[0], password, false);

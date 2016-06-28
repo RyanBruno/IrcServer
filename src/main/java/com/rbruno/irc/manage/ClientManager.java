@@ -3,6 +3,7 @@ package com.rbruno.irc.manage;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import com.rbruno.irc.Server;
 import com.rbruno.irc.reply.Reply;
 import com.rbruno.irc.templates.Client;
 import com.rbruno.irc.templates.Client.ClientMode;
@@ -51,6 +52,7 @@ public class ClientManager {
 	 */
 	public void addClient(Client client) {
 		clients.add(client);
+		Server.getServer().getPluginManager().runOnClientLogin(client);
 	}
 
 	/**

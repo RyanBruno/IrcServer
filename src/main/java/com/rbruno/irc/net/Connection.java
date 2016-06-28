@@ -72,6 +72,7 @@ public class Connection implements Runnable {
 					Command.runCommand(request);
 				} catch (Exception e) {
 					Logger.log(socket.getInetAddress() + " ran a command that resulted in an error: " + line, Level.FINE);
+					e.printStackTrace();
 				}
 
 			}
