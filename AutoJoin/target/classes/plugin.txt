@@ -1,2 +1,0 @@
-main=com.rbruno.AutoJoin
-name=AutoJoin

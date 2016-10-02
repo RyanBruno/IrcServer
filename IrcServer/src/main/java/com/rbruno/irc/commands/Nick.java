@@ -3,6 +3,7 @@ package com.rbruno.irc.commands;
 import java.io.IOException;
 
 import com.rbruno.irc.Server;
+import com.rbruno.irc.net.Connection.Type;
 import com.rbruno.irc.reply.Error;
 import com.rbruno.irc.templates.Client;
 import com.rbruno.irc.templates.Request;
@@ -20,7 +21,8 @@ public class Nick extends Command {
 			request.getConnection().close();
 			return;
 		}
-		request.getConnection().setClient(new Client(request.getConnection(), request.getArgs()[0]));
+		if (request.getConnection().getType() == Type.LOGGIN_IN)
+			request.getConnection().setClient(new Client(request.getConnection(), request.getArgs()[0]));
 	}
 
 }
