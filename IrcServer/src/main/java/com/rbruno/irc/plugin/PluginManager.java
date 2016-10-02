@@ -82,7 +82,7 @@ public class PluginManager {
 			if (plugin == null) {
 				Logger.log(path + " was not loaded because there was a problem loading your main class.", Level.FINE);
 				continue;
-			}
+			}		
 			this.add(plugin, name);
 			loader.close();
 
@@ -91,6 +91,8 @@ public class PluginManager {
 
 	private void add(Plugin plugin, String name) {
 		plugin.setName(name);
+		File folder = new File("plugins/" + plugin.getName());
+		if (!folder.exists()) folder.mkdir();
 		plugin.onEnable();
 		plugins.add(plugin);
 	}

@@ -19,7 +19,7 @@
     		</plugins>
 	</build>
 
-	<groupId>com.rbruno.irc</groupId>
+	<groupId>com.rbruno</groupId>
 	<artifactId>IrcServer</artifactId>
 	<version>v1.0-RELEASE</version>
 	<packaging>jar</packaging>

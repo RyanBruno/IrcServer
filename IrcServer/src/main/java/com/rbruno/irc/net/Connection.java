@@ -95,6 +95,7 @@ public class Connection implements Runnable {
 	 * @throws IOException
 	 */
 	public void send(String message) throws IOException {
+		if (socket.isClosed()) return;
 		if (Server.getServer().getConfig().getProperty("debug").equals("true")) System.out.println("[DeBug]" + message);
 		byte[] block = message.concat("\r\n").getBytes();
 
