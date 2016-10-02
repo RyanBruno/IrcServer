@@ -1,10 +1,12 @@
 package com.rbruno.irc.commands;
 
-import java.io.File;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.logging.Level;
 
+import com.rbruno.irc.logger.Logger;
 import com.rbruno.irc.reply.Reply;
 import com.rbruno.irc.templates.Request;
-import com.rbruno.irc.util.Utilities;
 
 public class Info extends Command {
 
@@ -15,9 +17,13 @@ public class Info extends Command {
 	@Override
 	public void execute(Request request) throws Exception {
 		if (request.getArgs().length == 0) {
-			if (new File("/info.txt").exists())
-				for (String current : Utilities.read("/info.txt"))
-					request.getConnection().send(Reply.RPL_INFO, request.getClient(), ":" + current);
+			try {
+				BufferedReader inputStream = new BufferedReader(new InputStreamReader(Info.class.getResourceAsStream("/info.txt")));
+				while (inputStream.ready())
+					request.getConnection().send(Reply.RPL_INFO, request.getClient(), ":" + inputStream.readLine());
+			} catch (NullPointerException e) {
+				Logger.log("Could not find info.txt in the jar.", Level.FINE);
+			}
 			request.getConnection().send(Reply.RPL_ENDOFINFO, request.getClient(), ":End of /INFO list");
 		} else {
 			// TODO: Server
