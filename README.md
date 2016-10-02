@@ -20,7 +20,7 @@ cp IrcServer/target/IrcServer-<Version>.jar test/ && cd test/
 java -jar IrcServer-<Version>.jar
 ```
 ## Creating Plugins
-1) Compile and Install the IrcServer (See Above) 
+1) Compile and Install the IrcServer (See Above)  
 2) Create a pom.xml  
 \**Must have the following lines*\*
 ```
