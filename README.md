@@ -20,7 +20,7 @@ cp IrcServer/target/IrcServer-<Version>.jar test/ && cd test/
 java -jar IrcServer-<Version>.jar
 ```
 ## Creating Plugins
-1) Compile and Install the IrcServer (See Above)
+1) Compile and Install the IrcServer (See Above) 
 2) Create a pom.xml  
 \**Must have the following lines*\*
 ```
@@ -35,7 +35,7 @@ java -jar IrcServer-<Version>.jar
 </dependencies>
 ```
 3) Create a Plugin class  
-\**See IrcServer/src/main/java/com/rbruno/irc/plugin/Plugin.java for more Details*\*
+\**See IrcServer/src/main/java/com/rbruno/irc/plugin/Plugin.java for more Details*\*  
 4) Create a config.txt
 ```
 main=Path.to.Main.Class
