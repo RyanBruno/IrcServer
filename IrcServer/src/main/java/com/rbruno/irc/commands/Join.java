@@ -31,7 +31,7 @@ public class Join extends Command {
 				channel.addOP(request.getClient());
 				Server.getServer().getChannelManger().addChannel(channel);
 			}
-			if (channel.getUserLimit() == -1 || channel.getUserLimit() > channel.getCurrentNumberOfUsers() || request.getClient().isServerOP()) {
+			if (channel.getUserLimit() == -1 || channel.getUserLimit() > channel.getUsersCount() || request.getClient().isServerOP()) {
 				if (channel.checkPassword((request.getArgs().length >= 2) ? request.getArgs()[1] : "")) {
 					if (channel.getMode(ChannelMode.INVITE_ONLY) && !channel.isUserInvited(request.getClient()) && !request.getClient().isServerOP()) {
 						request.getConnection().send(Error.ERR_INVITEONLYCHAN, request.getClient(), channel.getName() + " :Cannot join channel (+i)");

@@ -62,7 +62,7 @@ public enum Reply {
 	*  "<nick> :{[@|+]<channel><space>}"
 	*/
 	RPL_WHOISCHANNELS(319),
-	/*
+	/**
 	* Reply to a WHOWAS command.
 	* EX: "<nick> <user> <host> * :<real name>"
 	*/
@@ -72,7 +72,7 @@ public enum Reply {
 	* EX: "<nick> :End of WHOWAS"
 	*/
 	RPL_ENDOFWHOWAS(369),
-	/*
+	/**
 	* Starts a LIST response.
 	* EX: "Channel :Users  Name"
 	*/

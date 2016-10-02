@@ -82,7 +82,7 @@ public class PluginManager {
 			if (plugin == null) {
 				Logger.log(path + " was not loaded because there was a problem loading your main class.", Level.FINE);
 				continue;
-			}		
+			}
 			this.add(plugin, name);
 			loader.close();
 
@@ -97,12 +97,25 @@ public class PluginManager {
 		plugins.add(plugin);
 	}
 
+	/**
+	 * Returns the Plugin that has the given name.
+	 * 
+	 * @param name
+	 *            Name of Plugin to give.
+	 * @return The Plugin that has the given name or null if none exists.
+	 */
 	public Plugin getPlugin(String name) {
 		for (Plugin current : getPlugins())
 			if (current.getName().equals(name)) return current;
 		return null;
 	}
 
+	/**
+	 * Runs the onRequest(Request) method for all loaded Plugins.
+	 * 
+	 * @param request
+	 *            The request to pass to all Plugins.
+	 */
 	public void runOnRequest(Request request) {
 		for (Plugin current : getPlugins()) {
 			try {
@@ -114,10 +127,12 @@ public class PluginManager {
 		}
 	}
 
-	public ArrayList<Plugin> getPlugins() {
-		return new ArrayList<Plugin>(plugins);
-	}
-
+	/**
+	 * Runs the onClientLogin(Client) method for all loaded Plugins.
+	 * 
+	 * @param client
+	 *            The client to pass to all Plugins.
+	 */
 	public void runOnClientLogin(Client client) {
 		for (Plugin current : getPlugins()) {
 			try {
@@ -126,7 +141,11 @@ public class PluginManager {
 				Logger.log("An error occured while passing a new client to a plugin.", Level.FINE);
 				e.printStackTrace();
 			}
-		}		
+		}
+	}
+
+	private ArrayList<Plugin> getPlugins() {
+		return new ArrayList<Plugin>(plugins);
 	}
 
 }

@@ -180,55 +180,134 @@ public class Channel {
 		}
 	}
 
+	/**
+	 * Returns an ArrayList of all Clients currently in this Channel.
+	 * 
+	 * @return An ArrayList of all Clients currently in this Channel.
+	 */
 	public ArrayList<Client> getClients() {
 		return clients;
 	}
 
+	/**
+	 * Returns weather or not the password given matches the channel password.
+	 * Returns true if no Channel Password is set.
+	 * 
+	 * @param password
+	 *            Password to test.
+	 * @return Weather or not the password given matches the channel password or
+	 *         true if no Channel Password is set.
+	 */
 	public boolean checkPassword(String password) {
 		if (this.password == null || this.password.equals("")) return true;
 		return this.password.equals(password);
 	}
 
+	/**
+	 * Sets the Channel Password.
+	 * 
+	 * @param password
+	 *            The new Channel Password.
+	 */
 	public void setPassword(String password) {
 		this.password = password;
 	}
 
+	/**
+	 * Returns true if Client is a ChanOp.
+	 * 
+	 * @param client
+	 *            Client to check.
+	 * @return True if Client is a ChanOp. False if not.
+	 */
 	public boolean checkOP(Client client) {
 		return ops.contains(client);
 	}
 
+	/**
+	 * Adds a ChanOP.
+	 * 
+	 * @param client
+	 *            Client to make ChanOp.
+	 */
 	public void addOP(Client client) {
 		ops.add(client);
 	}
 
+	/**
+	 * Removes a ChanOp.
+	 * 
+	 * @param client
+	 *            Client to take ChanOp.
+	 */
 	public void takeOP(Client client) {
 		ops.remove(client);
 	}
 
+	/**
+	 * Sets Channel User Limit.
+	 * 
+	 * @param limit
+	 *            New Channel user limit.
+	 */
 	public void setUserLimit(int limit) {
 		this.userLimit = limit;
 	}
 
+	/**
+	 * Returns the user limit.
+	 * 
+	 * @return The user limit.
+	 */
 	public int getUserLimit() {
 		return userLimit;
 	}
 
-	public int getCurrentNumberOfUsers() {
+	/**
+	 * Returns the current amount of users in this Channel.
+	 * 
+	 * @return The current amount of users in this Channel.
+	 */
+	public int getUsersCount() {
 		return clients.size();
 	}
 
+	/**
+	 * Gives voice to a user.
+	 * 
+	 * @param voicee
+	 *            User that now has a voice.
+	 */
 	public void giveVoice(Client voicee) {
 		voiceList.add(voicee);
 	}
 
+	/**
+	 * Takes voice from a user.
+	 * 
+	 * @param voicee
+	 *            User that no longer has a voice.
+	 */
 	public void takeVoice(Client voicee) {
 		voiceList.remove(voicee);
 	}
 
+	/**
+	 * Checks if a user has a voice.
+	 * 
+	 * @param voicee
+	 *            User to check if has a voice.
+	 * @return True if the given user has a voice. False if not.
+	 */
 	public boolean hasVoice(Client voicee) {
 		return voiceList.contains(voicee);
 	}
 
+	/**
+	 * Return the Channel topic.
+	 * 
+	 * @return THe Channel topic.
+	 */
 	public String getTopic() {
 		if (topic.equals("") || topic == null) return "Default Topic";
 		return topic;
@@ -247,26 +326,64 @@ public class Channel {
 			current.getConnection().send(Reply.RPL_TOPIC, current, this.getName() + " " + this.getTopic());
 	}
 
+	/**
+	 * Invites a user to the Channel.
+	 * 
+	 * @param client
+	 *            User to invite to the Channel.
+	 */
 	public void inviteUser(Client client) {
 		this.invitedUsers.add(client);
 	}
 
+	/**
+	 * Uninvites a user to the Channel.
+	 * 
+	 * @param client
+	 *            User to uninvite to the Channel.
+	 */
 	public void unInviteUser(Client client) {
 		this.invitedUsers.remove(client);
 	}
 
+	/**
+	 * Checks if a user is invited to this Channel.
+	 * 
+	 * @param client
+	 *            User to check.
+	 * @return True if given user is invited. False if not.
+	 */
 	public boolean isUserInvited(Client client) {
 		return invitedUsers.contains(client);
 	}
 
+	/**
+	 * Checks if a user is currents on this Channel
+	 * 
+	 * @param client
+	 *            User to check.
+	 * @return True if user is on this Channel. False if not.
+	 */
 	public boolean isUserOnChannel(Client client) {
 		return clients.contains(client);
 	}
 
+	/**
+	 * Returns a HashMap of all the ChannelModes and weather they are enabled or
+	 * not.
+	 * 
+	 * @return A HashMap of all the ChannelModes and weather they are enabled or
+	 *         not.
+	 */
 	public HashMap<ChannelMode, Boolean> getModeMap() {
 		return modes;
 	}
 
+	/**
+	 * Returns weather or not this Channel is temporary or not.
+	 * 
+	 * @return Weather or not this Channel is temporary or not.
+	 */
 	public boolean isTemporary() {
 		return temporary;
 	}

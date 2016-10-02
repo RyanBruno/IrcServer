@@ -19,7 +19,7 @@ public class List extends Command {
 			ArrayList<Channel> channels = Server.getServer().getChannelManger().getChannels();
 			request.getConnection().send(Reply.RPL_LISTSTART, request.getClient(), "Channel :Users Name");
 			for (Channel current : channels) {
-				request.getConnection().send(Reply.RPL_LIST, request.getClient(), current.getName() + " " + current.getCurrentNumberOfUsers() + " :" + current.getTopic());
+				request.getConnection().send(Reply.RPL_LIST, request.getClient(), current.getName() + " " + current.getUsersCount() + " :" + current.getTopic());
 			}
 			request.getConnection().send(Reply.RPL_LISTEND, request.getClient(), ":End of /LIST");
 		} else {
@@ -27,7 +27,7 @@ public class List extends Command {
 			request.getConnection().send(Reply.RPL_LISTSTART, request.getClient(), "Channel :Users  Name");
 			for (String current : stringChannels) {
 				Channel channel = Server.getServer().getChannelManger().getChannel(current);
-				request.getConnection().send(Reply.RPL_LIST, request.getClient(), channel.getName() + " " + channel.getCurrentNumberOfUsers() + " :" + channel.getTopic());
+				request.getConnection().send(Reply.RPL_LIST, request.getClient(), channel.getName() + " " + channel.getUsersCount() + " :" + channel.getTopic());
 			}
 			request.getConnection().send(Reply.RPL_LISTEND, request.getClient(), " :End of /LIST");
 		}
