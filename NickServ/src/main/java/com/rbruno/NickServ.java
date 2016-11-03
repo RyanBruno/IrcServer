@@ -46,6 +46,7 @@ public class NickServ extends Plugin {
 		if (!request.getCommand().equalsIgnoreCase("privmsg") || request.getArgs().length < 2) return;
 		if (!request.getArgs()[0].equalsIgnoreCase("NickServ")) return;
 
+		request.setCancelled(true);
 		HashMap<String, Method> commands = new HashMap<String, Method>();
 		try {
 			commands.put("identify", NickServ.class.getMethod("identify", Request.class));
@@ -56,33 +57,52 @@ public class NickServ extends Plugin {
 			for (String current : commands.keySet())
 				if (command.equals(current)) {
 					commands.get(current).invoke(this, request);
+					return;
 				}
 
-			request.getConnection().send(request.getClient().getAbsoluteName(), "PRIVMSG", "Unknown Command!");
+			request.getConnection().send("NickServ", "PRIVMSG", request.getClient().getNickname() + " :Unknown Command!");
 		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Override
+	public void onClientLogin(Client client) {
+		if (client.getConnection().getSocket().isClosed()) return;
+		try {
+			if (isUserRegistered(client)) {
+				client.getConnection().send("NickServ", "NOTICE", client.getNickname() + " :Your nick is registered try /PRIVMSG NickServ identify <Password>");
+			} else {
+				client.getConnection().send("NickServ", "NOTICE", client.getNickname() + " :Your nick is not registered try /PRIVMSG NickServ register <Password>");
+			}
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
 	public void identify(Request request) throws IOException {
 		if (!isUserRegistered(request.getClient())) {
-			request.getConnection().send(request.getClient().getAbsoluteName(), "PRIVMSG", "Your nick is not registered try /PRIVMSG NickServ register <Password>");
+			request.getConnection().send("NickServ", "NOTICE", request.getClient().getNickname() + " :Your nick is not registered try /PRIVMSG NickServ register <Password>");
 			return;
 		}
 		if (checkPassword(request.getClient().getNickname(), request.getArgs()[1].split(" ")[1])) {
-			request.getConnection().send(request.getClient().getAbsoluteName(), "PRIVMSG", "You are now Identified as " + request.getClient().getNickname());
+			request.getConnection().send("NickServ", "NOTICE", request.getClient().getNickname() + " :You are now Identified as " + request.getClient().getNickname());
 		} else {
-			request.getConnection().send(request.getClient().getAbsoluteName(), "PRIVMSG", "Incorrect password!");
+			request.getConnection().send("NickServ", "NOTICE", request.getClient().getNickname() + " :Incorrect password!");
 		}
 
 	}
 
 	public void register(Request request) throws IOException {
-		setPassword(request.getClient().getNickname(), request.getArgs()[1]);
+		if (request.getArgs()[1].split(" ").length < 2) {
+			request.getConnection().send("NickServ", "NOTICE", request.getClient().getNickname() + " :More args needed.");
+			return;
+		}
+		setPassword(request.getClient().getNickname(), request.getArgs()[1].split(" ")[1]);
 		if (isUserRegistered(request.getClient())) {
-			request.getConnection().send(request.getClient().getAbsoluteName(), "PRIVMSG", "Password Changed!");
+			request.getConnection().send("NickServ", "NOTICE", request.getClient().getNickname() + " :Password Changed!");
 		} else {
-			request.getConnection().send(request.getClient().getAbsoluteName(), "PRIVMSG", "User Created!");
+			request.getConnection().send("NickServ", "NOTICE", request.getClient().getNickname() + " :User Created!");
 		}
 
 	}
@@ -90,11 +110,10 @@ public class NickServ extends Plugin {
 	private void setPassword(String nickname, String password) throws FileNotFoundException, UnsupportedEncodingException {
 		HashMap<String, String> keyMap = getKeyMap();
 		keyMap.put(nickname, password);
-		save();
+		save(keyMap);
 	}
 
-	private void save() throws FileNotFoundException, UnsupportedEncodingException {
-		HashMap<String, String> keyMap = getKeyMap();
+	private void save(HashMap<String, String> keyMap) throws FileNotFoundException, UnsupportedEncodingException {
 
 		PrintWriter writer = new PrintWriter(usersFile, "UTF-8");
 		for (String nickname : keyMap.keySet())

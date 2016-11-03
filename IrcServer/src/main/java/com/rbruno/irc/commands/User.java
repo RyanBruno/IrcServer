@@ -24,7 +24,7 @@ public class User extends Command {
 			client.setUsername(request.getArgs()[0]);
 			client.setHostname(Server.getServer().getConfig().getProperty("hostname"));
 			client.setServername(Server.getServer().getConfig().getProperty("hostname"));
-			client.setRealName(request.getArgs()[3].substring(1));
+			client.setRealName(request.getArgs()[3]);
 			request.getConnection().setClient(client);
 			request.getConnection().send(1, client.getNickname(), ":Welcome to the " + Server.getServer().getConfig().getProperty("hostname") + " Internet Relay Chat Network " + client.getNickname());
 			request.getConnection().send(Reply.RPL_LUSERCLIENT, client, ":There are " + Server.getServer().getClientManager().getClientCount() + " users and " + Server.getServer().getClientManager().getInvisibleClientCount() + " invisible on 1 servers");
