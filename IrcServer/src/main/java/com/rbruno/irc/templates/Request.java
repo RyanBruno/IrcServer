@@ -11,15 +11,14 @@ public class Request {
 	private Connection connection;
 	private String prefix;
 	private String command;
-	private String[] args = new String[0];
+	private String[] args;
 	private Client client;
 
 	private boolean cancelled;
 
 	/**
 	 * Creates a new Request object. Phrases the line into prefix, command and
-	 * arguments. KNOWN BUG: Everything after the last ':' will be put in one
-	 * arguments but will keep it ':'.
+	 * arguments.
 	 * 
 	 * @param connection
 	 *            Connection the request came from.
@@ -34,22 +33,15 @@ public class Request {
 			line = line.substring(prefix.length() + 1);
 		}
 		this.command = line.split(" ")[0];
+		line = line.substring(command.length() + 1);
 
-		if (line.length() != command.length()) {
-			line = line.substring(command.length() + 1);
-		} else {
-			line = line.substring(command.length());
-		}
-		String postDelimiter = line.substring(line.split(":")[0].length());
-		line = line.substring(0, line.length() - postDelimiter.length());
-		if (line.length() > 0) this.args = line.split(" ");
-		if (postDelimiter.length() > 0) {
-			String[] newArgs = new String[args.length + 1];
-			for (int i = 0; i < args.length; i++) {
-				newArgs[i] = args[i];
-			}
-			newArgs[newArgs.length - 1] = postDelimiter;
-			this.args = newArgs;
+		this.args = line.split(":")[0].split(" ");
+		if (line.split(":").length > 1) {
+			String[] newArray = new String[args.length + 1];
+			for (int i = 0; i < args.length; i++)
+				newArray[i] = args[i];
+			newArray[newArray.length - 1] = line.split(":")[1];
+			args = newArray;
 		}
 		if (prefix != null && connection.isServer()) {
 			client = Server.getServer().getClientManager().getClient(prefix);
@@ -89,8 +81,7 @@ public class Request {
 	}
 
 	/**
-	 * Returns the arguments that were sent. If a ':' delimiter was used then
-	 * the last argument will start with a ':'.
+	 * Returns the arguments that were sent.
 	 * 
 	 * @return The array of arguments.
 	 */

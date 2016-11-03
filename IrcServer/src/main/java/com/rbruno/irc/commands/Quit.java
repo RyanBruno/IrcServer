@@ -15,6 +15,8 @@ public class Quit extends Command {
 		if (request.getConnection().isClient()) {
 			request.getConnection().close();
 
+			if (request.getClient() == null) return;
+
 			String message = "Leaving";
 			if (request.getArgs().length != 0) message = request.getArgs()[0];
 

@@ -52,6 +52,8 @@ public class ClientManager {
 	 */
 	public void addClient(Client client) {
 		clients.add(client);
+		// TODO Fix
+		if (Server.getServer().getPluginManager() == null) return;
 		Server.getServer().getPluginManager().runOnClientLogin(client);
 	}
 

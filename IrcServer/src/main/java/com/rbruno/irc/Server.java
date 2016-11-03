@@ -42,6 +42,7 @@ public class Server implements Runnable {
 	 * @throws Exception
 	 */
 	public Server() throws Exception {
+		server = this;
 		try {
 			config = new Config();
 		} catch (Exception e) {
@@ -61,7 +62,6 @@ public class Server implements Runnable {
 			Logger.log("There has been a fatal error while reading the plugins folder. Check your permissions.", Level.SEVERE);
 			throw e;
 		}
-		server = this;
 
 		Command.init();
 		try {
