@@ -1,0 +1,26 @@
+{
+    "groups":{
+        "all":{
+            "power":0,
+            "neededPower":0,
+            "default":true
+        },
+        "[1-MIN]":{
+            "power":0,
+            "neededPower":0,
+            "users":[
+                "Sendren",
+                "Racken"
+            ]
+        },
+        "Directors":{
+            "power":100,
+            "neededPower":0,
+            "users":[
+                "JRoll",
+                "Xandrilla",
+                "Molly"
+            ]
+        }
+    }
+}
