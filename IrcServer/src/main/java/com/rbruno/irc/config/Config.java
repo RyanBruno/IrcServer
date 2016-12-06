@@ -25,12 +25,16 @@ public class Config {
 	public Config() throws Exception {
 		File config = new File("config.txt");
 		File ops = new File("ops.txt");
-		if (!config.exists())
+		File info = new File("info.txt");
+		if (!config.exists()) {
 			Utilities.makeFile("config.txt");
-
-		if (!ops.exists())
+		}
+		if (!ops.exists()) {
 			Utilities.makeFile("ops.txt");
-
+		}
+		if (!info.exists()) {
+			Utilities.makeFile("info.txt");
+		}
 		this.config = new Properties();
 		this.config.load(new FileReader(config));
 		this.ops = new Properties();
@@ -45,8 +49,7 @@ public class Config {
 	 * @return Value of the given key or null if key does not exist.
 	 */
 	public String getProperty(String key) {
-		if (config.getProperty(key) == null)
-			return "";
+		if (config.getProperty(key) == null) return "";
 		return config.getProperty(key);
 	}
 
