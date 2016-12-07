@@ -51,6 +51,7 @@ public class NickServ extends Plugin {
 		try {
 			commands.put("identify", NickServ.class.getMethod("identify", Request.class));
 			commands.put("register", NickServ.class.getMethod("register", Request.class));
+			commands.put("release", NickServ.class.getMethod("release", Request.class));
 
 			String command = request.getArgs()[1].split(" ")[0].toLowerCase();
 
@@ -87,10 +88,10 @@ public class NickServ extends Plugin {
 		}
 		if (checkPassword(request.getClient().getNickname(), request.getArgs()[1].split(" ")[1])) {
 			request.getConnection().send("NickServ", "NOTICE", request.getClient().getNickname() + " :You are now Identified as " + request.getClient().getNickname());
+			//TODO: Add +i
 		} else {
 			request.getConnection().send("NickServ", "NOTICE", request.getClient().getNickname() + " :Incorrect password!");
 		}
-
 	}
 
 	public void register(Request request) throws IOException {
@@ -98,13 +99,23 @@ public class NickServ extends Plugin {
 			request.getConnection().send("NickServ", "NOTICE", request.getClient().getNickname() + " :More args needed.");
 			return;
 		}
-		setPassword(request.getClient().getNickname(), request.getArgs()[1].split(" ")[1]);
 		if (isUserRegistered(request.getClient())) {
 			request.getConnection().send("NickServ", "NOTICE", request.getClient().getNickname() + " :Password Changed!");
 		} else {
 			request.getConnection().send("NickServ", "NOTICE", request.getClient().getNickname() + " :User Created!");
 		}
+		setPassword(request.getClient().getNickname(), request.getArgs()[1].split(" ")[1]);
+		identify(request);
+	}
 
+	public void release(Request request) throws IOException { 
+		if (request.getArgs().length < 2) {
+			request.getConnection().send("NickServ", "NOTICE", request.getClient().getNickname() + " :More args needed.");
+			return;
+		}
+		//TODO: Check if user has +i
+		removeUser(request.getClient());
+		request.getConnection().send("NickServ", "NOTICE", request.getClient().getNickname() + " :Nickname released!");
 	}
 
 	private void setPassword(String nickname, String password) throws FileNotFoundException, UnsupportedEncodingException {
@@ -113,8 +124,13 @@ public class NickServ extends Plugin {
 		save(keyMap);
 	}
 
-	private void save(HashMap<String, String> keyMap) throws FileNotFoundException, UnsupportedEncodingException {
+	private void removeUser(Client client) throws IOException {
+		HashMap<String, String> keyMap = getKeyMap();
+		keyMap.remove(client);
+		save(keyMap);
+	}	
 
+	private void save(HashMap<String, String> keyMap) throws FileNotFoundException, UnsupportedEncodingException {
 		PrintWriter writer = new PrintWriter(usersFile, "UTF-8");
 		for (String nickname : keyMap.keySet())
 			writer.println(nickname + "=" + keyMap.get(nickname));
