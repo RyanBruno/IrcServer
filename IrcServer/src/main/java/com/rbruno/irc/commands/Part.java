@@ -1,9 +1,8 @@
 package com.rbruno.irc.commands;
 
-import com.rbruno.irc.Server;
-import com.rbruno.irc.templates.Channel;
-import com.rbruno.irc.templates.Client;
-import com.rbruno.irc.templates.Request;
+import com.rbruno.irc.channel.Channel;
+import com.rbruno.irc.client.Client;
+import com.rbruno.irc.net.ClientRequest;
 
 public class Part extends Command {
 
@@ -12,17 +11,17 @@ public class Part extends Command {
 	}
 
 	@Override
-	public void execute(Request request) throws Exception {
+	public void execute(ClientRequest request) throws Exception {
 		String[] channels = request.getArgs()[0].split(",");
 		for (String channelName : channels) {
-			Channel channel = Server.getServer().getChannelManger().getChannel(channelName);
+			Channel channel = getServer(request).getChannelManger().getChannel(channelName);
 			String message = "Leaving";
 			if (request.getArgs().length != 0)
 				message = request.getArgs()[0];
 			for (Client client : channel.getClients())
 				client.getConnection().send(":" + request.getClient().getAbsoluteName() + " PART " + message);
-			channel.removeClient(request.getConnection().getClient());
-			request.getConnection().getClient().removeChannel(channel);
+			channel.removeClient(request.getClient());
+			request.getClient().removeChannel(channel);
 
 
 		}

@@ -3,13 +3,12 @@ package com.rbruno.irc.commands;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import com.rbruno.irc.Server;
+import com.rbruno.irc.channel.Channel;
+import com.rbruno.irc.channel.Channel.ChannelMode;
+import com.rbruno.irc.client.Client;
+import com.rbruno.irc.net.ClientRequest;
 import com.rbruno.irc.reply.Error;
 import com.rbruno.irc.reply.Reply;
-import com.rbruno.irc.templates.Channel;
-import com.rbruno.irc.templates.Channel.ChannelMode;
-import com.rbruno.irc.templates.Client;
-import com.rbruno.irc.templates.Request;
 
 public class Mode extends Command {
 
@@ -18,10 +17,10 @@ public class Mode extends Command {
 	}
 
 	@Override
-	public void execute(Request request) throws Exception {
+	public void execute(ClientRequest request) throws Exception {
 		if (request.getArgs().length <= 1) {
 			String target = request.getArgs()[0];
-			Channel channel = Server.getServer().getChannelManger().getChannel(target);
+			Channel channel = getServer(request).getChannelManger().getChannel(target);
 			if (channel == null) {
 				request.getConnection().send(Error.ERR_NOSUCHCHANNEL, request.getClient(), target + " :No such channel");
 			}
@@ -40,7 +39,7 @@ public class Mode extends Command {
 			if (modeFlag.startsWith("-")) add = false;
 			if (request.getArgs()[0].startsWith("#") || request.getArgs()[0].startsWith("&")) {
 				// Channels
-				Channel target = Server.getServer().getChannelManger().getChannel(request.getArgs()[0]);
+				Channel target = getServer(request).getChannelManger().getChannel(request.getArgs()[0]);
 				if (target == null) {
 					request.getConnection().send(Error.ERR_NOSUCHCHANNEL, request.getClient(), modeFlag + " :No such channel");
 					return;
@@ -49,7 +48,7 @@ public class Mode extends Command {
 					if (request.getClient().isServerOP() || target.checkOP(request.getClient())) {
 						switch (mode) {
 						case 'o':
-							Client clientTarget = Server.getServer().getClientManager().getClient(request.getArgs()[2]);
+							Client clientTarget = getServer(request).getClientManager().getClient(request.getArgs()[2]);
 							if (clientTarget == null) {
 								request.getConnection().send(Error.ERR_NOSUCHNICK, request.getClient(), request.getArgs()[2] + " :No such nick");
 								continue;
@@ -90,7 +89,7 @@ public class Mode extends Command {
 						case 'b':
 							break;
 						case 'v':
-							Client voicee = Server.getServer().getClientManager().getClient(request.getArgs()[2]);
+							Client voicee = getServer(request).getClientManager().getClient(request.getArgs()[2]);
 							if (voicee != null) {
 								if (add) {
 									target.giveVoice(voicee);
@@ -113,8 +112,8 @@ public class Mode extends Command {
 
 			} else {
 				// Not channel
-				if (Server.getServer().getClientManager().getClient(request.getArgs()[0]) != null) {
-					Client target = Server.getServer().getClientManager().getClient(request.getArgs()[0]);
+				if (getServer(request).getClientManager().getClient(request.getArgs()[0]) != null) {
+					Client target = getServer(request).getClientManager().getClient(request.getArgs()[0]);
 					if (request.getClient().isServerOP()) {
 						for (char mode : modeFlag.toLowerCase().toCharArray()) {
 							switch (mode) {
@@ -137,7 +136,7 @@ public class Mode extends Command {
 								break;
 							case 'o':
 								target.setMode(Client.ClientMode.OPERATOR, add, request.getClient());
-								target.getConnection().send(Reply.RPL_YOUREOPER, request.getConnection().getClient(), ":You are now an IRC operator");
+								target.getConnection().send(Reply.RPL_YOUREOPER, request.getClient(), ":You are now an IRC operator");
 								break;
 							}
 						}

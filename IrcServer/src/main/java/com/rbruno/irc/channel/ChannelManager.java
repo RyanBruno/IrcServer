@@ -1,4 +1,4 @@
-package com.rbruno.irc.manage;
+package com.rbruno.irc.channel;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -6,8 +6,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import com.rbruno.irc.templates.Channel;
-import com.rbruno.irc.templates.Channel.ChannelMode;
+import com.rbruno.irc.Server;
+import com.rbruno.irc.channel.Channel.ChannelMode;
 import com.rbruno.irc.util.Utilities;
 
 /**
@@ -23,7 +23,7 @@ public class ChannelManager {
 	 * 
 	 * @throws IOException
 	 */
-	public ChannelManager() throws IOException {
+	public ChannelManager(Server server) throws IOException {
 		File channels = new File("channels.txt");
 		if (!channels.exists()) Utilities.makeFile("channels.txt");
 
@@ -33,7 +33,7 @@ public class ChannelManager {
 			if (line.startsWith("//")) continue;
 			String[] lineArray = line.split(":");
 			if (lineArray.length < 5) continue;
-			Channel channel = new Channel(lineArray[0], lineArray[1], false);
+			Channel channel = new Channel(lineArray[0], lineArray[1], false, server);
 			channel.setUserLimit(Integer.parseInt(lineArray[2]));
 			for (char c : lineArray[3].toCharArray()) {
 				switch (c) {

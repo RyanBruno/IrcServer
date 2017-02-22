@@ -1,10 +1,11 @@
-package com.rbruno.irc.templates;
+package com.rbruno.irc.client;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.rbruno.irc.net.Connection;
+import com.rbruno.irc.channel.Channel;
+import com.rbruno.irc.net.ClientConnection;
 import com.rbruno.irc.reply.Reply;
 
 /**
@@ -12,7 +13,7 @@ import com.rbruno.irc.reply.Reply;
  */
 public class Client {
 
-	private Connection connection;
+	private ClientConnection connection;
 	private String nickname;
 	private String username;
 	private String hostname;
@@ -33,8 +34,12 @@ public class Client {
 	 * @param nickname
 	 *            Nickname of the client.
 	 */
-	public Client(Connection connection, String nickname) {
+	/*public Client(Connection connection, String nickname) {
 		this.connection = connection;
+		this.nickname = nickname;
+	}*/
+
+	public Client(String nickname) {
 		this.nickname = nickname;
 	}
 
@@ -55,7 +60,7 @@ public class Client {
 	 * @param realName
 	 *            Real Name of client.
 	 */
-	public Client(Connection connection, String nickname, String username, String hostname, String servername, String realName) {
+	/*public Client(Connection connection, String nickname, String username, String hostname, String servername, String realName) {
 		this.connection = connection;
 		this.nickname = nickname;
 		this.username = username;
@@ -63,7 +68,7 @@ public class Client {
 		this.servername = servername;
 		this.realName = realName;
 
-	}
+	}*/
 
 	public enum ClientMode {
 		INVISIBLE("i"), SERVER_NOTICES("s"), WALLOPS("w"), OPERATOR("o");
@@ -168,8 +173,12 @@ public class Client {
 	 * 
 	 * @return The Connection the Client is connected through.
 	 */
-	public Connection getConnection() {
+	public ClientConnection getConnection() {
 		return connection;
+	}
+	
+	public void setConnection(ClientConnection connection) {
+		this.connection = connection;
 	}
 
 	/**

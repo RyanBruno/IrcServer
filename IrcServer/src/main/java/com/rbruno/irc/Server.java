@@ -6,15 +6,16 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.logging.Level;
 
+import com.rbruno.irc.channel.ChannelManager;
+import com.rbruno.irc.client.Client;
+import com.rbruno.irc.client.ClientManager;
 import com.rbruno.irc.commands.Command;
+import com.rbruno.irc.commands.registration.RegCommand;
 import com.rbruno.irc.config.Config;
 import com.rbruno.irc.logger.Logger;
-import com.rbruno.irc.manage.ChannelManager;
-import com.rbruno.irc.manage.ClientManager;
 import com.rbruno.irc.net.Connection;
 import com.rbruno.irc.plugin.PluginManager;
 import com.rbruno.irc.reply.Reply;
-import com.rbruno.irc.templates.Client;
 import com.rbruno.irc.util.Utilities;
 
 /**
@@ -24,8 +25,6 @@ import com.rbruno.irc.util.Utilities;
 public class Server implements Runnable {
 
 	private static final String VERSION = "v1.0-RELEASE";
-
-	private static Server server;
 
 	private boolean running;
 	private ServerSocket serverSocket;
@@ -42,16 +41,15 @@ public class Server implements Runnable {
 	 * @throws Exception
 	 */
 	public Server() throws Exception {
-		server = this;
 		try {
 			config = new Config();
 		} catch (Exception e) {
 			Logger.log("There has been a fatal error while parsing the config.", Level.SEVERE);
 			throw e;
 		}
-		clientManager = new ClientManager();
+		clientManager = new ClientManager(this);
 		try {
-			channelManger = new ChannelManager();
+			channelManger = new ChannelManager(this);
 		} catch (Exception e) {
 			Logger.log("There has been a fatal error while parsing the channels file.", Level.SEVERE);
 			throw e;
@@ -62,7 +60,7 @@ public class Server implements Runnable {
 			Logger.log("There has been a fatal error while reading the plugins folder. Check your permissions.", Level.SEVERE);
 			throw e;
 		}
-
+		RegCommand.init();
 		Command.init();
 		try {
 			serverSocket = new ServerSocket(Integer.parseInt(config.getProperty("port")));
@@ -83,7 +81,7 @@ public class Server implements Runnable {
 		while (running) {
 			try {
 				Socket socket = serverSocket.accept();
-				Thread connection = new Thread(new Connection(socket));
+				Thread connection = new Thread(new Connection(socket, this));
 				connection.start();
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -109,15 +107,6 @@ public class Server implements Runnable {
 
 	public static void main(String args[]) throws Exception {
 		new Server();
-	}
-
-	/**
-	 * Gets current Server instance.
-	 * 
-	 * @return Server instance.
-	 */
-	public static Server getServer() {
-		return server;
 	}
 
 	/**

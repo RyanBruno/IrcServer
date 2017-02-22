@@ -3,8 +3,9 @@ package com.rbruno.irc.commands;
 import java.util.ArrayList;
 
 import com.rbruno.irc.Server;
+import com.rbruno.irc.net.ClientRequest;
+import com.rbruno.irc.net.Request;
 import com.rbruno.irc.reply.Error;
-import com.rbruno.irc.templates.Request;
 
 /**
  * A command that can be called when requested by a client. Also statically hold
@@ -18,10 +19,7 @@ public class Command {
 	private static ArrayList<Command> commands = new ArrayList<Command>();
 
 	public static void init() {
-		commands.add(new Pass());
-		commands.add(new Nick());
-		commands.add(new User());
-		// commands.add(new Server());
+//TODO: Nick
 		commands.add(new Oper());
 		commands.add(new Quit());
 		// commands.add(new Squit());
@@ -74,7 +72,7 @@ public class Command {
 	 *            Request that was sent.
 	 * @throws Exception
 	 */
-	public void execute(Request request) throws Exception {
+	public void execute(ClientRequest request) throws Exception {
 	}
 
 	/**
@@ -94,6 +92,10 @@ public class Command {
 	public int getParameters() {
 		return parameters;
 	}
+	
+	public Server getServer(Request request) {
+		return request.getConnection().getServer();
+	}
 
 	/**
 	 * Searches for the command that the request was asking for and runs it
@@ -103,9 +105,9 @@ public class Command {
 	 *            The request sent by the client.
 	 * @throws Exception
 	 */
-	public static void runCommand(Request request) throws Exception {
+	public static void runCommand(ClientRequest request) throws Exception {
 		if (request.getClient() != null) request.getClient().setLastCheckin(System.currentTimeMillis());
-		Server.getServer().getPluginManager().runOnRequest(request);
+		request.getConnection().getServer().getPluginManager().runOnRequest(request);
 		if (request.isCancelled()) return;
 		Command command = getCommand(request.getCommand());
 		if (command == null) {
@@ -113,7 +115,7 @@ public class Command {
 			return;
 		}
 		if (request.getArgs().length < command.getParameters()) {
-			request.getConnection().send(Error.ERR_NEEDMOREPARAMS, request.getConnection().getClient(), ":Not enough parameters");
+			request.getConnection().send(Error.ERR_NEEDMOREPARAMS, request.getClient(), ":Not enough parameters");
 			return;
 		}
 		command.execute(request);

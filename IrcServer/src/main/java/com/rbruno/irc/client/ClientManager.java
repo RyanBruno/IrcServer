@@ -1,12 +1,12 @@
-package com.rbruno.irc.manage;
+package com.rbruno.irc.client;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
 import com.rbruno.irc.Server;
+import com.rbruno.irc.client.Client.ClientMode;
+import com.rbruno.irc.net.ClientConnection;
 import com.rbruno.irc.reply.Reply;
-import com.rbruno.irc.templates.Client;
-import com.rbruno.irc.templates.Client.ClientMode;
 
 /**
  * Manages all clients local and remote.
@@ -14,6 +14,12 @@ import com.rbruno.irc.templates.Client.ClientMode;
 public class ClientManager {
 
 	private ArrayList<Client> clients = new ArrayList<Client>();
+
+	private Server server;
+
+	public ClientManager(Server server) {
+		this.server = server;
+	}
 
 	/**
 	 * Sends a message to all clients connected that are directly connected to
@@ -25,7 +31,7 @@ public class ClientManager {
 	 */
 	public void broadcastLocal(Reply reply, String args) throws IOException {
 		for (Client client : this.getClients())
-			if (client.getConnection().isClient()) client.getConnection().send(reply, client, args);
+			if (client.getConnection() instanceof ClientConnection) client.getConnection().send(reply, client, args);
 	}
 
 	/**
@@ -40,7 +46,7 @@ public class ClientManager {
 	 */
 	public void broadcastLocal(String prefix, String command, String args) throws IOException {
 		for (Client client : this.getClients())
-			if (client.getConnection().isClient()) client.getConnection().send(prefix, command, args);
+			if (client.getConnection() instanceof ClientConnection) client.getConnection().send(prefix, command, args);
 	}
 
 	/**
@@ -53,8 +59,8 @@ public class ClientManager {
 	public void addClient(Client client) {
 		clients.add(client);
 		// TODO Fix
-		if (Server.getServer().getPluginManager() == null) return;
-		Server.getServer().getPluginManager().runOnClientLogin(client);
+		if (server.getPluginManager() == null) return;
+		server.getPluginManager().runOnClientLogin(client);
 	}
 
 	/**

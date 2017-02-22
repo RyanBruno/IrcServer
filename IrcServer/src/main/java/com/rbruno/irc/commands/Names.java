@@ -2,11 +2,10 @@ package com.rbruno.irc.commands;
 
 import java.util.ArrayList;
 
-import com.rbruno.irc.Server;
+import com.rbruno.irc.channel.Channel;
+import com.rbruno.irc.client.Client;
+import com.rbruno.irc.net.ClientRequest;
 import com.rbruno.irc.reply.Reply;
-import com.rbruno.irc.templates.Channel;
-import com.rbruno.irc.templates.Client;
-import com.rbruno.irc.templates.Request;
 
 public class Names extends Command {
 
@@ -15,9 +14,9 @@ public class Names extends Command {
 	}
 
 	@Override
-	public void execute(Request request) throws Exception {
+	public void execute(ClientRequest request) throws Exception {
 		if (request.getArgs().length == 0) {
-			ArrayList<Channel> channels = Server.getServer().getChannelManger().getChannels();
+			ArrayList<Channel> channels = getServer(request).getChannelManger().getChannels();
 			for (Channel current : channels) {
 				String message = current.getName() + " :";
 				ArrayList<Client> clients = current.getClients();
@@ -33,7 +32,7 @@ public class Names extends Command {
 		} else {
 			String[] stringChannels = request.getArgs()[0].split(",");
 			for (String current : stringChannels) {
-				Channel channel = Server.getServer().getChannelManger().getChannel(current);
+				Channel channel = getServer(request).getChannelManger().getChannel(current);
 				String message = channel.getName() + " :";
 				ArrayList<Client> clients = channel.getClients();
 				for (Client client : clients) {

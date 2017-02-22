@@ -1,16 +1,19 @@
-package com.rbruno.irc.templates;
+package com.rbruno.irc.channel;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.rbruno.irc.Server;
+import com.rbruno.irc.client.Client;
 import com.rbruno.irc.reply.Reply;
 
 /**
  * An object that stores all the information on a Channel including its clients.
  */
 public class Channel {
+	
+	private Server server;
 
 	private String name;
 	private String password;
@@ -32,10 +35,11 @@ public class Channel {
 	 *            Password of channel. If blank then no password is needed.
 	 * @see ChannelManger.addChannel(Channel)
 	 */
-	public Channel(String name, String password, boolean temporary) {
+	public Channel(String name, String password, boolean temporary, Server server) {
 		this.name = name;
 		this.password = password;
 		this.temporary = temporary;
+		this.server = server;
 	}
 
 	public enum ChannelMode {
@@ -175,8 +179,8 @@ public class Channel {
 	public void removeClient(Client client) {
 		voiceList.remove(client);
 		clients.remove(client);
-		if (this.clients.size() == 0 && this.isTemporary() && Server.getServer().getConfig().getProperty("RemoveChannelOnEmpty").equals("true")) {
-			Server.getServer().getChannelManger().removeChannel(this);
+		if (this.clients.size() == 0 && this.isTemporary() && server.getConfig().getProperty("RemoveChannelOnEmpty").equals("true")) {
+			server.getChannelManger().removeChannel(this);
 		}
 	}
 

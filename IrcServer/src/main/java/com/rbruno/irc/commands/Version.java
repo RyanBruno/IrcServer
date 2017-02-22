@@ -1,8 +1,8 @@
 package com.rbruno.irc.commands;
 
 import com.rbruno.irc.Server;
+import com.rbruno.irc.net.ClientRequest;
 import com.rbruno.irc.reply.Reply;
-import com.rbruno.irc.templates.Request;
 
 public class Version extends Command {
 
@@ -11,9 +11,9 @@ public class Version extends Command {
 	}
 
 	@Override
-	public void execute(Request request) throws Exception {
+	public void execute(ClientRequest request) throws Exception {
 		if (request.getArgs().length == 0) {
-			request.getConnection().send(Reply.RPL_VERSION, request.getClient(), Server.getVersion() + " " + Server.getServer().getConfig().getProperty("hostname"));
+			request.getConnection().send(Reply.RPL_VERSION, request.getClient(), Server.getVersion() + " " + getServer(request).getConfig().getProperty("hostname"));
 		} else {
 			//TODO: Server
 		}

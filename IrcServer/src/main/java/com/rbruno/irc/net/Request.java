@@ -1,7 +1,4 @@
-package com.rbruno.irc.templates;
-
-import com.rbruno.irc.Server;
-import com.rbruno.irc.net.Connection;
+package com.rbruno.irc.net;
 
 /**
  * Phrases and stores information on a request made by a client.
@@ -12,7 +9,6 @@ public class Request {
 	private String prefix;
 	private String command;
 	private String[] args;
-	private Client client;
 
 	private boolean cancelled;
 
@@ -34,7 +30,7 @@ public class Request {
 		}
 		this.command = line.split(" ")[0];
 		line = line.substring(command.length() + 1);
-
+	
 		this.args = line.split(":")[0].split(" ");
 		if (line.split(":").length > 1) {
 			String[] newArray = new String[args.length + 1];
@@ -42,13 +38,6 @@ public class Request {
 				newArray[i] = args[i];
 			newArray[newArray.length - 1] = line.split(":")[1];
 			args = newArray;
-		}
-		if (prefix != null && connection.isServer()) {
-			client = Server.getServer().getClientManager().getClient(prefix);
-		} else if (connection.isClient()) {
-			client = connection.getClient();
-		} else {
-			client = null;
 		}
 	}
 
@@ -87,15 +76,6 @@ public class Request {
 	 */
 	public String[] getArgs() {
 		return args;
-	}
-
-	/**
-	 * Returns the client that sent the request.
-	 * 
-	 * @return The client that sent the request.
-	 */
-	public Client getClient() {
-		return client;
 	}
 
 	/**

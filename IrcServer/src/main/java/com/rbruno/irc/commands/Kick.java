@@ -1,10 +1,9 @@
 package com.rbruno.irc.commands;
 
-import com.rbruno.irc.Server;
+import com.rbruno.irc.channel.Channel;
+import com.rbruno.irc.client.Client;
+import com.rbruno.irc.net.ClientRequest;
 import com.rbruno.irc.reply.Error;
-import com.rbruno.irc.templates.Channel;
-import com.rbruno.irc.templates.Client;
-import com.rbruno.irc.templates.Request;
 
 public class Kick extends Command {
 
@@ -13,8 +12,8 @@ public class Kick extends Command {
 	}
 
 	@Override
-	public void execute(Request request) throws Exception {
-		Channel channel = Server.getServer().getChannelManger().getChannel(request.getArgs()[0]);
+	public void execute(ClientRequest request) throws Exception {
+		Channel channel = getServer(request).getChannelManger().getChannel(request.getArgs()[0]);
 		if (channel == null) {
 			request.getConnection().send(Error.ERR_NOSUCHCHANNEL, request.getClient(), request.getArgs()[1] + " :No such channel");
 			return;
@@ -23,7 +22,7 @@ public class Kick extends Command {
 			request.getConnection().send(Error.ERR_CHANOPRIVSNEEDED, request.getClient(), request.getArgs()[1] + " :You're not channel operator");
 			return;
 		}
-		Client target = Server.getServer().getClientManager().getClient(request.getArgs()[1]);
+		Client target = getServer(request).getClientManager().getClient(request.getArgs()[1]);
 		if (target == null) {
 			request.getConnection().send(Error.ERR_NOSUCHNICK, request.getClient(), request.getArgs()[1] + " :No such nick");
 			return;

@@ -1,8 +1,7 @@
 package com.rbruno.irc.commands;
 
-import com.rbruno.irc.Server;
+import com.rbruno.irc.net.ClientRequest;
 import com.rbruno.irc.reply.Reply;
-import com.rbruno.irc.templates.Request;
 
 public class Admin extends Command {
 
@@ -11,14 +10,10 @@ public class Admin extends Command {
 	}
 
 	@Override
-	public void execute(Request request) throws Exception {
-		if (request.getArgs().length == 0)  {
-			request.getConnection().send(Reply.RPL_ADMINME, request.getClient(), Server.getServer().getConfig().getProperty("hostname") + " :Administrative info");
-			request.getConnection().send(Reply.RPL_ADMINLOC1, request.getClient(), Server.getServer().getConfig().getProperty("hostname") + " :" + Server.getServer().getConfig().getProperty("AdminName"));
-			request.getConnection().send(Reply.RPL_ADMINLOC2, request.getClient(), Server.getServer().getConfig().getProperty("hostname") + " :" + Server.getServer().getConfig().getProperty("AdminNick"));
-			request.getConnection().send(Reply.RPL_ADMINMAIL, request.getClient(), Server.getServer().getConfig().getProperty("hostname") + " :" + Server.getServer().getConfig().getProperty("AdminEmail"));
-		} else {
-			//TODO: Server
-		}
+	public void execute(ClientRequest request) throws Exception {
+		request.getConnection().send(Reply.RPL_ADMINME, request.getClient(), getServer(request).getConfig().getProperty("hostname") + " :Administrative info");
+		request.getConnection().send(Reply.RPL_ADMINLOC1, request.getClient(), getServer(request).getConfig().getProperty("hostname") + " :" + getServer(request).getConfig().getProperty("AdminName"));
+		request.getConnection().send(Reply.RPL_ADMINLOC2, request.getClient(), getServer(request).getConfig().getProperty("hostname") + " :" + getServer(request).getConfig().getProperty("AdminNick"));
+		request.getConnection().send(Reply.RPL_ADMINMAIL, request.getClient(), getServer(request).getConfig().getProperty("hostname") + " :" + getServer(request).getConfig().getProperty("AdminEmail"));
 	}
 }

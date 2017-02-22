@@ -9,9 +9,9 @@ import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
+import com.rbruno.irc.client.Client;
 import com.rbruno.irc.logger.Logger;
-import com.rbruno.irc.templates.Client;
-import com.rbruno.irc.templates.Request;
+import com.rbruno.irc.net.Request;
 
 /**
  * Starts and reads plugins.

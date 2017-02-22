@@ -7,42 +7,26 @@ import java.net.Socket;
 import java.util.logging.Level;
 
 import com.rbruno.irc.Server;
-import com.rbruno.irc.commands.Command;
+import com.rbruno.irc.client.Client;
+import com.rbruno.irc.commands.registration.RegCommand;
 import com.rbruno.irc.logger.Logger;
 import com.rbruno.irc.reply.Error;
 import com.rbruno.irc.reply.Reply;
-import com.rbruno.irc.templates.Client;
-import com.rbruno.irc.templates.Request;
 
-/**
- * An object that listens to a socket and process its requests.
- */
 public class Connection implements Runnable {
 
 	private Socket socket;
 	private boolean open = true;
-
+	private Server server;
 	private String connectionPassword;
+	
+	private String nickname;
 
-	private Client client;
-
-	private Type type = Type.LOGGIN_IN;
-
-	/**
-	 * Creates a new Connection object. Will not start listing to socket until
-	 * Connection.run() is called.
-	 * 
-	 * @param socket
-	 * @see Connection.run()
-	 */
-	public Connection(Socket socket) {
+	public Connection(Socket socket, Server server) {
 		this.socket = socket;
+		this.server = server;
 	}
 
-	/**
-	 * Start listing on socket. When a line is received it creates a new Request
-	 * object and send to Command.runCommnd(Request)
-	 */
 	public void run() {
 		try {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"));
@@ -51,12 +35,13 @@ public class Connection implements Runnable {
 				try {
 					line = reader.readLine();
 				} catch (Exception e) {
+					e.printStackTrace();
 					if (e.getMessage() != null) if (e.getMessage().contains("Connection reset")) {
 						this.close();
 						continue;
 					}
 				}
-				if (Server.getServer().getConfig().getProperty("debug").equals("true")) Logger.log(line, Level.FINE);
+				if (server.getConfig().getProperty("debug").equals("true")) Logger.log(line, Level.FINE);
 				if (line == null) {
 					close();
 					continue;
@@ -69,7 +54,7 @@ public class Connection implements Runnable {
 					continue;
 				}
 				try {
-					Command.runCommand(request);
+					RegCommand.runCommand(request);
 				} catch (Exception e) {
 					Logger.log(socket.getInetAddress() + " ran a command that resulted in an error: " + line, Level.FINE);
 					e.printStackTrace();
@@ -83,10 +68,54 @@ public class Connection implements Runnable {
 		}
 	}
 
-	public enum Type {
-		LOGGIN_IN, SERVER, CLIENT
+	public void close() {
+		open = false;
+		try {
+			socket.close();
+		} catch (IOException e) {
+		}
 	}
 
+	/**
+	 * Sets the connection password.
+	 * 
+	 * @param connectionPassword
+	 *            The password for the connection.
+	 */
+	public void setConnectionPassword(String connectionPassword) {
+		this.connectionPassword = connectionPassword;
+	}
+
+	/**
+	 * Returns the connection password or "" is none was given.
+	 * 
+	 * @return The connection password
+	 */
+	public String getConnectionPassword() {
+		if (connectionPassword == null) return "";
+		return connectionPassword;
+	}
+
+	public Server getServer() {
+		return server;
+	}
+	
+	public Socket getSocket() {
+		return socket;
+	}
+	
+	public boolean isOpen() {
+		return open;
+	}
+	
+	public String getNickname() {
+		return nickname;
+	}
+	
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
+	
 	/**
 	 * Sends message to the socket
 	 * 
@@ -95,8 +124,9 @@ public class Connection implements Runnable {
 	 * @throws IOException
 	 */
 	public void send(String message) throws IOException {
+
 		if (socket.isClosed()) return;
-		if (Server.getServer().getConfig().getProperty("debug").equals("true")) System.out.println("[DeBug]" + message);
+		if (server.getConfig().getProperty("debug").equals("true")) System.out.println("[DeBug]" + message);
 		byte[] block = message.concat("\r\n").getBytes();
 
 		socket.getOutputStream().write(block);
@@ -137,7 +167,7 @@ public class Connection implements Runnable {
 		if (stringCode.length() < 2) stringCode = "0" + stringCode;
 		if (stringCode.length() < 3) stringCode = "0" + stringCode;
 
-		String message = ":" + Server.getServer().getConfig().getProperty("hostname") + " " + stringCode + " " + nickname + " " + args;
+		String message = ":" + server.getConfig().getProperty("hostname") + " " + stringCode + " " + nickname + " " + args;
 		send(message);
 	}
 
@@ -201,92 +231,5 @@ public class Connection implements Runnable {
 		send(error.getCode(), client.getNickname(), args);
 	}
 
-	/**
-	 * Closes the socket and removes the removes the client from the
-	 * ClientManager.
-	 */
-	public void close() {
-		open = false;
-		try {
-			socket.close();
-			if (client != null) Server.getServer().getClientManager().removeClient(client);
-		} catch (IOException e) {
-		}
-	}
-
-	/**
-	 * Returns the Socket.
-	 * 
-	 * @return The Socket.
-	 */
-	public Socket getSocket() {
-		return socket;
-	}
-
-	/**
-	 * Returns the connection password or "" is none was given.
-	 * 
-	 * @return The connection password
-	 */
-	public String getConnectionPassword() {
-		if (connectionPassword == null) return "";
-		return connectionPassword;
-	}
-
-	/**
-	 * Sets the connection password.
-	 * 
-	 * @param connectionPassword
-	 *            The password for the connection.
-	 */
-	public void setConnectionPassword(String connectionPassword) {
-		this.connectionPassword = connectionPassword;
-	}
-
-	/**
-	 * Returns weather or not the connection is a client.
-	 * 
-	 * @return Weather or not the connection is a client.
-	 */
-	public boolean isClient() {
-		return type == Type.CLIENT;
-	}
-
-	/**
-	 * Returns the Client or null if one is not set.
-	 * 
-	 * @return The Client
-	 */
-	public Client getClient() {
-		return client;
-	}
-
-	/**
-	 * Sets the Client and sets the connection type to Client.
-	 * 
-	 * @param client
-	 *            The Client this connection is connected to.
-	 */
-	public void setClient(Client client) {
-		type = Type.CLIENT;
-		this.client = client;
-	}
-
-	/**
-	 * Returns weather or not the connection is a Server.
-	 * 
-	 * @return Weather or not the connection is a Server.
-	 */
-	public boolean isServer() {
-		return type == Type.SERVER;
-	}
-
-	/**
-	 * Returns what type of connection it is.
-	 * @return What type of connection it is.
-	 */
-	public Type getType() {
-		return type;
-	}
 
 }

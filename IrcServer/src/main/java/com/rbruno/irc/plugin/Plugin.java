@@ -2,8 +2,8 @@ package com.rbruno.irc.plugin;
 
 import java.io.File;
 
-import com.rbruno.irc.templates.Client;
-import com.rbruno.irc.templates.Request;
+import com.rbruno.irc.client.Client;
+import com.rbruno.irc.net.Request;
 
 /**
  * The Plugin Object. While making a Plugin your main class MUST extend this

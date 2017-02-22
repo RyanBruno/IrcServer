@@ -1,8 +1,8 @@
-package com.rbruno.irc.commands;
+package com.rbruno.irc.commands.registration;
 
-import com.rbruno.irc.templates.Request;
+import com.rbruno.irc.net.Request;
 
-public class Pass extends Command {
+public class Pass extends RegCommand {
 
 	public Pass() {
 		super("PASS", 1);

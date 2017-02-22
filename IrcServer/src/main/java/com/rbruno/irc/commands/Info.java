@@ -5,8 +5,8 @@ import java.io.InputStreamReader;
 import java.util.logging.Level;
 
 import com.rbruno.irc.logger.Logger;
+import com.rbruno.irc.net.ClientRequest;
 import com.rbruno.irc.reply.Reply;
-import com.rbruno.irc.templates.Request;
 
 public class Info extends Command {
 
@@ -15,7 +15,7 @@ public class Info extends Command {
 	}
 
 	@Override
-	public void execute(Request request) throws Exception {
+	public void execute(ClientRequest request) throws Exception {
 		if (request.getArgs().length == 0) {
 			try {
 				BufferedReader inputStream = new BufferedReader(new InputStreamReader(Info.class.getResourceAsStream("/info.txt")));

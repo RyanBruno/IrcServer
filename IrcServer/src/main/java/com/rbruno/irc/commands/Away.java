@@ -1,7 +1,7 @@
 package com.rbruno.irc.commands;
 
+import com.rbruno.irc.net.ClientRequest;
 import com.rbruno.irc.reply.Reply;
-import com.rbruno.irc.templates.Request;
 
 public class Away extends Command {
 
@@ -10,7 +10,7 @@ public class Away extends Command {
 	}
 
 	@Override
-	public void execute(Request request) throws Exception {
+	public void execute(ClientRequest request) throws Exception {
 		String message = "";
 		if (request.getArgs().length >= 1) message = request.getArgs()[0];
 		if (message.startsWith(":")) message = message.substring(1);
