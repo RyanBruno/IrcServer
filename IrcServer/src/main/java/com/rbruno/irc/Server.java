@@ -49,7 +49,7 @@ public class Server implements Runnable {
 		}
 		clientManager = new ClientManager(this);
 		try {
-			channelManger = new ChannelManager(this);
+			channelManger = new ChannelManager();
 		} catch (Exception e) {
 			Logger.log("There has been a fatal error while parsing the channels file.", Level.SEVERE);
 			throw e;

@@ -28,7 +28,7 @@ public class Invite extends Command {
 			request.getConnection().send(Error.ERR_NOSUCHNICK, request.getClient(), request.getArgs()[1] + " :No such nick");
 			return;
 		}
-		channel.inviteUser(target);
+		target.addInvite(channel);
 		request.getConnection().send(Reply.RPL_INVITING, request.getClient(), target.getNickname() + " " + channel.getName());
 		target.getConnection().send(":" + request.getClient().getAbsoluteName() + " INVITE " + target.getNickname() + " " + channel.getName());
 	}

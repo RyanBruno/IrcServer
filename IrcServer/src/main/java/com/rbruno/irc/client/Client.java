@@ -23,6 +23,8 @@ public class Client {
 	private long lastCheckin;
 
 	private ArrayList<Channel> channels = new ArrayList<Channel>();
+	private ArrayList<Channel> invitedChannels = new ArrayList<Channel>();
+
 	private HashMap<ClientMode, Boolean> modes = new HashMap<ClientMode, Boolean>();
 	private String awayMessage = "";
 
@@ -34,10 +36,10 @@ public class Client {
 	 * @param nickname
 	 *            Nickname of the client.
 	 */
-	/*public Client(Connection connection, String nickname) {
-		this.connection = connection;
-		this.nickname = nickname;
-	}*/
+	/*
+	 * public Client(Connection connection, String nickname) { this.connection =
+	 * connection; this.nickname = nickname; }
+	 */
 
 	public Client(String nickname) {
 		this.nickname = nickname;
@@ -60,15 +62,15 @@ public class Client {
 	 * @param realName
 	 *            Real Name of client.
 	 */
-	/*public Client(Connection connection, String nickname, String username, String hostname, String servername, String realName) {
-		this.connection = connection;
-		this.nickname = nickname;
-		this.username = username;
-		this.hostname = hostname;
-		this.servername = servername;
-		this.realName = realName;
-
-	}*/
+	/*
+	 * public Client(Connection connection, String nickname, String username,
+	 * String hostname, String servername, String realName) { this.connection =
+	 * connection; this.nickname = nickname; this.username = username;
+	 * this.hostname = hostname; this.servername = servername; this.realName =
+	 * realName;
+	 * 
+	 * }
+	 */
 
 	public enum ClientMode {
 		INVISIBLE("i"), SERVER_NOTICES("s"), WALLOPS("w"), OPERATOR("o");
@@ -176,7 +178,7 @@ public class Client {
 	public ClientConnection getConnection() {
 		return connection;
 	}
-	
+
 	public void setConnection(ClientConnection connection) {
 		this.connection = connection;
 	}
@@ -324,6 +326,14 @@ public class Client {
 	 */
 	public String getAwayMessage() {
 		return awayMessage;
+	}
+
+	public void addInvite(Channel channel) {
+		invitedChannels.add(channel);
+	}
+
+	public boolean isInvitedTo(Channel channel) {
+		return invitedChannels.contains(channel);
 	}
 
 }

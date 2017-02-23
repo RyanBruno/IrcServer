@@ -1,7 +1,6 @@
 package com.rbruno.irc.commands;
 
 import com.rbruno.irc.channel.Channel;
-import com.rbruno.irc.channel.Channel.ChannelMode;
 import com.rbruno.irc.client.Client;
 import com.rbruno.irc.net.ClientRequest;
 import com.rbruno.irc.reply.Error;
@@ -23,11 +22,11 @@ public class Privmsg extends Command {
 					request.getConnection().send(Error.ERR_NOSUCHCHANNEL, request.getClient(), reciver + " :No such channel");
 					return;
 				}
-				if (!request.getClient().getChannels().contains(channel) && channel.getMode(ChannelMode.NO_MESSAGE_BY_OUTSIDE)) {
+				if (!request.getClient().getChannels().contains(channel) && channel.isMode('n')) {
 					request.getConnection().send(Error.ERR_CANNOTSENDTOCHAN, request.getClient(), channel.getName() + " :Cannot send to channel");
 					return;
 				}
-				if (!channel.hasVoice(request.getClient())) {
+				if (!channel.hasVoice(request.getClient()) && channel.isMode('m')) {
 					request.getConnection().send(Error.ERR_CANNOTSENDTOCHAN, request.getClient(), channel.getName() + " :Cannot send to channel");
 					return;
 				}

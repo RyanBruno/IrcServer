@@ -1,7 +1,6 @@
 package com.rbruno.irc.commands;
 
 import com.rbruno.irc.channel.Channel;
-import com.rbruno.irc.channel.Channel.ChannelMode;
 import com.rbruno.irc.net.ClientRequest;
 import com.rbruno.irc.reply.Error;
 import com.rbruno.irc.reply.Reply;
@@ -19,7 +18,7 @@ public class Topic extends Command {
 			request.getConnection().send(Error.ERR_NOSUCHCHANNEL, request.getClient(), request.getArgs()[0] + " :No such channel");
 			return;
 		}
-		if (channel.getMode(ChannelMode.TOPIC) && !channel.checkOP(request.getClient())) {
+		if (channel.isMode('t') && !channel.checkOP(request.getClient())) {
 			request.getConnection().send(Error.ERR_CHANOPRIVSNEEDED, request.getClient(), channel.getName() + " :You're not channel operator");
 			request.getConnection().send(Reply.RPL_TOPIC, request.getClient(), channel.getName() + " " + channel.getTopic());
 			return;

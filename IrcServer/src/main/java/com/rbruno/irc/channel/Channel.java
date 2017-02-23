@@ -12,19 +12,14 @@ import com.rbruno.irc.reply.Reply;
  * An object that stores all the information on a Channel including its clients.
  */
 public class Channel {
-	
+
 	private Server server;
 
 	private String name;
 	private String password;
 	private ArrayList<Client> clients = new ArrayList<Client>();
-	private ArrayList<Client> ops = new ArrayList<Client>();
-	private HashMap<ChannelMode, Boolean> modes = new HashMap<ChannelMode, Boolean>();
-	private ArrayList<Client> voiceList = new ArrayList<Client>();
-	private ArrayList<Client> invitedUsers = new ArrayList<Client>();
-	private int userLimit = 100;
+	private HashMap<Character, String> modes = new HashMap<Character, String>();
 	private String topic = "";
-	private boolean temporary;
 
 	/**
 	 * Creates a new a new Channels object. Will not add to ChannelManger.
@@ -35,24 +30,10 @@ public class Channel {
 	 *            Password of channel. If blank then no password is needed.
 	 * @see ChannelManger.addChannel(Channel)
 	 */
-	public Channel(String name, String password, boolean temporary, Server server) {
+	public Channel(String name, String password, Server server) {
 		this.name = name;
 		this.password = password;
-		this.temporary = temporary;
 		this.server = server;
-	}
-
-	public enum ChannelMode {
-		PRIVATE("p"), SECRET("s"), INVITE_ONLY("i"), TOPIC("t"), NO_MESSAGE_BY_OUTSIDE("n"), MODERATED_CHANNEL("m");
-		private String symbol;
-
-		ChannelMode(String symbol) {
-			this.symbol = symbol;
-		}
-
-		public String getSymbol() {
-			return symbol;
-		}
 	}
 
 	/**
@@ -61,39 +42,20 @@ public class Channel {
 	 * @param mode
 	 * @return True if mode is set false if not.
 	 */
-	public boolean getMode(ChannelMode mode) {
-		if (!modes.containsKey(mode)) return false;
+	public boolean isMode(char mode) {
+		return modes.containsKey(mode);
+	}
+
+	public void setMode(char mode, boolean add, String string) {
+		if (add) {
+			modes.put(mode, string);
+		} else {
+			modes.remove(mode);
+		}
+	}
+
+	public String getMode(char mode) {
 		return modes.get(mode);
-	}
-
-	/**
-	 * Sets mode to add. Also tells all users of the new change.
-	 * 
-	 * @param mode
-	 *            ChannelMode to be set.
-	 * @param add
-	 *            What mode should be set to.
-	 * @param sender
-	 *            Who requested this mode change. To be used when sending to all
-	 *            Clients.
-	 * @throws IOException
-	 */
-	public void setMode(ChannelMode mode, boolean add, Client sender) throws IOException {
-		send(Reply.RPL_CHANNELMODEIS, sender.getAbsoluteName() + " sets mode " + (add ? "+" : "-") + mode.getSymbol() + " on " + name);
-		modes.put(mode, add);
-	}
-
-	/**
-	 * Sets mode to add.
-	 * 
-	 * @param mode
-	 *            ChannelMode to be set.
-	 * @param add
-	 *            What mode should be set to.
-	 * @throws IOException
-	 */
-	public void setMode(ChannelMode mode, boolean add) throws IOException {
-		modes.put(mode, add);
 	}
 
 	/**
@@ -152,7 +114,6 @@ public class Channel {
 	 */
 	public void addClient(Client client) throws IOException {
 		clients.add(client);
-		if (!this.getMode(ChannelMode.MODERATED_CHANNEL) || client.isServerOP()) this.voiceList.add(client);
 
 		this.sendToAll(":" + client.getNickname() + "!" + client.getUsername() + "@" + client.getHostname() + " JOIN " + this.getName());
 		if (this.checkOP(client)) {
@@ -177,11 +138,9 @@ public class Channel {
 	}
 
 	public void removeClient(Client client) {
-		voiceList.remove(client);
 		clients.remove(client);
-		if (this.clients.size() == 0 && this.isTemporary() && server.getConfig().getProperty("RemoveChannelOnEmpty").equals("true")) {
-			server.getChannelManger().removeChannel(this);
-		}
+		if (this.clients.size() == 0) server.getChannelManger().removeChannel(this);
+
 	}
 
 	/**
@@ -225,7 +184,10 @@ public class Channel {
 	 * @return True if Client is a ChanOp. False if not.
 	 */
 	public boolean checkOP(Client client) {
-		return ops.contains(client);
+		if (modes.get('o') == null) return false;
+		for (String nick : modes.get('o').split(","))
+			if (nick.equals(client.getNickname())) return true;
+		return false;
 	}
 
 	/**
@@ -235,7 +197,8 @@ public class Channel {
 	 *            Client to make ChanOp.
 	 */
 	public void addOP(Client client) {
-		ops.add(client);
+		if (modes.get('o') == null) modes.put('o', "");
+		modes.put('o', modes.get('o') + client.getNickname() + ",");
 	}
 
 	/**
@@ -245,26 +208,9 @@ public class Channel {
 	 *            Client to take ChanOp.
 	 */
 	public void takeOP(Client client) {
-		ops.remove(client);
-	}
+		if (modes.get('o') == null) return;
+		modes.put('o', modes.get('o').replaceAll(client.getNickname() + ",", ""));
 
-	/**
-	 * Sets Channel User Limit.
-	 * 
-	 * @param limit
-	 *            New Channel user limit.
-	 */
-	public void setUserLimit(int limit) {
-		this.userLimit = limit;
-	}
-
-	/**
-	 * Returns the user limit.
-	 * 
-	 * @return The user limit.
-	 */
-	public int getUserLimit() {
-		return userLimit;
 	}
 
 	/**
@@ -283,7 +229,8 @@ public class Channel {
 	 *            User that now has a voice.
 	 */
 	public void giveVoice(Client voicee) {
-		voiceList.add(voicee);
+		if (modes.get('v') == null) modes.put('v', "");
+		modes.put('v', modes.get('v') + voicee.getNickname() + ",");
 	}
 
 	/**
@@ -293,7 +240,8 @@ public class Channel {
 	 *            User that no longer has a voice.
 	 */
 	public void takeVoice(Client voicee) {
-		voiceList.remove(voicee);
+		if (modes.get('v') == null) return;
+		modes.put('v', modes.get('v').replaceAll(voicee.getNickname() + ",", ""));
 	}
 
 	/**
@@ -304,7 +252,10 @@ public class Channel {
 	 * @return True if the given user has a voice. False if not.
 	 */
 	public boolean hasVoice(Client voicee) {
-		return voiceList.contains(voicee);
+		if (modes.get('v') == null) return false;
+		for (String nick : modes.get('v').split(","))
+			if (nick.equals(voicee.getNickname())) return true;
+		return false;
 	}
 
 	/**
@@ -331,37 +282,6 @@ public class Channel {
 	}
 
 	/**
-	 * Invites a user to the Channel.
-	 * 
-	 * @param client
-	 *            User to invite to the Channel.
-	 */
-	public void inviteUser(Client client) {
-		this.invitedUsers.add(client);
-	}
-
-	/**
-	 * Uninvites a user to the Channel.
-	 * 
-	 * @param client
-	 *            User to uninvite to the Channel.
-	 */
-	public void unInviteUser(Client client) {
-		this.invitedUsers.remove(client);
-	}
-
-	/**
-	 * Checks if a user is invited to this Channel.
-	 * 
-	 * @param client
-	 *            User to check.
-	 * @return True if given user is invited. False if not.
-	 */
-	public boolean isUserInvited(Client client) {
-		return invitedUsers.contains(client);
-	}
-
-	/**
 	 * Checks if a user is currents on this Channel
 	 * 
 	 * @param client
@@ -379,17 +299,8 @@ public class Channel {
 	 * @return A HashMap of all the ChannelModes and weather they are enabled or
 	 *         not.
 	 */
-	public HashMap<ChannelMode, Boolean> getModeMap() {
+	public HashMap<Character, String> getModeMap() {
 		return modes;
-	}
-
-	/**
-	 * Returns weather or not this Channel is temporary or not.
-	 * 
-	 * @return Weather or not this Channel is temporary or not.
-	 */
-	public boolean isTemporary() {
-		return temporary;
 	}
 
 }

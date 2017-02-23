@@ -1,14 +1,6 @@
 package com.rbruno.irc.channel;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
-
-import com.rbruno.irc.Server;
-import com.rbruno.irc.channel.Channel.ChannelMode;
-import com.rbruno.irc.util.Utilities;
 
 /**
  * Manages all channels. Also adds channels from channels.txt file.
@@ -16,52 +8,6 @@ import com.rbruno.irc.util.Utilities;
 public class ChannelManager {
 
 	private ArrayList<Channel> channels = new ArrayList<Channel>();
-
-	/**
-	 * Creates a new ClientManager object. Reads and process channels.txt. If
-	 * channels.txt does not exist it will create one.
-	 * 
-	 * @throws IOException
-	 */
-	public ChannelManager(Server server) throws IOException {
-		File channels = new File("channels.txt");
-		if (!channels.exists()) Utilities.makeFile("channels.txt");
-
-		BufferedReader reader = new BufferedReader(new FileReader(channels));
-		while (reader.ready()) {
-			String line = reader.readLine();
-			if (line.startsWith("//")) continue;
-			String[] lineArray = line.split(":");
-			if (lineArray.length < 5) continue;
-			Channel channel = new Channel(lineArray[0], lineArray[1], false, server);
-			channel.setUserLimit(Integer.parseInt(lineArray[2]));
-			for (char c : lineArray[3].toCharArray()) {
-				switch (c) {
-				case 'p':
-					channel.setMode(ChannelMode.PRIVATE, true);
-					break;
-				case 's':
-					channel.setMode(ChannelMode.SECRET, true);
-					break;
-				case 'i':
-					channel.setMode(ChannelMode.INVITE_ONLY, true);
-					break;
-				case 't':
-					channel.setMode(ChannelMode.TOPIC, true);
-					break;
-				case 'n':
-					channel.setMode(ChannelMode.NO_MESSAGE_BY_OUTSIDE, true);
-					break;
-				case 'm':
-					channel.setMode(ChannelMode.MODERATED_CHANNEL, true);
-					break;
-				}
-			}
-			channel.setTopic(lineArray[4]);
-			this.channels.add(channel);
-		}
-		reader.close();
-	}
 
 	/**
 	 * Returns an ArrayList of all the channels.
@@ -114,7 +60,7 @@ public class ChannelManager {
 	public int getNonSecretChannels() {
 		int channels = 0;
 		for (Channel channel : this.getChannels())
-			if (!channel.getMode(ChannelMode.SECRET)) channels++;
+			if (!channel.isMode('i')) channels++;
 		return channels;
 	}
 
