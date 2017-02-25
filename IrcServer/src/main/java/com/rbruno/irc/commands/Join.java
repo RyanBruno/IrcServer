@@ -26,7 +26,8 @@ public class Join extends Command {
 					continue;
 				}
 				String password = "";
-				if (request.getArgs().length >= 2) password = request.getArgs()[1];
+				if (request.getArgs().length >= 2)
+					password = request.getArgs()[1];
 				switch (channelName.charAt(0)) {
 				case '#':
 					channel = new NormalChannel(request.getArgs()[0], password, getServer(request));
@@ -45,6 +46,9 @@ public class Join extends Command {
 				channel.addOP(request.getClient());
 				getServer(request).getChannelManger().addChannel(channel);
 			}
+			if (channel.isUserOnChannel(request.getClient()))
+				return;
+
 			try {
 				Integer.parseInt(channel.getMode('l'));
 				if (Integer.parseInt(channel.getMode('l')) < channel.getUsersCount() && !request.getClient().getModes().contains('o')) {
@@ -52,7 +56,7 @@ public class Join extends Command {
 					continue;
 				}
 			} catch (NumberFormatException e) {
-			
+
 			}
 
 			if (!channel.checkPassword((request.getArgs().length >= 2) ? request.getArgs()[1] : "")) {
