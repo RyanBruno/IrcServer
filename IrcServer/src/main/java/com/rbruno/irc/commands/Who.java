@@ -14,7 +14,7 @@ public class Who extends Command {
 	@Override
 	public void execute(ClientRequest request) throws Exception {
 		String target = request.getArgs()[0];
-		if (target.startsWith("#") || target.startsWith("&")) {
+		if (target.matches("(#|&|-|!).*")) {
 			Channel channel = getServer(request).getChannelManger().getChannel(target);
 			for (Client client : channel.getClients())
 				request.getConnection().send(Reply.RPL_WHOREPLY, request.getClient(), channel.getName() + " " + client.getUsername() + " * " + client.getHostname() + " " + client.getNickname() + " H+ :" + client.getHopCount() + " " + client.getRealName());

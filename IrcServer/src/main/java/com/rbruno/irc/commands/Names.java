@@ -21,7 +21,7 @@ public class Names extends Command {
 				String message = current.getName() + " :";
 				ArrayList<Client> clients = current.getClients();
 				for (Client client : clients) {
-					if (current.checkOP(client) || client.isServerOP()) {
+					if (current.checkOP(client) || client.getModes().contains('o')) {
 						message = message + "@" + client.getNickname() + " ";
 					} else {
 						message = message + "+" + client.getNickname() + " ";
@@ -36,7 +36,7 @@ public class Names extends Command {
 				String message = channel.getName() + " :";
 				ArrayList<Client> clients = channel.getClients();
 				for (Client client : clients) {
-					if (channel.checkOP(client) || client.isServerOP()) {
+					if (channel.checkOP(client) || client.getModes().contains('o')) {
 						message = message + "@" + client.getNickname() + " ";
 					} else {
 						message = message + "+" + client.getNickname() + " ";

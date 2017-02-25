@@ -1,12 +1,9 @@
 package com.rbruno.irc.client;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import com.rbruno.irc.channel.Channel;
 import com.rbruno.irc.net.ClientConnection;
-import com.rbruno.irc.reply.Reply;
 
 /**
  * Stores information on a client local and remote.
@@ -25,92 +22,11 @@ public class Client {
 	private ArrayList<Channel> channels = new ArrayList<Channel>();
 	private ArrayList<Channel> invitedChannels = new ArrayList<Channel>();
 
-	private HashMap<ClientMode, Boolean> modes = new HashMap<ClientMode, Boolean>();
+	private ArrayList<Character> modes = new ArrayList<Character>();
 	private String awayMessage = "";
-
-	/**
-	 * Creates a new Client object. Will not add to ClientManager.
-	 * 
-	 * @param connection
-	 *            The client's connection.
-	 * @param nickname
-	 *            Nickname of the client.
-	 */
-	/*
-	 * public Client(Connection connection, String nickname) { this.connection =
-	 * connection; this.nickname = nickname; }
-	 */
 
 	public Client(String nickname) {
 		this.nickname = nickname;
-	}
-
-	/**
-	 * 
-	 * Creates a new Client object. Will not add to ClientManager.
-	 * 
-	 * @param connection
-	 *            The client's connection.
-	 * @param nickname
-	 *            Nickname of the client.
-	 * @param username
-	 *            User Name of client.
-	 * @param hostname
-	 *            Host Name of client.
-	 * @param servername
-	 *            Server Name of client.
-	 * @param realName
-	 *            Real Name of client.
-	 */
-	/*
-	 * public Client(Connection connection, String nickname, String username,
-	 * String hostname, String servername, String realName) { this.connection =
-	 * connection; this.nickname = nickname; this.username = username;
-	 * this.hostname = hostname; this.servername = servername; this.realName =
-	 * realName;
-	 * 
-	 * }
-	 */
-
-	public enum ClientMode {
-		INVISIBLE("i"), SERVER_NOTICES("s"), WALLOPS("w"), OPERATOR("o");
-
-		private String symbol;
-
-		ClientMode(String letter) {
-			this.symbol = letter;
-		}
-
-		public String getSymbol() {
-			return symbol;
-		}
-	}
-
-	/**
-	 * Gets mode of user.
-	 * 
-	 * @param mode
-	 * @return True if Mode is set to user False if not.
-	 */
-	public boolean getMode(ClientMode mode) {
-		return modes.get(mode);
-	}
-
-	/**
-	 * Sets mode to add and send the change to the user.
-	 * 
-	 * @param mode
-	 *            Client mode to be set.
-	 * @param add
-	 *            What to set mode to.
-	 * @param sender
-	 *            Who requested the mode change.
-	 * @throws IOException
-	 */
-	public void setMode(ClientMode mode, boolean add, Client sender) throws IOException {
-		connection.send(Reply.RPL_UMODEIS, this, sender.getAbsoluteName() + " sets mode " + (add ? "+" : "-") + mode.getSymbol() + " on " + getNickname());
-
-		modes.put(mode, add);
 	}
 
 	/**
@@ -251,28 +167,6 @@ public class Client {
 	}
 
 	/**
-	 * Checks if the Client has a ClientMode.
-	 * 
-	 * @param mode
-	 *            Mode to check.
-	 * @return True if Client has mode. False if not.
-	 */
-	public boolean hasMode(ClientMode mode) {
-		if (!modes.containsKey(mode)) return false;
-		return modes.get(mode);
-	}
-
-	/**
-	 * Checks if Client is a Server Op.
-	 * 
-	 * @return If Client is a Server Op.
-	 */
-	public boolean isServerOP() {
-		if (!modes.containsKey(ClientMode.OPERATOR)) return false;
-		return modes.get(ClientMode.OPERATOR);
-	}
-
-	/**
 	 * Returns the last time the user has sent a message. In Unix time.
 	 * 
 	 * @return The last time the user has sent a message. In Unix time.
@@ -334,6 +228,19 @@ public class Client {
 
 	public boolean isInvitedTo(Channel channel) {
 		return invitedChannels.contains(channel);
+	}
+
+	public ArrayList<Character> getModes() {
+		return modes;
+	}
+
+	public void setMode(char mode, boolean add) {
+		if (add) {
+			if (!modes.contains(mode)) modes.add(mode);
+		} else {
+			modes.remove(mode);
+		}
+
 	}
 
 }

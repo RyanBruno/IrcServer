@@ -47,7 +47,7 @@ public class Join extends Command {
 			}
 			try {
 				Integer.parseInt(channel.getMode('l'));
-				if (Integer.parseInt(channel.getMode('l')) < channel.getUsersCount() && !request.getClient().isServerOP()) {
+				if (Integer.parseInt(channel.getMode('l')) < channel.getUsersCount() && !request.getClient().getModes().contains('o')) {
 					request.getConnection().send(Error.ERR_CHANNELISFULL, request.getClient(), channel.getName() + " :Cannot join channel (+l)");
 					continue;
 				}
@@ -60,7 +60,7 @@ public class Join extends Command {
 				continue;
 			}
 
-			if (channel.isMode('i') && !request.getClient().isInvitedTo(channel) && !request.getClient().isServerOP()) {
+			if (channel.isMode('i') && !request.getClient().isInvitedTo(channel) && !request.getClient().getModes().contains('o')) {
 				request.getConnection().send(Error.ERR_INVITEONLYCHAN, request.getClient(), channel.getName() + " :Cannot join channel (+i)");
 				continue;
 			}

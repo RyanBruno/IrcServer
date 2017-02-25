@@ -14,10 +14,12 @@ import com.rbruno.irc.logger.Logger;
 public class ClientConnection extends Connection implements Runnable {
 
 	private Client client;
+	private BufferedReader reader;
 
-	public ClientConnection(Socket socket, Client client, Server server) {
+	public ClientConnection(Socket socket, Client client, Server server, BufferedReader reader) {
 		super(socket, server);
 		this.client = client;
+		this.reader = reader;
 	}
 
 	/**
@@ -27,7 +29,7 @@ public class ClientConnection extends Connection implements Runnable {
 	@Override
 	public void run() {
 		try {
-			BufferedReader reader = new BufferedReader(new InputStreamReader(getSocket().getInputStream(), "UTF-8"));
+			reader = new BufferedReader(new InputStreamReader(getSocket().getInputStream(), "UTF-8"));
 			while (isOpen()) {
 				String line = null;
 				try {

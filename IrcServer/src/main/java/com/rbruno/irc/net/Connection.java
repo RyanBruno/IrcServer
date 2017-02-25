@@ -19,7 +19,9 @@ public class Connection implements Runnable {
 	private boolean open = true;
 	private Server server;
 	private String connectionPassword;
-	
+
+	private BufferedReader reader;
+
 	private String nickname;
 
 	public Connection(Socket socket, Server server) {
@@ -29,7 +31,7 @@ public class Connection implements Runnable {
 
 	public void run() {
 		try {
-			BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"));
+			reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"));
 			while (open) {
 				String line = null;
 				try {
@@ -99,23 +101,23 @@ public class Connection implements Runnable {
 	public Server getServer() {
 		return server;
 	}
-	
+
 	public Socket getSocket() {
 		return socket;
 	}
-	
+
 	public boolean isOpen() {
 		return open;
 	}
-	
+
 	public String getNickname() {
 		return nickname;
 	}
-	
+
 	public void setNickname(String nickname) {
 		this.nickname = nickname;
 	}
-	
+
 	/**
 	 * Sends message to the socket
 	 * 
@@ -231,5 +233,8 @@ public class Connection implements Runnable {
 		send(error.getCode(), client.getNickname(), args);
 	}
 
+	public BufferedReader getReader() {
+		return reader;
+	}
 
 }

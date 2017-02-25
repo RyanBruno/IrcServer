@@ -12,7 +12,7 @@ public class Away extends Command {
 	@Override
 	public void execute(ClientRequest request) throws Exception {
 		String message = "";
-		if (request.getArgs().length >= 1) message = request.getArgs()[0];
+		if (request.getArgs().length != 0) message = request.getArgs()[0];
 		if (message.startsWith(":")) message = message.substring(1);
 		request.getClient().setAwayMessage(message);
 		if (request.getClient().getAwayMessage().equals("")) {

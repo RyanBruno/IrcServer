@@ -18,7 +18,7 @@ public class Kick extends Command {
 			request.getConnection().send(Error.ERR_NOSUCHCHANNEL, request.getClient(), request.getArgs()[1] + " :No such channel");
 			return;
 		}
-		if (!channel.checkOP(request.getClient()) && !request.getClient().isServerOP()) {
+		if (!channel.checkOP(request.getClient()) && !request.getClient().getModes().contains('o')) {
 			request.getConnection().send(Error.ERR_CHANOPRIVSNEEDED, request.getClient(), request.getArgs()[1] + " :You're not channel operator");
 			return;
 		}

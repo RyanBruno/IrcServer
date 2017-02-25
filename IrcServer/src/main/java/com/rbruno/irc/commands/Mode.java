@@ -46,7 +46,7 @@ public class Mode extends Command {
 			request.getConnection().send(Error.ERR_NOSUCHCHANNEL, request.getClient(), modeFlag + " :No such channel");
 			return;
 		}
-		if (!request.getClient().isServerOP() && !target.checkOP(request.getClient())) {
+		if (!request.getClient().getModes().contains('o') && !target.checkOP(request.getClient())) {
 			request.getConnection().send(Error.ERR_NOPRIVILEGES, request.getClient(), ":Permission Denied- You're not an IRC operator");
 			return;
 		}
@@ -100,34 +100,21 @@ public class Mode extends Command {
 			return;
 		}
 		Client target = getServer(request).getClientManager().getClient(request.getArgs()[0]);
-		if (!request.getClient().isServerOP()) {
+		if (!request.getClient().getModes().contains('o')) {
 			request.getConnection().send(Error.ERR_NOPRIVILEGES, request.getClient(), ":Permission Denied- You're not an IRC operator");
 			return;
 		}
-		for (char mode : modeFlag.toLowerCase().toCharArray()) {
-			switch (mode) {
-			case 'i':
-				if (target == request.getClient()) {
-					target.setMode(Client.ClientMode.INVISIBLE, add, request.getClient());
-				} else {
-					request.getConnection().send(Error.ERR_NOPRIVILEGES, request.getClient(), ":Permission Denied- You're not an IRC operator");
-				}
-				break;
-			case 's':
-				if (target == request.getClient()) {
-					target.setMode(Client.ClientMode.SERVER_NOTICES, add, request.getClient());
-				} else {
-					request.getConnection().send(Error.ERR_NOPRIVILEGES, request.getClient(), ":Permission Denied- You're not an IRC operator");
-				}
-				break;
-			case 'w':
-				target.setMode(Client.ClientMode.WALLOPS, add, request.getClient());
-				break;
-			case 'o':
-				target.setMode(Client.ClientMode.OPERATOR, add, request.getClient());
-				target.getConnection().send(Reply.RPL_YOUREOPER, request.getClient(), ":You are now an IRC operator");
-				break;
+		for (char mode : modeFlag.toLowerCase().substring(1).toCharArray()) {
+			if (mode == 'a') {
+				target.getConnection().send(Error.ERR_UMODEUNKNOWNFLAG, request.getClient(), ":Use AWAY command!");
+				return;
 			}
+			if (mode == 'o') {
+				target.getConnection().send(Error.ERR_UMODEUNKNOWNFLAG, request.getClient(), ":Use OPER command!");
+				return;
+			}
+			target.setMode(mode, add);
+			target.getConnection().send(Reply.RPL_UMODEIS, target, request.getClient().getAbsoluteName() + " sets mode " + (add ? "+" : "-") + mode + " on " + target.getNickname());
 		}
 
 	}

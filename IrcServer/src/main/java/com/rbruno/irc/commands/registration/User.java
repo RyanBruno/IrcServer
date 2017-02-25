@@ -16,10 +16,8 @@ public class User extends RegCommand {
 	@Override
 	public void execute(Request request) throws IOException {
 		Client client = new Client(request.getConnection().getNickname());
-		client.setConnection(new ClientConnection(request.getConnection().getSocket(), client, getServer(request)));
-		Thread connection = new Thread(client.getConnection());
-		connection.start();
-		
+		client.setConnection(new ClientConnection(request.getConnection().getSocket(), client, getServer(request), request.getConnection().getReader()));
+
 		client.setUsername(request.getArgs()[0]);
 		client.setHostname(getServer(request).getConfig().getProperty("hostname"));
 		client.setServername(getServer(request).getConfig().getProperty("hostname"));
@@ -31,6 +29,8 @@ public class User extends RegCommand {
 		client.getConnection().send(Reply.RPL_LUSERME, client, ":I have " + getServer(request).getClientManager().getClientCount() + " clients and 1 servers");
 		getServer(request).sendMOTD(client);
 		getServer(request).getClientManager().addClient(client);
+
+		client.getConnection().run();
 
 	}
 }

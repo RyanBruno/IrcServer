@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import com.rbruno.irc.Server;
-import com.rbruno.irc.client.Client.ClientMode;
 import com.rbruno.irc.net.ClientConnection;
 import com.rbruno.irc.reply.Reply;
 
@@ -119,7 +118,7 @@ public class ClientManager {
 	public int getClientCount() {
 		int users = 0;
 		for (Client current : this.getClients())
-			if (!current.hasMode(ClientMode.INVISIBLE)) users++;
+			if (!current.getModes().contains('i')) users++;
 		return users;
 	}
 
@@ -131,7 +130,7 @@ public class ClientManager {
 	public int getInvisibleClientCount() {
 		int users = 0;
 		for (Client current : this.getClients())
-			if (current.hasMode(ClientMode.INVISIBLE)) users++;
+			if (current.getModes().contains('i')) users++;
 		return users;
 	}
 
@@ -143,7 +142,7 @@ public class ClientManager {
 	public int getOps() {
 		int ops = 0;
 		for (Client current : this.getClients())
-			if (current.isServerOP()) ops++;
+			if (current.getModes().contains('o')) ops++;
 		return ops;
 	}
 
