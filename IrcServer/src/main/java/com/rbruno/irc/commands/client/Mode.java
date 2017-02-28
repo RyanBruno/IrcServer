@@ -50,7 +50,7 @@ public class Mode extends ClientCommand {
 			request.getConnection().send(Error.ERR_NOPRIVILEGES, request.getClient(), ":Permission Denied- You're not an IRC operator");
 			return;
 		}
-		for (char mode : modeFlag.toLowerCase().toCharArray()) {
+		for (char mode : modeFlag.toLowerCase().substring(1).toCharArray()) {
 			switch (mode) {
 			case 'o':
 				Client clientTarget = getServer(request).getClientManager().getClient(request.getArgs()[2]);

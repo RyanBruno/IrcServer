@@ -50,6 +50,7 @@ public class ClientConnection extends Connection implements Runnable {
 					request = new ClientRequest(this, line);
 				} catch (Exception e) {
 					Logger.log(getSocket().getInetAddress() + " sent an unparseable line: " + line, Level.FINE);
+					e.printStackTrace();
 					continue;
 				}
 				try {
