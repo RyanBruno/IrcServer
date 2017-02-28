@@ -1,11 +1,11 @@
-package com.rbruno.irc.commands;
+package com.rbruno.irc.commands.client;
 
 import com.rbruno.irc.channel.Channel;
 import com.rbruno.irc.client.Client;
 import com.rbruno.irc.net.ClientRequest;
 import com.rbruno.irc.reply.Error;
 
-public class Kick extends Command {
+public class Kick extends ClientCommand {
 
 	public Kick() {
 		super("KICK", 2);

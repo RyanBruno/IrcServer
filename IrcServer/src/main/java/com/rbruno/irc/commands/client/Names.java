@@ -1,4 +1,4 @@
-package com.rbruno.irc.commands;
+package com.rbruno.irc.commands.client;
 
 import java.util.ArrayList;
 
@@ -7,7 +7,7 @@ import com.rbruno.irc.client.Client;
 import com.rbruno.irc.net.ClientRequest;
 import com.rbruno.irc.reply.Reply;
 
-public class Names extends Command {
+public class Names extends ClientCommand {
 
 	public Names() {
 		super("NAMES", 0);

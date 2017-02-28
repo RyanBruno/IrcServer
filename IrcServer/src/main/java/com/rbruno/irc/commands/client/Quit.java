@@ -1,10 +1,10 @@
-package com.rbruno.irc.commands;
+package com.rbruno.irc.commands.client;
 
 import com.rbruno.irc.channel.Channel;
 import com.rbruno.irc.client.Client;
 import com.rbruno.irc.net.ClientRequest;
 
-public class Quit extends Command {
+public class Quit extends ClientCommand {
 
 	public Quit() {
 		super("QUIT", 0);

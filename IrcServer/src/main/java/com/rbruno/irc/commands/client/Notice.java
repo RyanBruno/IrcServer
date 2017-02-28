@@ -1,10 +1,10 @@
-package com.rbruno.irc.commands;
+package com.rbruno.irc.commands.client;
 
 import com.rbruno.irc.client.Client;
 import com.rbruno.irc.net.ClientRequest;
 import com.rbruno.irc.reply.Error;
 
-public class Notice extends Command {
+public class Notice extends ClientCommand {
 
 	public Notice() {
 		super("NOTICE", 2);

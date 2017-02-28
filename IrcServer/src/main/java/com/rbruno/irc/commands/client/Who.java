@@ -1,11 +1,11 @@
-package com.rbruno.irc.commands;
+package com.rbruno.irc.commands.client;
 
 import com.rbruno.irc.channel.Channel;
 import com.rbruno.irc.client.Client;
 import com.rbruno.irc.net.ClientRequest;
 import com.rbruno.irc.reply.Reply;
 
-public class Who extends Command {
+public class Who extends ClientCommand {
 
 	public Who() {
 		super("WHO", 1);

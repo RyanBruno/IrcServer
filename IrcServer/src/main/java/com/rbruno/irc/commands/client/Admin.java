@@ -1,9 +1,9 @@
-package com.rbruno.irc.commands;
+package com.rbruno.irc.commands.client;
 
 import com.rbruno.irc.net.ClientRequest;
 import com.rbruno.irc.reply.Reply;
 
-public class Admin extends Command {
+public class Admin extends ClientCommand {
 
 	public Admin() {
 		super("ADMIN", 0);

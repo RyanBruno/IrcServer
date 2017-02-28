@@ -1,10 +1,10 @@
-package com.rbruno.irc.commands;
+package com.rbruno.irc.commands.client;
 
 import com.rbruno.irc.channel.Channel;
 import com.rbruno.irc.client.Client;
 import com.rbruno.irc.net.ClientRequest;
 
-public class Part extends Command {
+public class Part extends ClientCommand {
 
 	public Part() {
 		super("PART", 1);

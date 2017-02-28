@@ -1,8 +1,8 @@
-package com.rbruno.irc.commands;
+package com.rbruno.irc.commands.client;
 
 import com.rbruno.irc.net.ClientRequest;
 
-public class Ping extends Command {
+public class Ping extends ClientCommand {
 
 	public Ping() {
 		super("PING", 1);

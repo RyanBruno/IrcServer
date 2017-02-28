@@ -1,9 +1,9 @@
-package com.rbruno.irc.commands;
+package com.rbruno.irc.commands.client;
 
 import com.rbruno.irc.net.ClientRequest;
 import com.rbruno.irc.reply.Reply;
 
-public class Away extends Command {
+public class Away extends ClientCommand {
 
 	public Away() {
 		super("AWAY", 0);

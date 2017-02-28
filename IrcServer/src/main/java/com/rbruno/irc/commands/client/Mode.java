@@ -1,4 +1,4 @@
-package com.rbruno.irc.commands;
+package com.rbruno.irc.commands.client;
 
 import java.io.IOException;
 
@@ -8,7 +8,7 @@ import com.rbruno.irc.net.ClientRequest;
 import com.rbruno.irc.reply.Error;
 import com.rbruno.irc.reply.Reply;
 
-public class Mode extends Command {
+public class Mode extends ClientCommand {
 
 	public Mode() {
 		super("MODE", 1);

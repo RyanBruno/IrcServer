@@ -1,4 +1,4 @@
-package com.rbruno.irc.commands;
+package com.rbruno.irc.commands.client;
 
 import com.rbruno.irc.channel.Channel;
 import com.rbruno.irc.channel.LocalChannel;
@@ -8,7 +8,7 @@ import com.rbruno.irc.net.ClientRequest;
 import com.rbruno.irc.reply.Error;
 import com.rbruno.irc.reply.Reply;
 
-public class Join extends Command {
+public class Join extends ClientCommand {
 
 	public Join() {
 		super("JOIN", 1);

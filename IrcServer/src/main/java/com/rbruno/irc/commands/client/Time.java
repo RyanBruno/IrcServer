@@ -1,4 +1,4 @@
-package com.rbruno.irc.commands;
+package com.rbruno.irc.commands.client;
 
 import java.sql.Timestamp;
 import java.util.Date;
@@ -6,7 +6,7 @@ import java.util.Date;
 import com.rbruno.irc.net.ClientRequest;
 import com.rbruno.irc.reply.Reply;
 
-public class Time extends Command {
+public class Time extends ClientCommand {
 
 	public Time() {
 		super("TIME", 0);

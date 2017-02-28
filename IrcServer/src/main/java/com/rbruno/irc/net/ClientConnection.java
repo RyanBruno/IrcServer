@@ -8,7 +8,7 @@ import java.util.logging.Level;
 
 import com.rbruno.irc.Server;
 import com.rbruno.irc.client.Client;
-import com.rbruno.irc.commands.Command;
+import com.rbruno.irc.commands.client.ClientCommand;
 import com.rbruno.irc.logger.Logger;
 
 public class ClientConnection extends Connection implements Runnable {
@@ -53,7 +53,7 @@ public class ClientConnection extends Connection implements Runnable {
 					continue;
 				}
 				try {
-					Command.runCommand(request);
+					ClientCommand.runCommand(request);
 				} catch (Exception e) {
 					Logger.log(getSocket().getInetAddress() + " ran a command that resulted in an error: " + line, Level.FINE);
 					e.printStackTrace();

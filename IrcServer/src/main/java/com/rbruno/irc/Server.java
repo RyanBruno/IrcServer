@@ -9,7 +9,7 @@ import java.util.logging.Level;
 import com.rbruno.irc.channel.ChannelManager;
 import com.rbruno.irc.client.Client;
 import com.rbruno.irc.client.ClientManager;
-import com.rbruno.irc.commands.Command;
+import com.rbruno.irc.commands.client.ClientCommand;
 import com.rbruno.irc.commands.registration.RegCommand;
 import com.rbruno.irc.config.Config;
 import com.rbruno.irc.logger.Logger;
@@ -61,7 +61,7 @@ public class Server implements Runnable {
 			throw e;
 		}
 		RegCommand.init();
-		Command.init();
+		ClientCommand.init();
 		try {
 			serverSocket = new ServerSocket(Integer.parseInt(config.getProperty("port")));
 		} catch (Exception e) {

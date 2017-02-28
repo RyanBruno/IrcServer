@@ -1,10 +1,10 @@
-package com.rbruno.irc.commands;
+package com.rbruno.irc.commands.client;
 
 import com.rbruno.irc.net.ClientRequest;
 import com.rbruno.irc.reply.Error;
 import com.rbruno.irc.reply.Reply;
 
-public class Oper extends Command {
+public class Oper extends ClientCommand {
 
 	public Oper() {
 		super("OPER", 2);

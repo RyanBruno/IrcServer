@@ -1,4 +1,4 @@
-package com.rbruno.irc.commands;
+package com.rbruno.irc.commands.client;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -8,7 +8,7 @@ import com.rbruno.irc.logger.Logger;
 import com.rbruno.irc.net.ClientRequest;
 import com.rbruno.irc.reply.Reply;
 
-public class Info extends Command {
+public class Info extends ClientCommand {
 
 	public Info() {
 		super("INFO", 0);
