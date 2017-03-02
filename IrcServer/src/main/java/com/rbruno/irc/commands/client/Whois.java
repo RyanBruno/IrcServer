@@ -4,6 +4,7 @@ import com.rbruno.irc.channel.Channel;
 import com.rbruno.irc.client.Client;
 import com.rbruno.irc.net.ClientRequest;
 import com.rbruno.irc.reply.Reply;
+import com.rbruno.irc.reply.Error;
 
 public class Whois extends ClientCommand {
 
@@ -15,6 +16,11 @@ public class Whois extends ClientCommand {
 	public void execute(ClientRequest request) throws Exception {
 		for (String current : request.getArgs()[0].split(",")) {
 			Client target = getServer(request).getClientManager().getClient(current);
+			if (target == null) {
+				request.getConnection().send(Error.ERR_NOSUCHNICK, request.getClient(), current + " :No such nick");
+				continue;
+			}
+
 			request.getConnection().send(Reply.RPL_WHOISUSER, request.getClient(), target.getNickname() + " " + target.getUsername() + " " + getServer(request).getConfig().getProperty("hostname") + " * :" + target.getRealName());
 			// TODO Whois server
 			if (target.getModes().contains('o')) request.getConnection().send(Reply.RPL_WHOISOPERATOR, request.getClient(), target.getNickname() + " :is an IRC operator");
