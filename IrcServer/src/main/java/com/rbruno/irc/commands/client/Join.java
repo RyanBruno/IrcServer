@@ -30,19 +30,19 @@ public class Join extends ClientCommand {
 					password = request.getArgs()[1];
 				switch (channelName.charAt(0)) {
 				case '#':
-					channel = new NormalChannel(request.getArgs()[0], password, getServer(request));
+					channel = new NormalChannel(channelName, password, getServer(request));
 					break;
 				case '&':
-					channel = new LocalChannel(request.getArgs()[0], password, getServer(request));
+					channel = new LocalChannel(channelName, password, getServer(request));
 					break;
 				case '+':
-					channel = new ModlessChannel(request.getArgs()[0], password, getServer(request));
+					channel = new ModlessChannel(channelName, password, getServer(request));
 					break;
 				default:
 					request.getConnection().send(Error.ERR_NOSUCHCHANNEL, request.getClient(), channelName + " :No such channel");
 					continue;
 				}
-				channel = new Channel(request.getArgs()[0], password, getServer(request));
+				channel = new Channel(channelName, password, getServer(request));
 				channel.addOP(request.getClient());
 				getServer(request).getChannelManger().addChannel(channel);
 			}
