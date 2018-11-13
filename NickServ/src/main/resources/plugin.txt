@@ -1,2 +1,0 @@
-name=NickServ
-main=com.rbruno.NickServ
