@@ -1,6 +1,6 @@
 .metadata
-*/.classpath
-*/.project
+.classpath
+.project
 */bin/
 */target/
 */.settings/
@@ -9,3 +9,4 @@ test/
 Test/
 .test/
 .recommenders/
+/bin/

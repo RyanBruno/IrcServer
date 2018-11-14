@@ -22,55 +22,40 @@ import com.rbruno.irc.util.Utilities;
  * Contains main method. The main class creates a new Server object which starts
  * everything up.
  */
-public class Server implements Runnable {
+public class Server {
 
 	private static final String VERSION = "v1.0-RELEASE";
 
-	private boolean running;
 	private ServerSocket serverSocket;
 
 	private Config config;
 	private ClientManager clientManager;
 	private ChannelManager channelManger;
 	private PluginManager pluginManager;
+	
+	private static Server server;
 
 	/**
 	 * Server constructor. Starts all managers, opens the socket and starts the
 	 * running thread.
+	 * @param bootStrap 
 	 * 
 	 * @throws Exception
 	 */
-	public Server() throws Exception {
-		try {
-			config = new Config();
-		} catch (Exception e) {
-			Logger.log("There has been a fatal error while parsing the config.", Level.SEVERE);
-			throw e;
-		}
-		clientManager = new ClientManager(this);
-		try {
-			channelManger = new ChannelManager();
-		} catch (Exception e) {
-			Logger.log("There has been a fatal error while parsing the channels file.", Level.SEVERE);
-			throw e;
-		}
-		try {
-			pluginManager = new PluginManager();
-		} catch (IOException e) {
-			Logger.log("There has been a fatal error while reading the plugins folder. Check your permissions.", Level.SEVERE);
-			throw e;
-		}
+	public Server(ServerBootStrap bootStrap) throws Exception {
+	  server = this;
+	  config = bootStrap.createConfig();
+	  clientManager = bootStrap.createClientManager();
+	  channelManger = bootStrap.createChannelManager();
+	  pluginManager = bootStrap.createPluginManager();
+	  
 		RegCommand.init();
 		ClientCommand.init();
-		try {
-			serverSocket = new ServerSocket(Integer.parseInt(config.getProperty("port")));
-		} catch (Exception e) {
-			Logger.log("There has been a fatal error while opening the Server socket. Check if a server is already using port: " + config.getProperty("port"), Level.SEVERE);
-			throw e;
-		}
-		running = true;
+		
+		serverSocket = new ServerSocket(config.getPort());
+		run();
+
 		Logger.log("Started Server on port: " + serverSocket.getLocalPort());
-		new Thread(this, "Running Thread").start();
 	}
 
 	/**
@@ -78,7 +63,7 @@ public class Server implements Runnable {
 	 * object on a new thread.
 	 */
 	public void run() {
-		while (running) {
+		while (true) {
 			try {
 				Socket socket = serverSocket.accept();
 				Thread connection = new Thread(new Connection(socket, this));
@@ -97,7 +82,7 @@ public class Server implements Runnable {
 	 * @throws IOException
 	 */
 	public void sendMOTD(Client client) throws IOException {
-		client.getConnection().send(Reply.RPL_MOTDSTART, client, ":- " + getConfig().getProperty("hostname") + " Message of the day - ");
+		client.getConnection().send(Reply.RPL_MOTDSTART, client, ":- " + config.getHostname() + " Message of the day - ");
 		File motd = new File("motd.txt");
 		if (!motd.exists()) Utilities.makeFile("motd.txt");
 		for (String line : Utilities.read("motd.txt"))
@@ -106,7 +91,8 @@ public class Server implements Runnable {
 	}
 
 	public static void main(String args[]) throws Exception {
-		new Server();
+		ServerBootStrap bootStrap = new IrcBootstrap();
+		new Server(bootStrap);
 	}
 
 	/**
@@ -152,5 +138,9 @@ public class Server implements Runnable {
 	 */
 	public PluginManager getPluginManager() {
 		return pluginManager;
+	}
+	
+	public static Server getServer() {
+	  return server;
 	}
 }

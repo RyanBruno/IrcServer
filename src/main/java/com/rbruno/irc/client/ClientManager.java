@@ -14,12 +14,6 @@ public class ClientManager {
 
 	private ArrayList<Client> clients = new ArrayList<Client>();
 
-	private Server server;
-
-	public ClientManager(Server server) {
-		this.server = server;
-	}
-
 	/**
 	 * Sends a message to all clients connected that are directly connected to
 	 * this server.
@@ -57,7 +51,7 @@ public class ClientManager {
 	 */
 	public void addClient(Client client) {
 		clients.add(client);
-		server.getPluginManager().runOnClientLogin(client);
+		Server.getServer().getPluginManager().runOnClientLogin(client);
 	}
 
 	/**

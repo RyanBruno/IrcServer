@@ -2,6 +2,10 @@
 An Irc server based on RFC 1459. 
 
 Developer: Ryan Bruno <ryanbruno506@gmail.com>
+## TODO
+- Improve Logger
+- Improve Commands
+
 ## How To Use
 1) Clone the repository
 ```
