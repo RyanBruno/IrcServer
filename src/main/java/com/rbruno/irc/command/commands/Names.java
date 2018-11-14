@@ -1,4 +1,4 @@
-package com.rbruno.irc.commands.client;
+package com.rbruno.irc.command.commands;
 
 import java.util.ArrayList;
 
@@ -14,7 +14,7 @@ public class Names extends ClientCommand {
 	}
 
 	@Override
-	public void execute(ClientRequest request) throws Exception {
+	public void execute(ClientRequest request) {
 		if (request.getArgs().length == 0) {
 			ArrayList<Channel> channels = getServer(request).getChannelManger().getChannels();
 			for (Channel current : channels) {

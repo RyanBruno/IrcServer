@@ -1,4 +1,4 @@
-package com.rbruno.irc.commands.client;
+package com.rbruno.irc.command.commands;
 
 import com.rbruno.irc.channel.Channel;
 import com.rbruno.irc.client.Client;
@@ -13,7 +13,7 @@ public class Who extends ClientCommand {
 	}
 
 	@Override
-	public void execute(ClientRequest request) throws Exception {
+	public void execute(ClientRequest request) {
 		String target = request.getArgs()[0];
 		Channel channel = getServer(request).getChannelManger().getChannel(target);
 		if (channel == null) {

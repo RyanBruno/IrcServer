@@ -1,17 +1,21 @@
-package com.rbruno.irc.commands.client;
+package com.rbruno.irc.command.commands;
 
-import com.rbruno.irc.net.ClientRequest;
+import java.util.Optional;
+
+import com.rbruno.irc.client.Client;
+import com.rbruno.irc.command.Command;
+import com.rbruno.irc.net.Request;
 import com.rbruno.irc.reply.Error;
 import com.rbruno.irc.reply.Reply;
 
-public class Oper extends ClientCommand {
+public class Oper extends Command {
 
 	public Oper() {
 		super("OPER", 2);
 	}
 
 	@Override
-	public void execute(ClientRequest request) throws Exception {
+	public void execute(Request request, Optional<Client> client) {
 		if (getServer(request).getConfig().getProperty("DisableOps").equals("true")) {
 			request.getConnection().send(Error.ERR_NOOPERHOST, request.getClient(), ":No O-lines for your host");
 			return;

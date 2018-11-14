@@ -1,4 +1,4 @@
-package com.rbruno.irc.commands.client;
+package com.rbruno.irc.command.commands;
 
 import com.rbruno.irc.channel.Channel;
 import com.rbruno.irc.channel.LocalChannel;
@@ -15,7 +15,7 @@ public class Join extends ClientCommand {
 	}
 
 	@Override
-	public void execute(ClientRequest request) throws Exception {
+	public void execute(ClientRequest request) {
 		// TODO: Check password
 		String[] channels = request.getArgs()[0].split(",");
 		for (String channelName : channels) {

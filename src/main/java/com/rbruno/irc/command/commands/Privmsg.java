@@ -1,4 +1,4 @@
-package com.rbruno.irc.commands.client;
+package com.rbruno.irc.command.commands;
 
 import com.rbruno.irc.channel.Channel;
 import com.rbruno.irc.client.Client;
@@ -12,7 +12,7 @@ public class Privmsg extends ClientCommand {
 	}
 
 	@Override
-	public void execute(ClientRequest request) throws Exception {
+	public void execute(ClientRequest request) {
 		for (String reciver : request.getArgs()[0].split(",")) {
 			if (reciver.startsWith("$")) {
 				// TODO: Server

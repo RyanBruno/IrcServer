@@ -1,4 +1,4 @@
-package com.rbruno.irc.commands.client;
+package com.rbruno.irc.command.commands;
 
 import java.sql.Timestamp;
 import java.util.Date;
@@ -13,7 +13,7 @@ public class Time extends ClientCommand {
 	}
 
 	@Override
-	public void execute(ClientRequest request) throws Exception {
+	public void execute(ClientRequest request) {
 		if (request.getArgs().length == 0) {
 			Date date = new Date();
 			request.getConnection().send(Reply.RPL_TIME, request.getClient(), getServer(request).getConfig().getProperty("hostname") + " :" + new Timestamp(date.getTime()));

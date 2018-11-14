@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import com.rbruno.irc.channel.ChannelManager;
 import com.rbruno.irc.client.ClientManager;
+import com.rbruno.irc.command.CommandInvoker;
 import com.rbruno.irc.config.Config;
 import com.rbruno.irc.plugin.PluginManager;
 
@@ -13,5 +14,6 @@ public interface ServerBootStrap {
   public ClientManager createClientManager();
   public ChannelManager createChannelManager();
   public PluginManager createPluginManager() throws IOException;
+  public CommandInvoker createCommandInvoker();
 
 }

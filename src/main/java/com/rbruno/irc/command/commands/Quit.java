@@ -1,4 +1,4 @@
-package com.rbruno.irc.commands.client;
+package com.rbruno.irc.command.commands;
 
 import com.rbruno.irc.channel.Channel;
 import com.rbruno.irc.client.Client;
@@ -11,7 +11,7 @@ public class Quit extends ClientCommand {
 	}
 
 	@Override
-	public void execute(ClientRequest request) throws Exception {
+	public void execute(ClientRequest request) {
 		request.getConnection().close();
 
 		String message = "Leaving";

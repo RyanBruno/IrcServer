@@ -1,4 +1,4 @@
-package com.rbruno.irc.commands.client;
+package com.rbruno.irc.command.commands;
 
 import java.io.IOException;
 
@@ -15,7 +15,7 @@ public class Mode extends ClientCommand {
 	}
 
 	@Override
-	public void execute(ClientRequest request) throws Exception {
+	public void execute(ClientRequest request) {
 		if (request.getArgs().length <= 1) {
 			String target = request.getArgs()[0];
 			Channel channel = getServer(request).getChannelManger().getChannel(target);

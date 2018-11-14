@@ -5,6 +5,8 @@ import java.util.logging.Level;
 
 import com.rbruno.irc.channel.ChannelManager;
 import com.rbruno.irc.client.ClientManager;
+import com.rbruno.irc.command.ClientCommandInvoker;
+import com.rbruno.irc.command.CommandInvoker;
 import com.rbruno.irc.config.Config;
 import com.rbruno.irc.config.FileConfig;
 import com.rbruno.irc.logger.Logger;
@@ -46,6 +48,12 @@ public class IrcBootstrap implements ServerBootStrap {
       Logger.log("There has been a fatal error while reading the plugins folder. Check your permissions.", Level.SEVERE);
       throw e;
     }
+  }
+
+
+  @Override
+  public CommandInvoker createCommandInvoker() {
+    return new ClientCommandInvoker();
   }
 
 }

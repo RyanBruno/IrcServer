@@ -9,9 +9,7 @@ public class Request {
 	private String prefix;
 	private String command;
 	private String[] args;
-
-	private boolean cancelled;
-
+	
 	/**
 	 * Creates a new Request object. Phrases the line into prefix, command and
 	 * arguments.
@@ -22,7 +20,8 @@ public class Request {
 	 *            The line that was sent.
 	 * @throws Exception
 	 */
-	public Request(Connection connection, String line) throws Exception {
+	public Request(Connection connection, String line) {
+	  //TODO Yell if malformed
 		this.connection = connection;
 		if (line.startsWith(":")) {
 			this.prefix = line.split(" ")[0].substring(1);
@@ -84,26 +83,4 @@ public class Request {
 	public String[] getArgs() {
 		return args;
 	}
-
-	/**
-	 * Return weather or not this request is cancelled. When a request is
-	 * cancelled it will not be run by the server.
-	 * 
-	 * @return Weather or not this request is cancelled.
-	 */
-	public boolean isCancelled() {
-		return cancelled;
-	}
-
-	/**
-	 * Sets the cancelled status of this request. When a request is cancelled it
-	 * will not be run by the server.
-	 * 
-	 * @param cancelled
-	 *            Cancelled status.
-	 */
-	public void setCancelled(boolean cancelled) {
-		this.cancelled = cancelled;
-	}
-
 }
