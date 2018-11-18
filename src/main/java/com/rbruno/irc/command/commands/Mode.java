@@ -1,21 +1,25 @@
 package com.rbruno.irc.command.commands;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import com.rbruno.irc.channel.Channel;
 import com.rbruno.irc.client.Client;
+import com.rbruno.irc.client.LocalClient;
+import com.rbruno.irc.command.Command;
 import com.rbruno.irc.net.ClientRequest;
+import com.rbruno.irc.net.Request;
 import com.rbruno.irc.reply.Error;
 import com.rbruno.irc.reply.Reply;
 
-public class Mode extends ClientCommand {
+public class Mode extends Command {
 
 	public Mode() {
 		super("MODE", 1);
 	}
 
 	@Override
-	public void execute(ClientRequest request) {
+	public void execute(Request request, Optional<Client> client) {
 		if (request.getArgs().length <= 1) {
 			String target = request.getArgs()[0];
 			Channel channel = getServer(request).getChannelManger().getChannel(target);
@@ -53,7 +57,7 @@ public class Mode extends ClientCommand {
 		for (char mode : modeFlag.toLowerCase().substring(1).toCharArray()) {
 			switch (mode) {
 			case 'o':
-				Client clientTarget = getServer(request).getClientManager().getClient(request.getArgs()[2]);
+				LocalClient clientTarget = getServer(request).getClientManager().getClient(request.getArgs()[2]);
 				if (clientTarget == null) {
 					request.getConnection().send(Error.ERR_NOSUCHNICK, request.getClient(), request.getArgs()[2] + " :No such nick");
 					continue;
@@ -68,7 +72,7 @@ public class Mode extends ClientCommand {
 			case 'b':
 				break;
 			case 'v':
-				Client voicee = getServer(request).getClientManager().getClient(request.getArgs()[2]);
+				LocalClient voicee = getServer(request).getClientManager().getClient(request.getArgs()[2]);
 				if (voicee != null) {
 					if (add) {
 						target.giveVoice(voicee);
@@ -99,7 +103,7 @@ public class Mode extends ClientCommand {
 			request.getConnection().send(Error.ERR_NOSUCHNICK, request.getClient(), request.getArgs()[0] + " :No such nick/channel");
 			return;
 		}
-		Client target = getServer(request).getClientManager().getClient(request.getArgs()[0]);
+		LocalClient target = getServer(request).getClientManager().getClient(request.getArgs()[0]);
 		if (!request.getClient().getModes().contains('o')) {
 			request.getConnection().send(Error.ERR_NOPRIVILEGES, request.getClient(), ":Permission Denied- You're not an IRC operator");
 			return;

@@ -2,7 +2,7 @@ package com.rbruno.irc.plugin;
 
 import java.io.File;
 
-import com.rbruno.irc.client.Client;
+import com.rbruno.irc.client.LocalClient;
 import com.rbruno.irc.net.Request;
 
 /**
@@ -26,7 +26,7 @@ public class Plugin {
 	 * @param client
 	 *            The Client that just logged in.
 	 */
-	public void onClientLogin(Client client) {
+	public void onClientLogin(LocalClient client) {
 	}
 
 	/**

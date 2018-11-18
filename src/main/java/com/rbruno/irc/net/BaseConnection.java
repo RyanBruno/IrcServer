@@ -11,24 +11,34 @@ import com.rbruno.irc.reply.Reply;
 public abstract class BaseConnection implements Connection {
 
   protected Socket socket;
-  
+  protected boolean closed = true;
+
   public BaseConnection(Socket socket) {
     this.socket = socket;
   }
 
   @Override
-  public boolean send(byte[] block){
+  public boolean send(byte[] block) {
 
     try {
       socket.getOutputStream().write(block);
       socket.getOutputStream().flush();
     } catch (IOException e) {
       e.printStackTrace();
-      // TODO
     }
     return true;
   }
-  
+
+  @Override
+  public void close() {
+    closed = false;
+    try {
+      socket.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
   /**
    * Sends message to the socket
    * 
@@ -36,8 +46,7 @@ public abstract class BaseConnection implements Connection {
    * @throws IOException
    */
   @Override
-  public boolean send(String message){
-
+  public boolean send(String message) {
     if (socket.isClosed())
       return false;
     // if (server.getConfig().getProperty("debug").equals("true"))
@@ -55,7 +64,7 @@ public abstract class BaseConnection implements Connection {
    * @throws IOException
    */
   @Override
-  public boolean send(String prefix, String command, String args){
+  public boolean send(String prefix, String command, String args) {
     String message = ":" + prefix + " " + command + " " + args;
     return send(message);
   }
@@ -70,15 +79,14 @@ public abstract class BaseConnection implements Connection {
    * @throws IOException
    */
   @Override
-  public boolean send(int code, String nickname, String args){
+  public boolean send(int code, String nickname, String args) {
     String stringCode = code + "";
     if (stringCode.length() < 2)
       stringCode = "0" + stringCode;
     if (stringCode.length() < 3)
       stringCode = "0" + stringCode;
 
-    String message = ":" + Server.getServer().getConfig().getHostname() + " " + stringCode + " "
-        + nickname + " " + args;
+    String message = ":" + Server.getServer().getConfig().getHostname() + " " + stringCode + " " + nickname + " " + args;
     return send(message);
   }
 
@@ -91,7 +99,7 @@ public abstract class BaseConnection implements Connection {
    * @throws IOException
    */
   @Override
-  public boolean send(Reply reply, String nickname, String args){
+  public boolean send(Reply reply, String nickname, String args) {
     return send(reply.getCode(), nickname, args);
   }
 
@@ -104,7 +112,7 @@ public abstract class BaseConnection implements Connection {
    * @throws IOException
    */
   @Override
-  public boolean send(Reply reply, Client client, String args){
+  public boolean send(Reply reply, Client client, String args) {
     return send(reply.getCode(), client.getNickname(), args);
   }
 
@@ -130,7 +138,7 @@ public abstract class BaseConnection implements Connection {
    * @throws IOException
    */
   @Override
-  public boolean send(Error error, Client client, String args){
+  public boolean send(Error error, Client client, String args) {
     return send(error.getCode(), client.getNickname(), args);
   }
 

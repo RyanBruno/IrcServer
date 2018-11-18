@@ -1,78 +1,73 @@
 package com.rbruno.irc.command.commands;
 
+import java.util.Arrays;
+import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.stream.Stream;
+
+import com.rbruno.irc.Server;
 import com.rbruno.irc.channel.Channel;
 import com.rbruno.irc.channel.LocalChannel;
-import com.rbruno.irc.channel.ModlessChannel;
-import com.rbruno.irc.channel.NormalChannel;
-import com.rbruno.irc.net.ClientRequest;
+import com.rbruno.irc.client.Client;
+import com.rbruno.irc.command.Command;
+import com.rbruno.irc.net.Request;
 import com.rbruno.irc.reply.Error;
 import com.rbruno.irc.reply.Reply;
 
-public class Join extends ClientCommand {
+public class Join extends Command {
 
-	public Join() {
-		super("JOIN", 1);
-	}
+    public Join() {
+        super("JOIN", 1);
+    }
 
-	@Override
-	public void execute(ClientRequest request) {
-		// TODO: Check password
-		String[] channels = request.getArgs()[0].split(",");
-		for (String channelName : channels) {
-			Channel channel = getServer(request).getChannelManger().getChannel(channelName);
-			if (channel == null) {
-				if (!getServer(request).getConfig().getProperty("CreateOnJoin").equals("true")) {
-					request.getConnection().send(Error.ERR_NOSUCHCHANNEL, request.getClient(), channelName + " :No such channel");
-					continue;
-				}
-				String password = "";
-				if (request.getArgs().length >= 2)
-					password = request.getArgs()[1];
-				switch (channelName.charAt(0)) {
-				case '#':
-					channel = new NormalChannel(channelName, password, getServer(request));
-					break;
-				case '&':
-					channel = new LocalChannel(channelName, password, getServer(request));
-					break;
-				case '+':
-					channel = new ModlessChannel(channelName, password, getServer(request));
-					break;
-				default:
-					request.getConnection().send(Error.ERR_NOSUCHCHANNEL, request.getClient(), channelName + " :No such channel");
-					continue;
-				}
-				channel = new Channel(channelName, password, getServer(request));
-				channel.addOP(request.getClient());
-				getServer(request).getChannelManger().addChannel(channel);
-			}
-			if (channel.isUserOnChannel(request.getClient()))
-				return;
+    @Override
+    public void execute(Request request, Optional<Client> client) {
+        Stream<Channel> channels = Arrays.stream(request.getArgs()[0].split(",")).map(new Function<String, Channel>() {
+            @Override
+            public Channel apply(String name) {
+                if (!name.startsWith("&") && !name.startsWith("#")) {
+                    request.getConnection().send(Error.ERR_NOSUCHCHANNEL, client.get(), name + " :No such channel");
+                }
 
-			try {
-				Integer.parseInt(channel.getMode('l'));
-				if (Integer.parseInt(channel.getMode('l')) < channel.getUsersCount() && !request.getClient().getModes().contains('o')) {
-					request.getConnection().send(Error.ERR_CHANNELISFULL, request.getClient(), channel.getName() + " :Cannot join channel (+l)");
-					continue;
-				}
-			} catch (NumberFormatException e) {
+                Channel channel = Server.getServer().getChannelManger().getChannel(name);
 
-			}
+                if (channel == null) {
+                    channel = new LocalChannel(name);
+                }
 
-			if (!channel.checkPassword((request.getArgs().length >= 2) ? request.getArgs()[1] : "")) {
-				request.getConnection().send(Error.ERR_BADCHANNELKEY, request.getClient(), channel.getName() + " :Cannot join channel (+k)");
-				continue;
-			}
+                return channel;
+            }
+        });
 
-			if (channel.isMode('i') && !request.getClient().isInvitedTo(channel) && !request.getClient().getModes().contains('o')) {
-				request.getConnection().send(Error.ERR_INVITEONLYCHAN, request.getClient(), channel.getName() + " :Cannot join channel (+i)");
-				continue;
-			}
-			channel.addClient(request.getClient());
-			request.getClient().addChannel(channel);
-			request.getConnection().send(Reply.RPL_TOPIC, request.getClient(), channel.getName() + " :" + channel.getTopic());
+        channels.filter(c -> c != null);
 
-		}
+        channels.forEach(new Consumer<Channel>() {
+            @Override
+            public void accept(Channel channel) {
 
-	}
+                if (channel.hasClient(client.get()))
+                    return;
+
+                if (channel.isInviteOnly()) {
+                    // TODO
+                }
+
+                if (channel.isBanned(client.get())) {
+                    // TODO
+                }
+
+                // TODO Limit
+
+                if (channel.getPassword().isPresent()) {
+                    // TODO
+                }
+
+                channel.addClient(client.get());
+                request.getConnection().send(Reply.RPL_TOPIC, client.get(), channel.getName() + " :" + channel.getTopic());
+
+            }
+        });
+
+    }
 }

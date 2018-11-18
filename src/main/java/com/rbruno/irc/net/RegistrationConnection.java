@@ -9,13 +9,13 @@ import java.util.Optional;
 
 import com.rbruno.irc.Server;
 
-public class IrcConnection extends BaseConnection implements Connection, Runnable {
-  
-  public String nickname;
-  
+public class RegistrationConnection extends BaseConnection implements Connection, Runnable {
+
+  private Optional<String> nickname;
+
   protected BufferedReader reader;
 
-  public IrcConnection(Socket socket) {
+  public RegistrationConnection(Socket socket) {
     super(socket);
   }
 
@@ -27,11 +27,11 @@ public class IrcConnection extends BaseConnection implements Connection, Runnabl
   public void run() {
     try {
       reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"));
-      while (true) {
+      while (!closed) {
         Request request = getNextRequest(reader);
 
         if (request == null) {
-          // TODO Quit
+          close();
         }
         Server.getServer().getCommandInvoker().runCommand(request, Optional.empty());
       }
@@ -54,8 +54,23 @@ public class IrcConnection extends BaseConnection implements Connection, Runnabl
   }
 
   @Override
-  public void setNickName(String nickname) {
-    this.nickname = nickname;
+  public void close() {
+    try {
+      reader.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    super.close();
+  }
+
+  @Override
+  public void setNickname(String nickname) {
+    this.nickname = Optional.of(nickname);
+  }
+
+  @Override
+  public Optional<String> getNickname() {
+    return nickname;
   }
 
 }

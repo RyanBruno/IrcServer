@@ -9,7 +9,7 @@ import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
-import com.rbruno.irc.client.Client;
+import com.rbruno.irc.client.LocalClient;
 import com.rbruno.irc.logger.Logger;
 import com.rbruno.irc.net.Request;
 
@@ -133,7 +133,7 @@ public class PluginManager {
 	 * @param client
 	 *            The client to pass to all Plugins.
 	 */
-	public void runOnClientLogin(Client client) {
+	public void runOnClientLogin(LocalClient client) {
 		for (Plugin current : getPlugins()) {
 			try {
 				current.onClientLogin(client);

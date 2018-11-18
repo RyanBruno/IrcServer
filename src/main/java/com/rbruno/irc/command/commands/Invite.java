@@ -1,36 +1,41 @@
 package com.rbruno.irc.command.commands;
 
+import java.util.Optional;
+
+import com.rbruno.irc.Server;
 import com.rbruno.irc.channel.Channel;
 import com.rbruno.irc.client.Client;
-import com.rbruno.irc.net.ClientRequest;
+import com.rbruno.irc.client.LocalClient;
+import com.rbruno.irc.command.Command;
+import com.rbruno.irc.net.Request;
 import com.rbruno.irc.reply.Error;
 import com.rbruno.irc.reply.Reply;
 
-public class Invite extends ClientCommand {
+public class Invite extends Command {
 
-	public Invite() {
-		super("INVITE", 2);
-	}
+  public Invite() {
+    super("INVITE", 2);
+  }
 
-	@Override
-	public void execute(ClientRequest request) {
-		Channel channel = getServer(request).getChannelManger().getChannel(request.getArgs()[1]);
-		if (channel == null) {
-			request.getConnection().send(Error.ERR_NOSUCHCHANNEL, request.getClient(), request.getArgs()[1] + " :No such channel");
-			return;
-		}
-		if (!channel.checkOP(request.getClient()) && !request.getClient().getModes().contains('o')) {
-			request.getConnection().send(Error.ERR_CHANOPRIVSNEEDED, request.getClient(), request.getArgs()[1] + " :You're not channel operator");
-			return;
-		}
-		Client target = getServer(request).getClientManager().getClient(request.getArgs()[0]);
-		if (target == null) {
-			request.getConnection().send(Error.ERR_NOSUCHNICK, request.getClient(), request.getArgs()[1] + " :No such nick");
-			return;
-		}
-		target.addInvite(channel);
-		request.getConnection().send(Reply.RPL_INVITING, request.getClient(), target.getNickname() + " " + channel.getName());
-		target.getConnection().send(":" + request.getClient().getAbsoluteName() + " INVITE " + target.getNickname() + " " + channel.getName());
-	}
+  @Override
+  public void execute(Request request, Optional<Client> client) {
+    Channel channel = Server.getServer().getChannelManger().getChannel(request.getArgs()[1]);
+    if (channel == null) {
+      request.getConnection().send(Error.ERR_NOSUCHCHANNEL, client.get(), request.getArgs()[1] + " :No such channel");
+      return;
+    }
+    if (!channel.isChanOp(client.get()) && !Server.getServer().getOperManager().isop(client.get())) {
+      request.getConnection().send(Error.ERR_CHANOPRIVSNEEDED, client.get(), request.getArgs()[1] + " :You're not channel operator");
+      return;
+    }
+    LocalClient target = Server.getServer().getClientManager().getClient(request.getArgs()[0]);
+    if (target == null) {
+      request.getConnection().send(Error.ERR_NOSUCHNICK, client.get(), request.getArgs()[1] + " :No such nick");
+      return;
+    }
+    // TODO Invite Player
+    request.getConnection().send(Reply.RPL_INVITING, client.get(), target.getNickname() + " " + channel.getName());
+    target.getConnection().send(":" + client.get().getAbsoluteName() + " INVITE " + target.getNickname() + " " + channel.getName());
+  }
 
 }

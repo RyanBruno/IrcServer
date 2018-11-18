@@ -7,61 +7,47 @@ import java.util.ArrayList;
  */
 public class ChannelManager {
 
-	private ArrayList<Channel> channels = new ArrayList<Channel>();
+    private ArrayList<Channel> channels = new ArrayList<Channel>();
 
-	/**
-	 * Returns an ArrayList of all the channels.
-	 * 
-	 * @return an ArrayList of all the channels.
-	 */
-	public ArrayList<Channel> getChannels() {
-		return channels;
-	}
+    /**
+     * Returns an ArrayList of all the channels.
+     * 
+     * @return an ArrayList of all the channels.
+     */
+    public ArrayList<Channel> getChannels() {
+        return channels;
+    }
 
-	/**
-	 * Adds a channel to the Array.
-	 * 
-	 * @param channel
-	 *            Channel to be added.
-	 */
-	public void addChannel(Channel channel) {
-		channels.add(channel);
-	}
+    /**
+     * Adds a channel to the Array.
+     * 
+     * @param channel Channel to be added.
+     */
+    public void addChannel(Channel channel) {
+        channels.add(channel);
+    }
 
-	/**
-	 * Removes a channel from the Array.
-	 * 
-	 * @param channel
-	 *            Channel to be removed.
-	 */
-	public void removeChannel(Channel channel) {
-		channels.remove(channel);
-	}
+    /**
+     * Removes a channel from the Array.
+     * 
+     * @param channel Channel to be removed.
+     */
+    public void removeChannel(Channel channel) {
+        channels.remove(channel);
+    }
 
-	/**
-	 * Returns channel with the given name.
-	 * 
-	 * @param name
-	 *            Name of channel that is returned.
-	 * @return Returns Channel with the given name or null if channel does not
-	 *         exist.
-	 */
-	public Channel getChannel(String name) {
-		for (Channel channel : this.getChannels())
-			if (channel.getName().equals(name)) return channel;
-		return null;
-	}
-
-	/**
-	 * Returns the number of channels that do not have the secret flag.
-	 * 
-	 * @return The number of channels that do not have the secret flag.
-	 */
-	public int getNonSecretChannels() {
-		int channels = 0;
-		for (Channel channel : this.getChannels())
-			if (!channel.isMode('i')) channels++;
-		return channels;
-	}
+    /**
+     * Returns channel with the given name.
+     * 
+     * @param name Name of channel that is returned.
+     * @return Returns Channel with the given name or null if channel does not
+     *         exist.
+     */
+    public Channel getChannel(String name) {
+        for (Channel channel : this.getChannels())
+            if (channel.getName().equals(name))
+                return channel;
+        return null;
+    }
 
 }

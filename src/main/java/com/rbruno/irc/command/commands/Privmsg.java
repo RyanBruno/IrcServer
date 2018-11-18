@@ -1,18 +1,22 @@
 package com.rbruno.irc.command.commands;
 
+import java.util.Optional;
+
 import com.rbruno.irc.channel.Channel;
 import com.rbruno.irc.client.Client;
-import com.rbruno.irc.net.ClientRequest;
+import com.rbruno.irc.client.LocalClient;
+import com.rbruno.irc.command.Command;
+import com.rbruno.irc.net.Request;
 import com.rbruno.irc.reply.Error;
 
-public class Privmsg extends ClientCommand {
+public class Privmsg extends Command {
 
 	public Privmsg() {
 		super("PRIVMSG", 2);
 	}
 
 	@Override
-	public void execute(ClientRequest request) {
+	public void execute(Request request, Optional<Client> client) {
 		for (String reciver : request.getArgs()[0].split(",")) {
 			if (reciver.startsWith("$")) {
 				// TODO: Server
@@ -33,7 +37,7 @@ public class Privmsg extends ClientCommand {
 				channel.sendMessage(request.getClient(), request.getArgs()[1]);
 
 			} else {
-				Client client = getServer(request).getClientManager().getClient(reciver);
+				LocalClient client = getServer(request).getClientManager().getClient(reciver);
 				if (client != null) {
 					client.getConnection().send(":" + request.getClient().getAbsoluteName() + " PRIVMSG " + client.getNickname() + " " + request.getArgs()[1]);
 				} else {

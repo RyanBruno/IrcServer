@@ -1,7 +1,5 @@
 package com.rbruno.irc.command.commands;
 
-import java.util.Optional;
-
 import com.rbruno.irc.Server;
 import com.rbruno.irc.channel.Channel;
 import com.rbruno.irc.client.Client;
@@ -17,7 +15,7 @@ public class Topic extends Command {
   }
 
   @Override
-  public void execute(Request request, Optional<Client> client) {
+  public void execute(Request request, Client client) {
     super.execute(request, client);
     Channel channel = Server.getServer().getChannelManger().getChannel(request.getArgs()[0]);
     if (channel == null) {

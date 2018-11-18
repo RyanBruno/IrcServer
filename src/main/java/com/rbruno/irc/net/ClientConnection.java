@@ -2,19 +2,20 @@ package com.rbruno.irc.net;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.net.Socket;
+import java.io.InputStreamReader;
 import java.util.Optional;
 
 import com.rbruno.irc.Server;
-import com.rbruno.irc.client.Client;
+import com.rbruno.irc.client.LocalClient;
 
 public class ClientConnection extends BaseConnection implements Connection, Runnable {
 
-  private IrcConnection base;
-  private Client client;
+  private Connection base;
+  private LocalClient client;
+  protected BufferedReader reader;
 
-  public ClientConnection(Socket socket, IrcConnection base, Client client) {
-    super(socket);
+  public ClientConnection(Connection base, LocalClient client) {
+    super(null);
     this.base = base;
     this.client = client;
   }
@@ -22,11 +23,12 @@ public class ClientConnection extends BaseConnection implements Connection, Runn
   @Override
   public void run() {
     try {
+      reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"));
       while (true) {
-        Request request = getNextRequest(base.reader);
+        Request request = getNextRequest(reader);
 
         if (request == null) {
-          // TODO Quit
+          close();
         }
         Server.getServer().getCommandInvoker().runCommand(request, Optional.ofNullable(client));
       }
@@ -42,6 +44,27 @@ public class ClientConnection extends BaseConnection implements Connection, Runn
   }
 
   @Override
-  public void setNickName(String nickname) {
+  public void close() {
+    try {
+      reader.close();
+      base.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  @Override
+  public boolean send(byte[] block) {
+    return base.send(block);
+  }
+
+  @Override
+  public void setNickname(String nickname) {
+      client.setNickname(nickname);
+  }
+
+  @Override
+  public Optional<String> getNickname() {
+    return Optional.of(client.getNickname());
   }
 }

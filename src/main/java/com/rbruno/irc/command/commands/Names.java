@@ -1,50 +1,59 @@
 package com.rbruno.irc.command.commands;
 
-import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
+import com.rbruno.irc.Server;
 import com.rbruno.irc.channel.Channel;
 import com.rbruno.irc.client.Client;
-import com.rbruno.irc.net.ClientRequest;
+import com.rbruno.irc.command.Command;
+import com.rbruno.irc.net.Request;
 import com.rbruno.irc.reply.Reply;
 
-public class Names extends ClientCommand {
+public class Names extends Command {
 
-	public Names() {
-		super("NAMES", 0);
-	}
+    public Names() {
+        super("NAMES", 0);
+    }
 
-	@Override
-	public void execute(ClientRequest request) {
-		if (request.getArgs().length == 0) {
-			ArrayList<Channel> channels = getServer(request).getChannelManger().getChannels();
-			for (Channel current : channels) {
-				String message = current.getName() + " :";
-				ArrayList<Client> clients = current.getClients();
-				for (Client client : clients) {
-					if (current.checkOP(client) || client.getModes().contains('o')) {
-						message = message + "@" + client.getNickname() + " ";
-					} else {
-						message = message + "+" + client.getNickname() + " ";
-					}
-				}
-				request.getConnection().send(Reply.RPL_NAMREPLY, request.getClient(), message);
-			}
-		} else {
-			String[] stringChannels = request.getArgs()[0].split(",");
-			for (String current : stringChannels) {
-				Channel channel = getServer(request).getChannelManger().getChannel(current);
-				String message = channel.getName() + " :";
-				ArrayList<Client> clients = channel.getClients();
-				for (Client client : clients) {
-					if (channel.checkOP(client) || client.getModes().contains('o')) {
-						message = message + "@" + client.getNickname() + " ";
-					} else {
-						message = message + "+" + client.getNickname() + " ";
-					}
-				}
-				request.getConnection().send(Reply.RPL_NAMREPLY, request.getClient(), message);
-			}
-		}
-	}
+    @Override
+    public void execute(Request request, Optional<Client> client) {
+        Stream<Channel> channels;
+
+        if (request.getArgs().length == 0) {
+            channels = Server.getServer().getChannelManger().getChannels().stream().filter(c -> c.hasClient(client.get()));
+        } else {
+            channels = Stream.of(request.getArgs()[0].split(",")).map(new Function<String, Channel>() {
+                @Override
+                public Channel apply(String name) {
+                    return Server.getServer().getChannelManger().getChannel(name);
+                }
+            }).filter(c -> c != null);
+        }
+
+        channels.forEach(new Consumer<Channel>() {
+
+            @Override
+            public void accept(Channel channel) {
+                String message = channel.getName() + " :";
+                Iterator<Client> clients = channel.getIterator();
+
+                while (clients.hasNext()) {
+                    Client client = clients.next();
+                    if (channel.isChanOp(client) || Server.getServer().getOperManager().isop(client)) {
+                        message = message + "@" + client.getNickname() + " ";
+                    } else {
+                        message = message + "+" + client.getNickname() + " ";
+                    }
+                }
+
+                request.getConnection().send(Reply.RPL_NAMREPLY, client.get(), message);
+            }
+        });
+
+    }
 
 }

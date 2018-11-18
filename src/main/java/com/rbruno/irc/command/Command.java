@@ -8,23 +8,21 @@ import com.rbruno.irc.reply.Error;
 
 public abstract class Command {
 
-  protected int args;
+    protected int args;
 
-  public Command(String command, int args) {
-    this.args = args;
-  }
-
-  public void execute(Request request, Optional<Client> client) {
-    if (client.isPresent()) {
-      client.get().setLastCheckin(System.currentTimeMillis());
+    public Command(String command, int args) {
+        this.args = args;
     }
 
-    if (request.getArgs().length < args) {
-      if (client.isPresent()) {
-        request.getConnection().send(Error.ERR_NEEDMOREPARAMS, client.get(), ":Not enough parameters");
-      }
-      return;
+    public void execute(Request request, Optional<Client> client) {
+        if (client.isPresent())
+            client.get().setLastCheckin(System.currentTimeMillis());
+
+        if (request.getArgs().length < args) {
+            if (client.isPresent())
+                request.getConnection().send(Error.ERR_NEEDMOREPARAMS, client.get().getNickname(), ":Not enough parameters");
+            return;
+        }
     }
-  }
 
 }
