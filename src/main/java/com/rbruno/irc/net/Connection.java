@@ -2,36 +2,75 @@ package com.rbruno.irc.net;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.Socket;
 import java.util.Optional;
 
-import com.rbruno.irc.client.Client;
-import com.rbruno.irc.reply.Error;
-import com.rbruno.irc.reply.Reply;
+import com.rbruno.irc.Server;
 
-public interface Connection {
+public class RegistrationConnection extends BaseConnection implements Connection, Runnable {
 
-    public Request getNextRequest(BufferedReader reader) throws IOException;
+  private Optional<String> nickname;
 
-    public void setNickname(String nickname);
+  protected BufferedReader reader;
 
-    public Optional<String> getNickname();
+  public RegistrationConnection(Socket socket) {
+    super(socket);
+  }
 
-    public void close();
+  /**
+   * Start listing on socket. When a line is received it creates a new Request
+   * object and send to Command.runCommnd(Request)
+   */
+  @Override
+  public void run() {
+    try {
+      reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"));
+      while (!closed) {
+        Request request = getNextRequest(reader);
 
-    public boolean send(byte[] message);
+        if (request == null) {
+          close();
+        }
+        Server.getServer().getCommandInvoker().runCommand(request, Optional.empty());
+      }
+    } catch (UnsupportedEncodingException e) {
+      e.printStackTrace();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
 
-    public boolean send(String message);
+  @Override
+  public Request getNextRequest(BufferedReader reader) throws IOException {
+    String line = reader.readLine();
 
-    public boolean send(String prefix, String command, String args);
+    if (line == null) {
+      return null;
+    } else {
+      return new Request(this, line);
+    }
+  }
 
-    public boolean send(int code, String nickname, String args);
+  @Override
+  public void close() {
+    try {
+      reader.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    super.close();
+  }
 
-    public boolean send(Reply reply, String nickname, String args);
+  @Override
+  public void setNickname(String nickname) {
+    this.nickname = Optional.of(nickname);
+  }
 
-    public boolean send(Reply reply, Client client, String args);
-
-    public boolean send(Error error, String nickname, String args);
-
-    public boolean send(Error error, Client client, String args);
+  @Override
+  public Optional<String> getNickname() {
+    return nickname;
+  }
 
 }
