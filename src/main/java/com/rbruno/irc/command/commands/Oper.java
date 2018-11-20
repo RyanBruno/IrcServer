@@ -17,6 +17,7 @@ public class Oper extends Command {
 
     @Override
     public void execute(Request request, Optional<Client> client) {
+        super.execute(request, client);
         if (Server.getServer().getOperManager().checkOpPassword(request.getArgs()[0], request.getArgs()[1], client.get())) {
             Server.getServer().getOperManager().addop(client.get());
             request.getConnection().send(Reply.RPL_YOUREOPER, client.get().getNickname(), ":You are now an IRC operator");

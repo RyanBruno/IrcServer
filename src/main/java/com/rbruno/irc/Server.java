@@ -6,10 +6,11 @@ import java.net.Socket;
 
 import com.rbruno.irc.channel.ChannelManager;
 import com.rbruno.irc.client.ClientManager;
-import com.rbruno.irc.command.CommandInvoker;
+import com.rbruno.irc.command.ClientCommandInvoker;
+import com.rbruno.irc.command.RegistrationCommandInvoker;
 import com.rbruno.irc.config.Config;
 import com.rbruno.irc.logger.Logger;
-import com.rbruno.irc.net.RegistrationConnection;
+import com.rbruno.irc.net.Connection;
 import com.rbruno.irc.oper.OperManager;
 import com.rbruno.irc.plugin.PluginManager;
 
@@ -27,7 +28,8 @@ public class Server {
     private ClientManager clientManager;
     private ChannelManager channelManger;
     private PluginManager pluginManager;
-    private CommandInvoker commandInvoker;
+    private RegistrationCommandInvoker regCommandInvoker;
+    private ClientCommandInvoker clientCommandInvoker;
     private OperManager operManager;
 
     private static Server server;
@@ -46,7 +48,8 @@ public class Server {
         clientManager = bootStrap.createClientManager();
         channelManger = bootStrap.createChannelManager();
         pluginManager = bootStrap.createPluginManager();
-        commandInvoker = bootStrap.createCommandInvoker();
+        regCommandInvoker = bootStrap.createRegCommandInvoker();
+        clientCommandInvoker = bootStrap.createClientCommandInvoker();
         operManager = bootStrap.createOperManager();
         
         serverSocket = new ServerSocket(config.getPort());
@@ -63,7 +66,7 @@ public class Server {
         while (true) {
             try {
                 Socket socket = serverSocket.accept();
-                Thread connection = new Thread(new RegistrationConnection(socket));
+                Thread connection = new Thread(new Connection(socket, regCommandInvoker));
                 connection.start();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -112,8 +115,8 @@ public class Server {
         return pluginManager;
     }
 
-    public CommandInvoker getCommandInvoker() {
-        return commandInvoker;
+    public ClientCommandInvoker getClientCommandInvoker() {
+        return clientCommandInvoker;
     }
 
     public OperManager getOperManager() {

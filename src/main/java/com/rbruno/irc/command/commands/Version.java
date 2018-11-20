@@ -16,6 +16,7 @@ public class Version extends Command {
 
     @Override
     public void execute(Request request, Optional<Client> client) {
+        super.execute(request, client);
         request.getConnection().send(Reply.RPL_VERSION, client.get(), Server.VERSION + " " + Server.getServer().getConfig().getHostname());
     }
 }

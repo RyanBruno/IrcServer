@@ -12,20 +12,21 @@ import com.rbruno.irc.reply.Reply;
 
 public class Info extends Command {
 
-  public Info() {
-    super("INFO", 0);
-  }
-
-  @Override
-  public void execute(Request request, Optional<Client> client) {
-    try {
-      BufferedReader inputStream = new BufferedReader(new InputStreamReader(Info.class.getResourceAsStream("/info.txt")));
-      inputStream.lines().forEach(l -> request.getConnection().send(Reply.RPL_INFO, client.get(), ":" + l));
-      inputStream.close();
-    } catch (IOException e) {
-      e.printStackTrace();
+    public Info() {
+        super("INFO", 0);
     }
-    request.getConnection().send(Reply.RPL_ENDOFINFO, client.get(), ":End of /INFO list");
-  }
+
+    @Override
+    public void execute(Request request, Optional<Client> client) {
+        super.execute(request, client);
+        try {
+            BufferedReader inputStream = new BufferedReader(new InputStreamReader(Info.class.getResourceAsStream("/info.txt")));
+            inputStream.lines().forEach(l -> request.getConnection().send(Reply.RPL_INFO, client.get(), ":" + l));
+            inputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        request.getConnection().send(Reply.RPL_ENDOFINFO, client.get(), ":End of /INFO list");
+    }
 
 }

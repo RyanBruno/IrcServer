@@ -3,40 +3,33 @@ package com.rbruno.irc.channel;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Optional;
-import java.util.function.Consumer;
 
 import com.rbruno.irc.client.Client;
-import com.rbruno.irc.reply.Reply;
 
 public class LocalChannel implements Channel {
 
     private String name;
-    protected Optional<String> topic;
+    private String topic;
+    private IrcMessenger messenger;
 
-    protected ArrayList<Client> clients;
-    protected ArrayList<Client> ops;
-    protected ArrayList<Client> banned;
-    protected ArrayList<Client> voice;
+    private ArrayList<Client> clients;
+    private ArrayList<Client> ops;
+    private ArrayList<Client> banned;
+    private ArrayList<Client> voice;
 
-    private boolean privateChannel;
-    private boolean secrete;
-    private boolean inviteOnly;
-    private boolean opMustSetTopic;
-    private boolean noOutSideMessages;
-    private boolean moderated;
-    private int userLimit;
-    private Optional<String> password;
+    private ChannelMode modes;
 
     public LocalChannel(String name) {
         this.name = name;
+        this.topic = "Default Topic";
+        messenger = new IrcMessenger();
 
         clients = new ArrayList<Client>(5);
         ops = new ArrayList<Client>(2);
         banned = new ArrayList<Client>(2);
         voice = new ArrayList<Client>(5);
 
-        userLimit = 10;
-        password = Optional.empty();
+        modes = new ChannelMode();
     }
 
     @Override
@@ -46,53 +39,48 @@ public class LocalChannel implements Channel {
 
     @Override
     public String getTopic() {
-        if (topic.isPresent())
-            return topic.get();
-        return "Default Topic";
+        return topic;
     }
 
-    public void setTopic(Optional<String> topic) {
-        // TODO Send to all
+    public void setTopic(String topic) {
+        messenger.sendTopicToAll(this, getIterator());
         this.topic = topic;
     }
 
     @Override
     public void addClient(Client client) {
-        // TODO JOIN MSG
-
-        this.sendToAll(":" + client.getNickname() + "!" + client.getUsername() + "@" + client.getHostname() + " JOIN " + this.getName());
-
-        String message = "@ " + this.getName() + " :";
-        for (Client current : clients) {
-            if (isChanOp(client)) {
-                message = message + "@" + current.getNickname() + " ";
-            } else if (hasVoice(current)) {
-                message = message + "+" + current.getNickname() + " ";
-            } else {
-                message = message + current.getNickname() + " ";
-            }
-        }
-        client.getConnection().send(Reply.RPL_NAMREPLY, client, message);
-        client.getConnection().send(Reply.RPL_ENDOFNAMES, client, this.getName() + " :End of /NAMES list.");
+        messenger.sendJoinMessage(this, client);
+        messenger.sendNames(this, client, getIterator());
+        messenger.sendTopic(this, client);
         clients.add(client);
+    }
+
+    @Override
+    public void sendToAll(String message) {
+        Iterator<Client> clients = getIterator();
+        while (clients.hasNext()) {
+            Client client = clients.next();
+            client.getConnection().send(message);
+        }
     }
     
     @Override
-    public void sendToAll(String message) {
-        clients.stream().forEach(new Consumer<Client>() {
-
-            @Override
-            public void accept(Client client) {
-                    client.getConnection().send(message);
-                
-            }
-        });
+    public void partClient(Client client, Optional<String> message) {
+        messenger.clientPart(this, client, message.isPresent() ? message.get() : "Leaving");
+        clients.remove(client);
     }
 
     @Override
-    public void removeClient(Client client) {
-        // TODO QUIT MSG
+    public void quitClient(Client client, Optional<String> message) {
+        messenger.clientQuit(this, client, message.isPresent() ? message.get() : "Leaving");
         clients.remove(client);
+    }
+    
+
+    @Override
+    public void kickClient(Client client, Optional<String> message) {
+        messenger.clientKick(this, client, message.isPresent() ? message.get() : "You have been kicked from the channel");
+        clients.remove(client);        
     }
 
     @Override
@@ -112,41 +100,6 @@ public class LocalChannel implements Channel {
         } else {
             ops.remove(client);
         }
-    }
-
-    @Override
-    public boolean isPrivateChannel() {
-        return privateChannel;
-    }
-
-    @Override
-    public boolean isSecrete() {
-        return secrete;
-    }
-
-    @Override
-    public boolean isInviteOnly() {
-        return inviteOnly;
-    }
-
-    @Override
-    public boolean isOpMustSetTopic() {
-        return opMustSetTopic;
-    }
-
-    @Override
-    public boolean isNoOutsideMessages() {
-        return noOutSideMessages;
-    }
-
-    @Override
-    public boolean isModerated() {
-        return moderated;
-    }
-
-    @Override
-    public int getuserLimit() {
-        return userLimit;
     }
 
     @Override
@@ -178,16 +131,6 @@ public class LocalChannel implements Channel {
     }
 
     @Override
-    public Optional<String> getPassword() {
-        return password;
-    }
-
-    @Override
-    public void setPassword(Optional<String> password) {
-        this.password = password;
-    }
-
-    @Override
     public boolean hasClient(Client client) {
         return clients.contains(client);
     }
@@ -197,4 +140,8 @@ public class LocalChannel implements Channel {
         return clients.size();
     }
 
+    @Override
+    public ChannelMode getModes() {
+        return modes;
+    }
 }

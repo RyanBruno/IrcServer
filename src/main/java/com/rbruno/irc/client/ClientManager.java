@@ -2,31 +2,42 @@ package com.rbruno.irc.client;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Optional;
+
+import com.rbruno.irc.Server;
+import com.rbruno.irc.channel.Channel;
 
 /**
  * Manages all clients local and remote.
  */
 public class ClientManager {
 
-    private ArrayList<LocalClient> clients = new ArrayList<LocalClient>();
+    private ArrayList<Client> clients = new ArrayList<Client>();
 
-    public void addClient(LocalClient client) {
+    public void addClient(Client client) {
         clients.add(client);
     }
 
-    public void removeClient(LocalClient client) {
+    public void removeClient(Client client, Optional<String> message) {
+        Iterator<Channel> channels = Server.getServer().getChannelManger().getChannels().iterator();
+        while (channels.hasNext()) {
+            Channel channel = channels.next();
+            if (channel.hasClient(client)) {
+                channel.quitClient(client, message);
+            }
+        }
         clients.remove(client);
     }
 
-    public Iterator<LocalClient> iterator() {
+    public Iterator<Client> iterator() {
         return clients.iterator();
     }
 
-    public LocalClient getClient(String nickname) {
-        Iterator<LocalClient> iterator = clients.iterator();
+    public Client getClient(String nickname) {
+        Iterator<Client> iterator = clients.iterator();
 
         while (iterator.hasNext()) {
-            LocalClient current = iterator.next();
+            Client current = iterator.next();
             if (current.getNickname().equals(nickname))
                 return current;
 

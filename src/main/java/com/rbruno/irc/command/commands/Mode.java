@@ -1,126 +1,141 @@
 package com.rbruno.irc.command.commands;
 
-import java.io.IOException;
 import java.util.Optional;
 
+import com.rbruno.irc.Server;
 import com.rbruno.irc.channel.Channel;
 import com.rbruno.irc.client.Client;
-import com.rbruno.irc.client.LocalClient;
 import com.rbruno.irc.command.Command;
-import com.rbruno.irc.net.ClientRequest;
 import com.rbruno.irc.net.Request;
 import com.rbruno.irc.reply.Error;
 import com.rbruno.irc.reply.Reply;
 
 public class Mode extends Command {
 
-	public Mode() {
-		super("MODE", 1);
-	}
+    public Mode() {
+        super("MODE", 1);
+    }
 
-	@Override
-	public void execute(Request request, Optional<Client> client) {
-		if (request.getArgs().length <= 1) {
-			String target = request.getArgs()[0];
-			Channel channel = getServer(request).getChannelManger().getChannel(target);
-			if (channel == null) {
-				request.getConnection().send(Error.ERR_NOSUCHCHANNEL, request.getClient(), target + " :No such channel");
-			}
-			String modes = "";
-			for (char current : channel.getModeMap().keySet())
-				modes += current;
-			request.getConnection().send(Reply.RPL_CHANNELMODEIS, request.getClient(), target + " +" + modes);
-			return;
-		}
-		String modeFlag = request.getArgs()[1];
-		if (!(modeFlag.startsWith("+") || modeFlag.startsWith("-"))) request.getConnection().send(Error.ERR_UMODEUNKNOWNFLAG, request.getClient(), "Unknown MODE flag");
-		boolean add = true;
-		if (modeFlag.startsWith("-")) add = false;
-		if (request.getArgs()[0].matches("(#|&|-|!).*")) {
-			channel(request, modeFlag, add);
-		} else {
-			client(request, modeFlag, add);
-		}
+    @Override
+    public void execute(Request request, Optional<Client> client) {
+        super.execute(request, client);
+        if (request.getArgs()[0].startsWith("#") || request.getArgs()[0].startsWith("#")) {
+            Channel channel = Server.getServer().getChannelManger().getChannel(request.getArgs()[0]);
 
-	}
+            if (channel == null) {
+                request.getConnection().send(Error.ERR_NOSUCHCHANNEL, client.get(), request.getArgs()[0] + " :No such channel");
+                return;
+            }
 
-	private void channel(ClientRequest request, String modeFlag, boolean add) throws IOException {
-		Channel target = getServer(request).getChannelManger().getChannel(request.getArgs()[0]);
-		if (target == null) {
-			request.getConnection().send(Error.ERR_NOSUCHCHANNEL, request.getClient(), modeFlag + " :No such channel");
-			return;
-		}
-		if (!request.getClient().getModes().contains('o') && !target.checkOP(request.getClient())) {
-			request.getConnection().send(Error.ERR_NOPRIVILEGES, request.getClient(), ":Permission Denied- You're not an IRC operator");
-			return;
-		}
-		for (char mode : modeFlag.toLowerCase().substring(1).toCharArray()) {
-			switch (mode) {
-			case 'o':
-				LocalClient clientTarget = getServer(request).getClientManager().getClient(request.getArgs()[2]);
-				if (clientTarget == null) {
-					request.getConnection().send(Error.ERR_NOSUCHNICK, request.getClient(), request.getArgs()[2] + " :No such nick");
-					continue;
-				}
-				if (add) {
-					target.addOP(clientTarget);
-				} else {
-					target.takeOP(clientTarget);
-				}
-				target.send(Reply.RPL_CHANNELMODEIS, target.getName() + (add ? " +" : " -") + "o " + clientTarget.getNickname());
-				break;
-			case 'b':
-				break;
-			case 'v':
-				LocalClient voicee = getServer(request).getClientManager().getClient(request.getArgs()[2]);
-				if (voicee != null) {
-					if (add) {
-						target.giveVoice(voicee);
-					} else {
-						target.takeVoice(voicee);
-					}
-				} else {
-					request.getConnection().send(Error.ERR_NOSUCHNICK, request.getClient(), ":No such channel");
-				}
-				target.send(Reply.RPL_CHANNELMODEIS, target.getName() + (add ? " +" : " -") + "v " + voicee.getNickname());
-				break;
-			default:
-				if (request.getArgs().length < 3) {
-					target.setMode(mode, add, "");
-				} else {
-					target.setMode(mode, add, request.getArgs()[2]);
-				}
-				target.send(Reply.RPL_CHANNELMODEIS, target.getName() + (add ? " +" : " -") + mode);
-				break;
-			}
+            if (request.getArgs().length <= 1) {
+                request.getConnection().send(Reply.RPL_CHANNELMODEIS, client.get(), channel.getName() + "+"/* TODO */);
+                return;
+            }
 
-		}
+            if (!channel.isChanOp(client.get()) && !Server.getServer().getOperManager().isop(client.get())) {
+                request.getConnection().send(Error.ERR_NOPRIVILEGES, client.get(), ":Permission Denied- You're not an IRC operator");
+                return;
+            }
 
-	}
+            boolean add = true;
 
-	private void client(ClientRequest request, String modeFlag, boolean add) throws IOException {
-		if (getServer(request).getClientManager().getClient(request.getArgs()[0]) == null) {
-			request.getConnection().send(Error.ERR_NOSUCHNICK, request.getClient(), request.getArgs()[0] + " :No such nick/channel");
-			return;
-		}
-		LocalClient target = getServer(request).getClientManager().getClient(request.getArgs()[0]);
-		if (!request.getClient().getModes().contains('o')) {
-			request.getConnection().send(Error.ERR_NOPRIVILEGES, request.getClient(), ":Permission Denied- You're not an IRC operator");
-			return;
-		}
-		for (char mode : modeFlag.toLowerCase().substring(1).toCharArray()) {
-			if (mode == 'a') {
-				target.getConnection().send(Error.ERR_UMODEUNKNOWNFLAG, request.getClient(), ":Use AWAY command!");
-				return;
-			}
-			if (mode == 'o') {
-				target.getConnection().send(Error.ERR_UMODEUNKNOWNFLAG, request.getClient(), ":Use OPER command!");
-				return;
-			}
-			target.setMode(mode, add);
-			target.getConnection().send(Reply.RPL_UMODEIS, target, request.getClient().getAbsoluteName() + " sets mode " + (add ? "+" : "-") + mode + " on " + target.getNickname());
-		}
+            for (char c : request.getArgs()[1].toLowerCase().toCharArray()) {
+                switch (c) {
+                case '+':
+                    add = true;
+                    break;
+                case '-':
+                    add = false;
+                    break;
+                case 'o':
+                    Client target = null;
 
-	}
+                    if (request.getArgs().length >= 3) {
+                        target = Server.getServer().getClientManager().getClient(request.getArgs()[2]);
+                    }
+
+                    if (target == null) {
+                        request.getConnection().send(Error.ERR_NOSUCHNICK, client.get(), request.getArgs()[2] + " :No such nick");
+                        continue;
+                    }
+
+                    channel.setChanOp(target, add);
+                    break;
+                case 'p':
+                    channel.getModes().setPrivate(add);
+                    break;
+                case 's':
+                    channel.getModes().setSecret(add);
+                    break;
+                case 'i':
+                    channel.getModes().setInviteOnly(add);
+                    break;
+                case 't':
+                    channel.getModes().setOpMustSetTopic(add);
+                    break;
+                case 'n':
+                    channel.getModes().setNoOutSideMessages(add);
+                    break;
+                case 'm':
+                    channel.getModes().setModerated(add);
+                    break;
+                case 'l':
+                    if (request.getArgs().length < 3) {
+                        request.getConnection().send(Error.ERR_NEEDMOREPARAMS, client.get(), request.getCommand() + " :Not enough parameters");
+                        continue;
+                    }
+                    try {
+                        channel.getModes().setUserLimit(Integer.parseInt(request.getArgs()[2]));
+                    } catch (NumberFormatException e) {
+                        request.getConnection().send(Error.ERR_NEEDMOREPARAMS, client.get(), request.getCommand() + " :Not enough parameters");
+                    }
+                    break;
+                case 'b':
+                    Client banee = null;
+
+                    if (request.getArgs().length >= 3) {
+                        banee = Server.getServer().getClientManager().getClient(request.getArgs()[2]);
+                    }
+
+                    if (banee == null) {
+                        request.getConnection().send(Error.ERR_NOSUCHNICK, client.get(), request.getArgs()[2] + " :No such nick");
+                        continue;
+                    }
+
+                    channel.setBanned(banee, add);
+                    break;
+                case 'v':
+                    Client voicee = null;
+
+                    if (request.getArgs().length >= 3) {
+                        voicee = Server.getServer().getClientManager().getClient(request.getArgs()[2]);
+                    }
+
+                    if (voicee == null) {
+                        request.getConnection().send(Error.ERR_NOSUCHNICK, client.get(), request.getArgs()[2] + " :No such nick");
+                        continue;
+                    }
+
+                    channel.setBanned(voicee, add);
+                    break;
+                case 'k':
+                    if (add) {
+                        if (request.getArgs().length < 3) {
+                            request.getConnection().send(Error.ERR_NEEDMOREPARAMS, client.get(), request.getCommand() + " :Not enough parameters");
+                            continue;
+                        }
+                        channel.getModes().setPassword(Optional.of(request.getArgs()[2]));
+                    } else {
+                        channel.getModes().setPassword(Optional.empty());
+                    }
+                    break;
+                }
+            }
+
+        } else {
+            // Client
+        }
+
+    }
 
 }

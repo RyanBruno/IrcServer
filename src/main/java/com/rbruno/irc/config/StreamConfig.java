@@ -12,8 +12,8 @@ public abstract class StreamConfig implements Config {
     private Optional<String> adminMail;
 
     public void load(Stream<String> stream) {
-        stream = stream.filter(l -> l.startsWith("#") ? false : true);
-        stream = stream.filter(l -> l.split("=").length == 2 ? true : false);
+        stream = stream.filter(l -> !l.startsWith("#"));
+        stream = stream.filter(l -> l.split("=").length == 2);
         Optional<String> port = stream.filter(l -> l.startsWith("port")).findFirst();
         Optional<String> hostname = stream.filter(l -> l.startsWith("hostname")).findFirst();
 
@@ -25,6 +25,11 @@ public abstract class StreamConfig implements Config {
         // TODO
         this.port = Integer.parseInt(port.get().split("=")[1]);
         this.hostname = hostname.get();
+        
+        adminLoc1 = stream.filter(l -> l.startsWith("adminLoc1")).map(l -> l.split("=")[1]).findFirst();
+        adminLoc2 = stream.filter(l -> l.startsWith("adminLoc2")).map(l -> l.split("=")[1]).findFirst();
+        adminMail = stream.filter(l -> l.startsWith("adminMail")).map(l -> l.split("=")[1]).findFirst();
+
     }
 
     @Override

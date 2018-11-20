@@ -6,7 +6,6 @@ import com.rbruno.irc.Server;
 import com.rbruno.irc.client.Client;
 import com.rbruno.irc.client.LocalClient;
 import com.rbruno.irc.command.Command;
-import com.rbruno.irc.net.ClientConnection;
 import com.rbruno.irc.net.Request;
 import com.rbruno.irc.reply.Error;
 
@@ -32,9 +31,8 @@ public class User extends Command {
         //request.getConnection().send(Reply.RPL_LUSERCHANNELS, newClient, Server.getServer().getChannelManger().getNonSecretChannels() + " :channels formed");
         //request.getConnection().send(Reply.RPL_LUSERME, newClient, ":I have " + Server.getServer().getClientManager().getClientCount() + " clients and 1 servers");
 
-        request.getConnection().close();
-        new ClientConnection(request.getConnection(), newClient).run();
-
+        request.getConnection().setClient(newClient);
+        request.getConnection().setInvoker(Server.getServer().getClientCommandInvoker());
     }
 
 }

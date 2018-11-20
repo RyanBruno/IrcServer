@@ -22,6 +22,7 @@ public abstract class Command {
             if (client.isPresent())
                 request.getConnection().send(Error.ERR_NEEDMOREPARAMS, client.get().getNickname(), ":Not enough parameters");
             return;
+            // TODO Fix
         }
     }
 

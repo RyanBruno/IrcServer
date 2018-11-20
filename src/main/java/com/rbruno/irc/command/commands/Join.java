@@ -1,10 +1,6 @@
 package com.rbruno.irc.command.commands;
 
-import java.util.Arrays;
 import java.util.Optional;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.stream.Stream;
 
 import com.rbruno.irc.Server;
 import com.rbruno.irc.channel.Channel;
@@ -13,7 +9,6 @@ import com.rbruno.irc.client.Client;
 import com.rbruno.irc.command.Command;
 import com.rbruno.irc.net.Request;
 import com.rbruno.irc.reply.Error;
-import com.rbruno.irc.reply.Reply;
 
 public class Join extends Command {
 
@@ -23,51 +18,48 @@ public class Join extends Command {
 
     @Override
     public void execute(Request request, Optional<Client> client) {
-        Stream<Channel> channels = Arrays.stream(request.getArgs()[0].split(",")).map(new Function<String, Channel>() {
-            @Override
-            public Channel apply(String name) {
-                if (!name.startsWith("&") && !name.startsWith("#")) {
-                    request.getConnection().send(Error.ERR_NOSUCHCHANNEL, client.get(), name + " :No such channel");
-                }
-
-                Channel channel = Server.getServer().getChannelManger().getChannel(name);
-
-                if (channel == null) {
-                    channel = new LocalChannel(name);
-                }
-
-                return channel;
+        super.execute(request, client);
+        
+        for (String name : request.getArgs()[0].split(","))  {
+            
+            if (!name.startsWith("&") && !name.startsWith("#")) {
+                request.getConnection().send(Error.ERR_NOSUCHCHANNEL, client.get(), name + " :No such channel");
+                return;
             }
-        });
+            
+            Channel channel = Server.getServer().getChannelManger().getChannel(name);
 
-        channels.filter(c -> c != null);
-
-        channels.forEach(new Consumer<Channel>() {
-            @Override
-            public void accept(Channel channel) {
-
-                if (channel.hasClient(client.get()))
-                    return;
-
-                if (channel.isInviteOnly()) {
-                    // TODO
-                }
-
-                if (channel.isBanned(client.get())) {
-                    // TODO
-                }
-
-                // TODO Limit
-
-                if (channel.getPassword().isPresent()) {
-                    // TODO
-                }
-
-                channel.addClient(client.get());
-                request.getConnection().send(Reply.RPL_TOPIC, client.get(), channel.getName() + " :" + channel.getTopic());
-
+            if (channel == null) {
+                channel = new LocalChannel(name);
             }
-        });
+            
+            if (channel.hasClient(client.get()))
+                return;
+
+            // TODO Fix conditions
+            if (channel.getModes().isInviteOnly()) {
+                request.getConnection().send(Error.ERR_INVITEONLYCHAN, client.get(), channel.getName() + " :Cannot join channel (+i)");
+                return;
+            }
+
+            if (channel.isBanned(client.get())) {
+                request.getConnection().send(Error.ERR_BANNEDFROMCHAN, client.get(), channel.getName() + " :Cannot join channel (+b)");
+                return;
+            }
+
+            if (channel.getUsersCount() >= channel.getModes().getuserLimit()) {
+                request.getConnection().send(Error.ERR_CHANNELISFULL, client.get(), channel.getName() + " :Cannot join channel (+l)");
+                return;
+            }
+
+            if (channel.getModes().getPassword().isPresent()) {
+                request.getConnection().send(Error.ERR_BADCHANNELKEY, client.get(), channel.getName() + " :Cannot join channel (+k)");
+                return;
+            }
+
+            channel.addClient(client.get());
+
+        }
 
     }
 }

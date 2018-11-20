@@ -21,6 +21,7 @@ public class List extends Command {
 
     @Override
     public void execute(Request request, Optional<Client> client) {
+        super.execute(request, client);
         Iterator<Channel> channels;
         if (request.getArgs().length == 0) {
             channels = Server.getServer().getChannelManger().getChannels().iterator();
@@ -31,7 +32,7 @@ public class List extends Command {
                 public Channel apply(String channel) {
                     return Server.getServer().getChannelManger().getChannel(channel);
                 }
-            }).filter(c -> !c.isSecrete()).iterator();
+            }).filter(c -> !c.getModes().isSecrete()).iterator();
         }
         request.getConnection().send(Reply.RPL_LISTSTART, client.get(), "Channel :Users Name");
 
