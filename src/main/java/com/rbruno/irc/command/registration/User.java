@@ -31,6 +31,7 @@ public class User extends Command {
         //request.getConnection().send(Reply.RPL_LUSERCHANNELS, newClient, Server.getServer().getChannelManger().getNonSecretChannels() + " :channels formed");
         //request.getConnection().send(Reply.RPL_LUSERME, newClient, ":I have " + Server.getServer().getClientManager().getClientCount() + " clients and 1 servers");
 
+        Server.getServer().getClientManager().addClient(newClient);
         request.getConnection().setClient(newClient);
         request.getConnection().setInvoker(Server.getServer().getClientCommandInvoker());
     }

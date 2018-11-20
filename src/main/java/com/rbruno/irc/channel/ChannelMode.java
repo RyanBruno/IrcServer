@@ -10,8 +10,8 @@ public class ChannelMode {
     private boolean opMustSetTopic;
     private boolean noOutSideMessages;
     private boolean moderated;
-    private int userLimit;
-    private Optional<String> password;
+    private int userLimit = 10;
+    private Optional<String> password = Optional.empty();
 
     public boolean isPrivateChannel() {
         return privateChannel;

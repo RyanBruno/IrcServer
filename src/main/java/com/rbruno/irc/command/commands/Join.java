@@ -31,6 +31,7 @@ public class Join extends Command {
 
             if (channel == null) {
                 channel = new LocalChannel(name);
+                Server.getServer().getChannelManger().addChannel(channel);
             }
             
             if (channel.hasClient(client.get()))

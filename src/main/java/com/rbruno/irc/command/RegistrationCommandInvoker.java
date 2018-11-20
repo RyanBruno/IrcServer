@@ -21,16 +21,16 @@ public class RegistrationCommandInvoker implements CommandInvoker {
     }
 
     @Override
-    public void runCommand(Request request, Optional<Client> command) {
+    public void runCommand(Request request, Optional<Client> client) {
         switch (request.getCommand()) {
         case "pass":
-            pass.execute(request, command);
+            pass.execute(request, client);
             break;
         case "nick":
-            nick.execute(request, command);
+            nick.execute(request, client);
             break;
         case "user":
-            user.execute(request, command);
+            user.execute(request, client);
             break;
         default:
             break;

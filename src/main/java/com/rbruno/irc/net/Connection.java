@@ -41,6 +41,7 @@ public class Connection implements Runnable {
 
                 if (request == null) {
                     close(Optional.empty());
+                    break;
                 }
                 invoker.runCommand(request, client);
             }
