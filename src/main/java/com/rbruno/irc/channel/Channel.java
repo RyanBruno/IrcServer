@@ -43,4 +43,8 @@ public interface Channel {
 
     public int getUsersCount();
 
+    public void invitePlayer(Client invitor, Client target);
+
+    void clientDisconnected(Client client);
+
 }

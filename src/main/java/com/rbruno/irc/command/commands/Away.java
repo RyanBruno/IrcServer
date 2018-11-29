@@ -16,14 +16,12 @@ public class Away extends Command {
     @Override
     public void execute(Request request, Optional<Client> client) {
         super.execute(request, client);
-        String message = null;
-        if (request.getArgs().length > 0)
-            message = request.getArgs()[0];
-        client.get().setAwayMessage(Optional.ofNullable(message));
 
-        if (client.get().getAwayMessage().isPresent()) {
+        if (request.getArgs().length > 0) {
+            client.get().setAwayMessage(Optional.ofNullable(request.getArgs()[0]));
             request.getConnection().send(Reply.RPL_NOWAWAY, client.get(), ":You have been marked as being away");
         } else {
+            client.get().setAwayMessage(Optional.empty());
             request.getConnection().send(Reply.RPL_UNAWAY, client.get(), ":You are no longer marked as being away");
         }
     }

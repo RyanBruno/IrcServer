@@ -8,7 +8,6 @@ import com.rbruno.irc.client.Client;
 import com.rbruno.irc.command.Command;
 import com.rbruno.irc.net.Request;
 import com.rbruno.irc.reply.Error;
-import com.rbruno.irc.reply.Reply;
 
 public class Invite extends Command {
 
@@ -36,9 +35,7 @@ public class Invite extends Command {
             request.getConnection().send(Error.ERR_NOSUCHNICK, client.get(), request.getArgs()[1] + " :No such nick");
             return;
         }
-        // TODO Invite Player
-        request.getConnection().send(Reply.RPL_INVITING, client.get(), target.getNickname() + " " + channel.getName());
-        target.getConnection().send(":" + client.get().getAbsoluteName() + " INVITE " + target.getNickname() + " " + channel.getName());
-    }
+        channel.invitePlayer(client.get(), target);
+ }
 
 }

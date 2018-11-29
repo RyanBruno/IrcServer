@@ -14,9 +14,12 @@ import com.rbruno.irc.oper.BasicOperManager;
 import com.rbruno.irc.oper.OperManager;
 import com.rbruno.irc.plugin.PluginManager;
 
-public class IrcBootstrap implements ServerBootStrap {
+public class Bootstrap {
+    
+    public Networking createNetworking() throws IOException {
+        return new Networking();
+    }
 
-    @Override
     public Config createConfig() throws Exception {
         try {
             return new FileConfig("config.txt");
@@ -26,12 +29,10 @@ public class IrcBootstrap implements ServerBootStrap {
         }
     }
 
-    @Override
     public ClientManager createClientManager() {
         return new ClientManager();
     }
 
-    @Override
     public ChannelManager createChannelManager() {
         try {
             return new ChannelManager();
@@ -41,27 +42,18 @@ public class IrcBootstrap implements ServerBootStrap {
         }
     }
 
-    @Override
     public PluginManager createPluginManager() throws IOException {
-        try {
-            return new PluginManager();
-        } catch (IOException e) {
-            Logger.log("There has been a fatal error while reading the plugins folder. Check your permissions.", Level.SEVERE);
-            throw e;
-        }
+        return null;
     }
 
-    @Override
     public RegistrationCommandInvoker createRegCommandInvoker() {
         return new RegistrationCommandInvoker();
     }
     
-    @Override
     public ClientCommandInvoker createClientCommandInvoker() {
         return new ClientCommandInvoker();
     }
 
-    @Override
     public OperManager createOperManager() {
         return new BasicOperManager();
     }

@@ -1,8 +1,9 @@
 package com.rbruno.irc.config;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Optional;
 
 /**
@@ -12,38 +13,47 @@ public class FileConfig implements Config {
 
     private int port;
     private String hostname;
-    private Optional<String> adminLoc1;
-    private Optional<String> adminLoc2;
-    private Optional<String> adminMail;
+    private Optional<String> adminLoc1 = Optional.empty();
+    private Optional<String> adminLoc2 = Optional.empty();
+    private Optional<String> adminMail = Optional.empty();
 
-    public FileConfig(String fileName) throws IOException {
-        BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName));
+    public FileConfig(String fileName) throws Exception {
+        BufferedReader bufferedReader;
+        try {
+            bufferedReader = new BufferedReader(new FileReader(fileName));
+        } catch (FileNotFoundException e) {
+            bufferedReader = new BufferedReader(new InputStreamReader(FileConfig.class.getResourceAsStream("/config.txt")));
+        }
 
         String line;
         while ((line = bufferedReader.readLine()) != null) {
             if (line.startsWith("#"))
                 continue;
 
-            switch (line.split("=")[0]) {
+            switch (line.split("=")[0].toLowerCase()) {
             case "port":
                 this.port = Integer.parseInt(line.split("=")[1]);
                 break;
             case "hostname":
                 this.hostname = line.split("=")[1];
                 break;
-            case "adminLoc1":
+            case "adminname":
                 this.adminLoc1 = Optional.ofNullable(line.split("=")[1]);
                 break;
-            case "adminLoc2":
+            case "adminnick":
                 this.adminLoc2 = Optional.ofNullable(line.split("=")[1]);
                 break;
-            case "adminMail":
+            case "adminemail":
                 this.adminMail = Optional.ofNullable(line.split("=")[1]);
                 break;
             }
         }
-
         bufferedReader.close();
+
+        if (port == 0 || hostname == null) {
+            throw new Exception("Port or hostname not found in config");
+        }
+
     }
 
     @Override

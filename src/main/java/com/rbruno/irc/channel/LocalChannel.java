@@ -16,10 +16,11 @@ public class LocalChannel implements Channel {
     private ArrayList<Client> ops;
     private ArrayList<Client> banned;
     private ArrayList<Client> voice;
+    private ArrayList<Client> invited;
 
     private ChannelMode modes;
 
-    public LocalChannel(String name) {
+    public LocalChannel(String name, String password) {
         this.name = name;
         this.topic = "Default Topic";
         messenger = new IrcMessenger();
@@ -30,6 +31,7 @@ public class LocalChannel implements Channel {
         voice = new ArrayList<Client>(5);
 
         modes = new ChannelMode();
+        modes.setPassword(Optional.ofNullable(password));
     }
 
     @Override
@@ -49,10 +51,10 @@ public class LocalChannel implements Channel {
 
     @Override
     public void addClient(Client client) {
+        clients.add(client);
         messenger.sendJoinMessage(this, client);
         messenger.sendNames(this, client, getIterator());
         messenger.sendTopic(this, client);
-        clients.add(client);
     }
 
     @Override
@@ -63,7 +65,7 @@ public class LocalChannel implements Channel {
             client.getConnection().send(message);
         }
     }
-    
+
     @Override
     public void partClient(Client client, Optional<String> message) {
         messenger.clientPart(this, client, message.isPresent() ? message.get() : "Leaving");
@@ -75,12 +77,20 @@ public class LocalChannel implements Channel {
         messenger.clientQuit(this, client, message.isPresent() ? message.get() : "Leaving");
         clients.remove(client);
     }
-    
 
     @Override
     public void kickClient(Client client, Optional<String> message) {
         messenger.clientKick(this, client, message.isPresent() ? message.get() : "You have been kicked from the channel");
-        clients.remove(client);        
+        clients.remove(client);
+    }
+    
+    @Override
+    public void clientDisconnected(Client client) {
+        clients.remove(client);
+        ops.remove(client);
+        voice.remove(client);
+        banned.remove(client);
+        invited.remove(client);
     }
 
     @Override
@@ -143,5 +153,11 @@ public class LocalChannel implements Channel {
     @Override
     public ChannelMode getModes() {
         return modes;
+    }
+
+    @Override
+    public void invitePlayer(Client invitor, Client target) {
+        invited.add(target);
+        messenger.invitePlayer(this, invitor, target);
     }
 }

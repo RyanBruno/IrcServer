@@ -132,9 +132,11 @@ public class Connection implements Runnable {
 
     public void close(Optional<String> message) {
         if (client.isPresent()) {
-            Server.getServer().getClientManager().removeClient(client.get(), message);
+            Server.getServer().getChannelManger().clientDisconnected(client.get());
+            if (message.isPresent())
+                Server.getServer().getClientManager().removeClient(client.get(), message);
         }
-        
+
         try {
             reader.close();
             socket.close();

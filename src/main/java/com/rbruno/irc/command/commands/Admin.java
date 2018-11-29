@@ -17,6 +17,7 @@ public class Admin extends Command {
     @Override
     public void execute(Request request, Optional<Client> client) {
         super.execute(request, client);
+
         request.getConnection().send(Reply.RPL_ADMINME, client.get(), Server.getServer().getConfig().getHostname() + " :Administrative info");
         if (Server.getServer().getConfig().getAdminLoc1().isPresent()) {
             request.getConnection().send(Reply.RPL_ADMINLOC1, client.get(), Server.getServer().getConfig().getHostname() + " :" + Server.getServer().getConfig().getAdminLoc1().get());

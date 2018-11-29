@@ -62,4 +62,9 @@ public class IrcMessenger {
         channel.sendToAll(":" + client.getAbsoluteName() + " QUIT :" + message);        
     }
 
+    public void invitePlayer(Channel channel, Client invitor, Client target) {
+        invitor.getConnection().send(Reply.RPL_INVITING, invitor, target.getNickname() + " " + channel.getName());
+        target.getConnection().send(":" + invitor.getAbsoluteName() + " INVITE " + target.getNickname() + " " + channel.getName());       
+    }
+
 }

@@ -1,0 +1,13 @@
+apply plugin: 'application'
+
+repositories {
+    mavenCentral()
+}
+
+application {
+    mainClassName = "com.rbruno.irc.Server"
+}
+
+dependencies {
+    testCompile 'junit:junit:4.9'
+}

@@ -20,26 +20,32 @@ public class Join extends Command {
     public void execute(Request request, Optional<Client> client) {
         super.execute(request, client);
         
-        for (String name : request.getArgs()[0].split(","))  {
-            
+        //TODO Fix Passwords
+        String password = null;
+        if (request.getArgs().length > 1) {
+            password = request.getArgs()[1];
+        }
+
+        for (String name : request.getArgs()[0].split(",")) {
+
             if (!name.startsWith("&") && !name.startsWith("#")) {
                 request.getConnection().send(Error.ERR_NOSUCHCHANNEL, client.get(), name + " :No such channel");
                 return;
             }
-            
+
             Channel channel = Server.getServer().getChannelManger().getChannel(name);
 
             if (channel == null) {
-                channel = new LocalChannel(name);
+                channel = new LocalChannel(name, password);
                 Server.getServer().getChannelManger().addChannel(channel);
             }
-            
+
             if (channel.hasClient(client.get()))
                 return;
 
-            // TODO Fix conditions
             if (channel.getModes().isInviteOnly()) {
                 request.getConnection().send(Error.ERR_INVITEONLYCHAN, client.get(), channel.getName() + " :Cannot join channel (+i)");
+                // TODO Fix invites
                 return;
             }
 
@@ -54,8 +60,10 @@ public class Join extends Command {
             }
 
             if (channel.getModes().getPassword().isPresent()) {
-                request.getConnection().send(Error.ERR_BADCHANNELKEY, client.get(), channel.getName() + " :Cannot join channel (+k)");
-                return;
+                if (!channel.getModes().getPassword().get().equals(password)) {
+                    request.getConnection().send(Error.ERR_BADCHANNELKEY, client.get(), channel.getName() + " :Cannot join channel (+k)");
+                    return;
+                }
             }
 
             channel.addClient(client.get());

@@ -2,6 +2,8 @@ package com.rbruno.irc.channel;
 
 import java.util.ArrayList;
 
+import com.rbruno.irc.client.Client;
+
 /**
  * Manages all channels. Also adds channels from channels.txt file.
  */
@@ -16,6 +18,14 @@ public class ChannelManager {
      */
     public ArrayList<Channel> getChannels() {
         return channels;
+    }
+
+    public void clientDisconnected(Client client) {
+        for (Channel channel : channels) {
+            if (channel.hasClient(client)) {
+                channel.clientDisconnected(client);
+            }
+        }
     }
 
     /**
