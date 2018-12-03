@@ -8,11 +8,12 @@ public class EventDispacher {
     private List<EventListener> listeners;
 
     public enum EventType {
-        SERVER_OPEN, NEW_CONNECTION, NEW_LINE, NEW_REQUEST, 
+        SERVER_OPEN, NEW_CONNECTION, NEW_LINE, NEW_REQUEST,
+        CONFIG_CHANGED,
         NEW_REG_COMMAND, NEW_CLIENT_COMMAND,
-        CLIENT_REGISTERED, CLINET_DISCONNECT,
-        NICK_SET, NICK_CHANGED
-        
+        CLIENT_REGISTERED, CLIENT_DISCONNECT,
+        NICK_SET, NICK_CHANGED,
+        CLIENT_QUIT
         
     }
 
@@ -25,7 +26,7 @@ public class EventDispacher {
     }
 
     public void dispach(Event event) {
-        for (EventListener listener : listeners) {
+        for (EventListener listener : listeners) {   	
             switch (event.getType()) {
             case SERVER_OPEN:
                 listener.onServerOpen((ServerOpenEvent) event);
@@ -39,8 +40,11 @@ public class EventDispacher {
             case NEW_REQUEST:
                 listener.onNewRequest((NewRequestEvent) event);
                 break;
-            case NEW_COMMAND:
-                listener.onNewCommand((NewCommandEvent) event);
+            case NEW_REG_COMMAND:
+                listener.onNewRegCommand((NewRegCommandEvent) event);
+                break;
+            case NEW_CLIENT_COMMAND:
+                listener.onNewClientCommand((NewClientCommandEvent) event);
                 break;
             }
             // TODO if event.isCanceled();

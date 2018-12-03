@@ -3,85 +3,140 @@ package com.rbruno.irc.net;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.net.Socket;
 import java.util.Optional;
 
 import com.rbruno.irc.Server;
 import com.rbruno.irc.client.Client;
-import com.rbruno.irc.command.CommandInvoker;
+import com.rbruno.irc.events.EventDispacher;
+import com.rbruno.irc.events.EventListener;
+import com.rbruno.irc.events.NewClientCommandEvent;
+import com.rbruno.irc.events.NewLineEvent;
+import com.rbruno.irc.events.NewRegCommandEvent;
+import com.rbruno.irc.events.NewRequestEvent;
+import com.rbruno.irc.events.NickSetEvent;
 import com.rbruno.irc.reply.Error;
 import com.rbruno.irc.reply.Reply;
 
-public class Connection implements Runnable {
+public class Connection extends EventListener {
 
-    private Optional<Client> client = Optional.empty();
-    private Optional<String> nickname = Optional.empty();
-    protected Socket socket;
+	private EventDispacher eventDispacher;
+	protected Socket socket;
 
-    public boolean send(byte[] block) {
+	private Client client;
+	private Optional<String> nickname = Optional.empty();
 
-        try {
-            socket.getOutputStream().write(block);
-            socket.getOutputStream().flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return true;
-    }
+	public Connection(EventDispacher eventDispacher, Socket socket) {
+		this.eventDispacher = eventDispacher;
+		this.socket = socket;
+		eventDispacher.registerListener(this);
 
-    public boolean send(String message) {
-        if (socket.isClosed())
-            return false;
-        System.out.println(message);
-        return send(message.concat("\r\n").getBytes());
-    }
+		BufferedReader reader;
+		try {
+			reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"));
 
-    public boolean send(String prefix, String command, String args) {
-        String message = ":" + prefix + " " + command + " " + args;
-        return send(message);
-    }
+			while (!socket.isClosed()) {
+				String line = reader.readLine();
 
-    public boolean send(int code, String nickname, String args) {
-        String stringCode = code + "";
-        if (stringCode.length() < 2)
-            stringCode = "0" + stringCode;
-        if (stringCode.length() < 3)
-            stringCode = "0" + stringCode;
+				if (line == null) {
+					break;
+				}
 
-        String message = ":" + Server.getServer().getConfig().getHostname() + " " + stringCode + " " + nickname + " " + args;
-        return send(message);
-    }
+				eventDispacher.dispach(new NewLineEvent(line, Optional.ofNullable(client)));
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		//TODO QUIT event
+	}
 
-    public boolean send(Reply reply, String nickname, String args) {
-        return send(reply.getCode(), nickname, args);
-    }
+	@Override
+	public void onNewLine(NewLineEvent event) {
+		eventDispacher.dispach(new NewRequestEvent(new Request(this, event.getLine()), event.getClient()));
+	}
 
-    public boolean send(Reply reply, Client client, String args) {
-        return send(reply.getCode(), client.getNickname(), args);
-    }
+	@Override
+	public void onNewRequest(NewRequestEvent event) {
+		if (client == null) {
+			eventDispacher.dispach(new NewRegCommandEvent(event.getRequest()));
+		} else {
+			eventDispacher.dispach(new NewClientCommandEvent(event.getRequest(), client));
+		}
+	}
+	
+	@Override
+	public void onNickSet(NickSetEvent event) {
+		if (event.getConnection() == this) {
+			nickname = Optional.of(event.getNickname());
+		}
+	}
 
-    public boolean send(Error error, String nickname, String args) {
-        return send(error.getCode(), nickname, args);
-    }
+	public boolean send(byte[] block) {
 
-    public boolean send(Error error, Client client, String args) {
-        return send(error.getCode(), client.getNickname(), args);
-    }
+		try {
+			socket.getOutputStream().write(block);
+			socket.getOutputStream().flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return true;
+	}
 
-    public void close(Optional<String> message) {
-        if (client.isPresent()) {
-            Server.getServer().getChannelManger().clientDisconnected(client.get());
-            if (message.isPresent())
-                Server.getServer().getClientManager().removeClient(client.get(), message);
-        }
+	public boolean send(String message) {
+		if (socket.isClosed())
+			return false;
+		System.out.println(message);
+		return send(message.concat("\r\n").getBytes());
+	}
 
-        try {
-            reader.close();
-            socket.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+	public boolean send(String prefix, String command, String args) {
+		String message = ":" + prefix + " " + command + " " + args;
+		return send(message);
+	}
+
+	public boolean send(int code, String nickname, String args) {
+		String stringCode = code + "";
+		if (stringCode.length() < 2)
+			stringCode = "0" + stringCode;
+		if (stringCode.length() < 3)
+			stringCode = "0" + stringCode;
+
+		String message = ":" + Server.getServer().getConfig().getHostname() + " " + stringCode + " " + nickname + " "
+				+ args;
+		return send(message);
+	}
+
+	public boolean send(Reply reply, String nickname, String args) {
+		return send(reply.getCode(), nickname, args);
+	}
+
+	public boolean send(Reply reply, Client client, String args) {
+		return send(reply.getCode(), client.getNickname(), args);
+	}
+
+	public boolean send(Error error, String nickname, String args) {
+		return send(error.getCode(), nickname, args);
+	}
+
+	public boolean send(Error error, Client client, String args) {
+		return send(error.getCode(), client.getNickname(), args);
+	}
+
+	public void close(Optional<String> message) {
+
+// TODO unregister from dispacher
+		try {
+			socket.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public Optional<String> getNickname() {
+		if (client != null)
+			return Optional.of(client.getNickname());
+		return nickname;
+
+	}
 
 }

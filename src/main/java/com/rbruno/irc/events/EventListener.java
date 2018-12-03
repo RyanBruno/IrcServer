@@ -10,5 +10,10 @@ public abstract class EventListener {
 
     public void onNewRequest(NewRequestEvent event) {}
 
-    public void onNewCommand(NewCommandEvent event) {}
+    public void onNewRegCommand(NewRegCommandEvent event) {}
+    
+    public void onNewClientCommand(NewClientCommandEvent event) {}
+    
+    public void onNickSet(NickSetEvent event) {}
+
 }
