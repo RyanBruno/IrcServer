@@ -16,7 +16,7 @@ public class Ping extends Command {
     @Override
     public void execute(Request request, Optional<Client> client) {
         super.execute(request, client);
-        request.getConnection().send(":" + Server.getServer().getConfig().getHostname() + " PONG " + request.getConnection().getNickname());
+        request.getConnection().send(":" + Server.getServer().getConfig().getHostname() + " PONG " + client.get());
     }
 
 }

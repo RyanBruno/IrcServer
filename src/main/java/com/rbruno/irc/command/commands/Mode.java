@@ -28,7 +28,7 @@ public class Mode extends Command {
             }
 
             if (request.getArgs().length <= 1) {
-                request.getConnection().send(Reply.RPL_CHANNELMODEIS, client.get(), channel.getName() + "+"/* TODO */);
+                request.getConnection().send(Reply.RPL_CHANNELMODEIS, client.get(), channel.getName() + " +"/* TODO */);
                 return;
             }
 

@@ -18,11 +18,11 @@ public class User extends Command {
     @Override
     public void execute(Request request, Optional<Client> client) {
         super.execute(request, client);
+
         if (!request.getConnection().getNickname().isPresent()) {
             request.getConnection().send(Error.ERR_NEEDMOREPARAMS, "???", ":Nickname required!");
             return;
         }
-        
         LocalClient newClient = new LocalClient(request.getConnection(), request.getConnection().getNickname().get(), request.getArgs()[0], request.getArgs()[1], request.getArgs()[2], request.getArgs()[3]);
 
         request.getConnection().send(1, request.getConnection().getNickname().get(), ":Welcome to the " + Server.getServer().getConfig().getHostname() + " Internet Relay Chat Network " + request.getConnection().getNickname().get());

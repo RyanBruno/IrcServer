@@ -89,7 +89,7 @@ public class ClientCommandInvoker implements CommandInvoker {
 
     @Override
     public void runCommand(Request request, Optional<Client> client) {
-        switch (request.getCommand()) {
+        switch (request.getCommand().toLowerCase()) {
         case "oper":
             oper.execute(request, client);
             break;

@@ -58,6 +58,7 @@ public class Connection implements Runnable {
         if (line == null) {
             return null;
         } else {
+            System.out.println(line);
             return new Request(this, line);
         }
     }
@@ -95,6 +96,7 @@ public class Connection implements Runnable {
     public boolean send(String message) {
         if (socket.isClosed())
             return false;
+        System.out.println(message);
         return send(message.concat("\r\n").getBytes());
     }
 

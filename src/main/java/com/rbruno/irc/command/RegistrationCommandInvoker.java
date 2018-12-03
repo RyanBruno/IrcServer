@@ -22,7 +22,7 @@ public class RegistrationCommandInvoker implements CommandInvoker {
 
     @Override
     public void runCommand(Request request, Optional<Client> client) {
-        switch (request.getCommand()) {
+        switch (request.getCommand().toLowerCase()) {
         case "pass":
             pass.execute(request, client);
             break;
