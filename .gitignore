@@ -4,7 +4,6 @@
 */bin/
 */target/
 */.settings/
-test/
 *.*.swp
 Test/
 .test/
