@@ -1,5 +1,6 @@
 package com.rbruno.irc.command;
 
+import com.rbruno.irc.client.Client;
 import com.rbruno.irc.command.client.Admin;
 import com.rbruno.irc.command.client.Away;
 import com.rbruno.irc.command.client.Info;
@@ -22,137 +23,142 @@ import com.rbruno.irc.command.client.Topic;
 import com.rbruno.irc.command.client.Version;
 import com.rbruno.irc.command.client.Who;
 import com.rbruno.irc.command.client.Whois;
+import com.rbruno.irc.events.EventDispacher;
 import com.rbruno.irc.events.EventListener;
-import com.rbruno.irc.events.NewCommandEvent;
+import com.rbruno.irc.events.NewRequestEvent;
 
 public class ClientCommandInvoker extends EventListener {
 
-    private Oper oper;
-    private Quit quit;
-    private Join join;
-    private Part part;
-    private Mode mode;
-    private Topic topic;
-    private Names names;
-    private List list;
-    private Invite invite;
-    private Kick kick;
-    private Version version;
-    private Time time;
-    private Admin admin;
-    private Info info;
-    private Privmsg privmsg;
-    private Notice notice;
-    private Who who;
-    private Whois whois;
-    private Ping ping;
-    private Pong pong;
-    private Away away;
-    private Nick nick;
+    private ClientCommand oper;
+    private ClientCommand quit;
+    private ClientCommand join;
+    private ClientCommand part;
+    private ClientCommand mode;
+    private ClientCommand topic;
+    private ClientCommand names;
+    private ClientCommand list;
+    private ClientCommand invite;
+    private ClientCommand kick;
+    private ClientCommand version;
+    private ClientCommand time;
+    private ClientCommand admin;
+    private ClientCommand info;
+    private ClientCommand privmsg;
+    private ClientCommand notice;
+    private ClientCommand who;
+    private ClientCommand whois;
+    private ClientCommand ping;
+    private ClientCommand pong;
+    private ClientCommand away;
+    private ClientCommand nick;
 
-    public ClientCommandInvoker() {
+    private CommandModule commandModule;
+    
+    public ClientCommandInvoker(CommandModule commandModule) {
         // TODO: Nick
-        nick = new Nick();
-        oper = new Oper();
-        quit = new Quit();
+        nick = new Nick(commandModule);
+        oper = new Oper(commandModule);
+        quit = new Quit(commandModule);
         // commands.add(new Squit());
-        join = new Join();
-        part = new Part();
-        mode = new Mode();
-        topic = new Topic();
-        names = new Names();
-        list = new List();
-        invite = new Invite();
-        kick = new Kick();
-        version = new Version();
+        join = new Join(commandModule);
+        part = new Part(commandModule);
+        mode = new Mode(commandModule);
+        topic = new Topic(commandModule);
+        names = new Names(commandModule);
+        list = new List(commandModule);
+        invite = new Invite(commandModule);
+        kick = new Kick(commandModule);
+        version = new Version(commandModule);
         // commands.add(new Stats());
         // commands.add(new Links());
-        time = new Time();
+        time = new Time()commandModule;
         // commands.add(new Connect());
         // commands.add(new Trace());
-        admin = new Admin();
-        info = new Info();
-        privmsg = new Privmsg();
-        notice = new Notice();
-        who = new Who();
-        whois = new Whois();
+        admin = new Admin(commandModule);
+        info = new Info(commandModule);
+        privmsg = new Privmsg(commandModule);
+        notice = new Notice(commandModule);
+        who = new Who(commandModule);
+        whois = new Whois(commandModule);
         // commands.add(new Whowas());
         // commands.add(new Kill());
-        ping = new Ping();
-        pong = new Pong();
+        ping = new Ping(commandModule);
+        pong = new Pong(commandModule);
         // commands.add(new Error());
         // Optional Commands
-        away = new Away();
+        away = new Away(commandModule);
     }
 
     @Override
-    public void onNewCommand(NewCommandEvent event) {
+    public void onNewRequest(NewRequestEvent event) {
+        Client client = commandModule.getClient(event.getRequest().getSocketConnection());
+
         switch (event.getRequest().getCommand().toLowerCase()) {
         case "oper":
-            oper.execute(event.getRequest(), event.getClient());
+            oper.execute(event.getRequest(), client);
             break;
         case "quit":
-            quit.execute(event.getRequest(), event.getClient());
+            quit.execute(event.getRequest(), client);
             break;
         case "join":
-            join.execute(event.getRequest(), event.getClient());
+            join.execute(event.getRequest(), client);
             break;
         case "part":
-            part.execute(event.getRequest(), event.getClient());
+            part.execute(event.getRequest(), client);
             break;
         case "mode":
-            mode.execute(event.getRequest(), event.getClient());
+            mode.execute(event.getRequest(), client);
             break;
         case "topic":
-            topic.execute(event.getRequest(), event.getClient());
+            topic.execute(event.getRequest(), client);
             break;
         case "names":
-            names.execute(event.getRequest(), event.getClient());
+            names.execute(event.getRequest(), client);
             break;
         case "list":
-            list.execute(event.getRequest(), event.getClient());
+            list.execute(event.getRequest(), client);
             break;
         case "invite":
-            invite.execute(event.getRequest(), event.getClient());
+            invite.execute(event.getRequest(), client);
             break;
         case "kick":
-            kick.execute(event.getRequest(), event.getClient());
+            kick.execute(event.getRequest(), client);
             break;
         case "version":
-            version.execute(event.getRequest(), event.getClient());
+            version.execute(event.getRequest(), client);
             break;
         case "time":
-            time.execute(event.getRequest(), event.getClient());
+            time.execute(event.getRequest(), client);
             break;
         case "admin":
-            admin.execute(event.getRequest(), event.getClient());
+            admin.execute(event.getRequest(), client);
             break;
         case "info":
-            info.execute(event.getRequest(), event.getClient());
+            info.execute(event.getRequest(), client);
             break;
         case "privmsg":
-            privmsg.execute(event.getRequest(), event.getClient());
+            privmsg.execute(event.getRequest(), client);
             break;
         case "notice":
-            notice.execute(event.getRequest(), event.getClient());
+            notice.execute(event.getRequest(), client);
             break;
         case "who":
-            who.execute(event.getRequest(), event.getClient());
+            who.execute(event.getRequest(), client);
             break;
         case "whois":
-            whois.execute(event.getRequest(), event.getClient());
+            whois.execute(event.getRequest(), client);
             break;
         case "ping":
-            ping.execute(event.getRequest(), event.getClient());
+            ping.execute(event.getRequest(), client);
             break;
         case "pong":
-            pong.execute(event.getRequest(), event.getClient());
+            pong.execute(event.getRequest(), client);
             break;
         case "away":
-            away.execute(event.getRequest(), event.getClient());
+            away.execute(event.getRequest(), client);
             break;
         case "nick":
-            nick.execute(event.getRequest(), event.getClient());
+            nick.execute(event.getRequest(), client);
             break;
         default:
             // TODO

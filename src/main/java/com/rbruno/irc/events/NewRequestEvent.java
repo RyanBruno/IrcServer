@@ -1,19 +1,14 @@
 package com.rbruno.irc.events;
 
-import java.util.Optional;
-
-import com.rbruno.irc.client.Client;
 import com.rbruno.irc.events.EventDispacher.EventType;
 import com.rbruno.irc.net.Request;
 
 public class NewRequestEvent extends Event {
 
     private Request request;
-    private Optional<Client> client;
 
-    public NewRequestEvent(Request request, Optional<Client> client) {
+    public NewRequestEvent(Request request) {
         this.request = request;
-        this.client = client;
     }
 
     @Override
@@ -24,9 +19,4 @@ public class NewRequestEvent extends Event {
     public Request getRequest() {
         return request;
     }
-
-    public Optional<Client> getClient() {
-        return client;
-    }
-
 }

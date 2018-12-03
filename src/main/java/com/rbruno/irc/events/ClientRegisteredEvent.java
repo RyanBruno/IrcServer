@@ -2,29 +2,30 @@ package com.rbruno.irc.events;
 
 import java.nio.channels.SocketChannel;
 
+import com.rbruno.irc.client.Client;
 import com.rbruno.irc.events.EventDispacher.EventType;
 
-public class NickSetEvent extends Event {
-
+public class ClientRegisteredEvent extends Event {
+    
     private SocketChannel socketChannel;
-    private String nickname;
+    private Client client;
 
-    public NickSetEvent(SocketChannel socketChannel, String nickname) {
+    public ClientRegisteredEvent(SocketChannel socketChannel, Client client) {
         this.socketChannel = socketChannel;
-        this.nickname = nickname;
+        this.client = client;
     }
 
     @Override
     protected EventType getType() {
-        return EventType.NICK_SET;
+        return EventType.CLIENT_REGISTERED;
     }
 
     public SocketChannel getSocketChannel() {
         return socketChannel;
     }
-
-    public String getNickname() {
-        return nickname;
+    
+    public Client getClient() {
+        return client;
     }
 
 }

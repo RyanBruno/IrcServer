@@ -1,11 +1,13 @@
 package com.rbruno.irc.net;
 
+import java.nio.channels.SocketChannel;
+
 /**
  * Phrases and stores information on a request made by a client.
  */
 public class Request {
 
-    private Connection connection;
+    private SocketChannel socketChannel;
     private String prefix;
     private String command;
     private String[] args;
@@ -18,9 +20,10 @@ public class Request {
      * @param line       The line that was sent.
      * @throws Exception
      */
-    public Request(Connection connection, String line) {
+    public Request(SocketChannel socketChannel, String line) {
         // TODO Yell if malformed
-        this.connection = connection;
+        this.socketChannel = socketChannel;
+
         if (line.startsWith(":")) {
             this.prefix = line.split(" ")[0].substring(1);
             line = line.substring(prefix.length() + 1);
@@ -50,8 +53,8 @@ public class Request {
      * 
      * @return The connection that the request was sent through.
      */
-    public Connection getConnection() {
-        return connection;
+    public SocketChannel getSocketChannel() {
+        return socketChannel;
     }
 
     /**

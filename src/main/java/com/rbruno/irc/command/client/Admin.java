@@ -4,20 +4,14 @@ import java.util.Optional;
 
 import com.rbruno.irc.Server;
 import com.rbruno.irc.client.Client;
-import com.rbruno.irc.command.Command;
+import com.rbruno.irc.command.ClientCommand;
 import com.rbruno.irc.net.Request;
 import com.rbruno.irc.reply.Reply;
 
-public class Admin extends Command {
-
-    public Admin() {
-        super("ADMIN", 0);
-    }
+public class Admin implements ClientCommand {
 
     @Override
-    public void execute(Request request, Optional<Client> client) {
-        super.execute(request, client);
-
+    public void execute(Request request, Client client) {
         request.getConnection().send(Reply.RPL_ADMINME, client.get(), Server.getServer().getConfig().getHostname() + " :Administrative info");
         if (Server.getServer().getConfig().getAdminLoc1().isPresent()) {
             request.getConnection().send(Reply.RPL_ADMINLOC1, client.get(), Server.getServer().getConfig().getHostname() + " :" + Server.getServer().getConfig().getAdminLoc1().get());
@@ -27,6 +21,6 @@ public class Admin extends Command {
                     request.getConnection().send(Reply.RPL_ADMINMAIL, client.get(), Server.getServer().getConfig().getHostname() + " :" + Server.getServer().getConfig().getAdminMail().get());
                 }
             }
-        }
+        }        
     }
 }

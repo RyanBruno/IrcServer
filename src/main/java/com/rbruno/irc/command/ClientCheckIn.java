@@ -1,14 +1,18 @@
 package com.rbruno.irc.command;
 
+import com.rbruno.irc.client.Client;
 import com.rbruno.irc.events.EventListener;
-import com.rbruno.irc.events.NewCommandEvent;
+import com.rbruno.irc.events.NewRequestEvent;
 
 public class ClientCheckIn extends EventListener {
 
+    private CommandModule commandModule;
+
     @Override
-    public void onNewCommand(NewCommandEvent event) {
-        if (event.getClient().isPresent())
-            event.getClient().get().setLastCheckIn(System.currentTimeMillis());
+    public void onNewRequest(NewRequestEvent event) {
+        Client client = commandModule.getClient(event.getRequest().getSocketChannel());
+        if (client != null)
+            client.setLastCheckIn(System.currentTimeMillis());
     }
 
 }

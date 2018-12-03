@@ -1,8 +1,7 @@
 package com.rbruno.irc.client;
 
+import java.nio.channels.SocketChannel;
 import java.util.Optional;
-
-import com.rbruno.irc.net.Connection;
 
 /**
  * Stores information on a local client.
@@ -23,10 +22,10 @@ public class LocalClient implements Client {
     public boolean wallops;
     public boolean operator;
 
-    private Connection connection;
+    private SocketChannel socketChannel;
 
-    public LocalClient(Connection connection, String nickname, String username, String hostname, String servername, String realName) {
-        this.connection = connection;
+    public LocalClient(SocketChannel socketChannel, String nickname, String username, String hostname, String servername, String realName) {
+        this.socketChannel = socketChannel;
         this.nickname = nickname;
         this.username = username;
         this.hostname = hostname;
@@ -129,8 +128,8 @@ public class LocalClient implements Client {
     }
 
     @Override
-    public Connection getConnection() {
-        return connection;
+    public SocketChannel getSocketChannel() {
+        return socketChannel;
     }
 
 }

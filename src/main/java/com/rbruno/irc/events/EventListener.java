@@ -6,14 +6,13 @@ public abstract class EventListener {
 
     public void onNewConnection(NewConnectionEvent event) {}
 
-    public void onNewLine(NewLineEvent event) {}
-
     public void onNewRequest(NewRequestEvent event) {}
 
-    public void onNewRegCommand(NewRegCommandEvent event) {}
-    
-    public void onNewClientCommand(NewClientCommandEvent event) {}
+    public void onSendData(SendDataEvent event) {}
     
     public void onNickSet(NickSetEvent event) {}
 
+    public void onConfigChanged(ConfigChangedEvent event) {}
+
+    public void onClientRegistered(ClientRegisteredEvent event) {}
 }

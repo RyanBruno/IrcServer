@@ -4,22 +4,22 @@ import com.rbruno.irc.command.registration.Nick;
 import com.rbruno.irc.command.registration.Pass;
 import com.rbruno.irc.command.registration.User;
 import com.rbruno.irc.events.EventListener;
-import com.rbruno.irc.events.NewCommandEvent;
+import com.rbruno.irc.events.NewRequestEvent;
 
 public class RegistrationCommandInvoker extends EventListener {
 
-    private Pass pass;
-    private Nick nick;
-    private User user;
+    private RegistrationCommand pass;
+    private RegistrationCommand nick;
+    private RegistrationCommand user;
 
-    public RegistrationCommandInvoker() {
-        pass = new Pass();
-        nick = new Nick();
-        user = new User();
+    public RegistrationCommandInvoker(CommandModule commandModule) {
+        pass = new Pass(commandModule);
+        nick = new Nick(commandModule);
+        user = new User(commandModule);
     }
     
     @Override
-    public void onNewCommand(NewCommandEvent event) {
+    public void onNewRequest(NewRequestEvent event) {
         switch (event.getRequest().getCommand().toLowerCase()) {
         case "pass":
             pass.execute(event.getRequest());
@@ -29,8 +29,6 @@ public class RegistrationCommandInvoker extends EventListener {
             break;
         case "user":
             user.execute(event.getRequest());
-            break;
-        default:
             break;
         }
     }

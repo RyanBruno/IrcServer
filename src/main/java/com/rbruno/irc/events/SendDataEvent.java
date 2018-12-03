@@ -4,27 +4,27 @@ import java.nio.channels.SocketChannel;
 
 import com.rbruno.irc.events.EventDispacher.EventType;
 
-public class NickSetEvent extends Event {
+public class SendDataEvent extends Event {
 
     private SocketChannel socketChannel;
-    private String nickname;
+    private byte[] data;
 
-    public NickSetEvent(SocketChannel socketChannel, String nickname) {
+    public SendDataEvent(SocketChannel socketChannel, byte[] data) {
         this.socketChannel = socketChannel;
-        this.nickname = nickname;
+        this.data = data;
     }
 
     @Override
     protected EventType getType() {
-        return EventType.NICK_SET;
+        return EventType.SEND_DATA;
     }
 
     public SocketChannel getSocketChannel() {
         return socketChannel;
     }
 
-    public String getNickname() {
-        return nickname;
+    public byte[] getData() {
+        return data;
     }
 
 }

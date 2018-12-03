@@ -1,12 +1,11 @@
 package com.rbruno.irc.client;
 
+import java.nio.channels.SocketChannel;
 import java.util.Optional;
-
-import com.rbruno.irc.net.Connection;
 
 public interface Client {
 
-    public Connection getConnection();
+    public SocketChannel getSocketChannel();
 
     public String getNickname();
 

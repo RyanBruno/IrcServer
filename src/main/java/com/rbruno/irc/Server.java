@@ -3,7 +3,10 @@ package com.rbruno.irc;
 import java.net.InetSocketAddress;
 import java.nio.channels.ServerSocketChannel;
 
+import com.rbruno.irc.command.CommandModule;
 import com.rbruno.irc.config.Config;
+import com.rbruno.irc.config.FileConfig;
+import com.rbruno.irc.events.ConfigChangedEvent;
 import com.rbruno.irc.events.EventDispacher;
 import com.rbruno.irc.events.ServerOpenEvent;
 import com.rbruno.irc.net.NetworkingModule;
@@ -18,8 +21,6 @@ public class Server {
 
     private Config config;
 
-    private static Server server;
-
     /**
      * Server constructor. Starts all managers, opens the socket and starts the
      * running thread.
@@ -28,26 +29,25 @@ public class Server {
      * 
      * @throws Exception
      */
-    public Server() throws Exception {
-        server = this;
+    private Server(Config config) throws Exception {
         EventDispacher eventDispacher = new EventDispacher();
         
         // TODO ADD all the modules
         
+        new CommandModule(eventDispacher);
         new NetworkingModule(eventDispacher);
         
-        String hostname = "";
-        int port = 6667;
+        eventDispacher.dispach(new ConfigChangedEvent(config));
         
         ServerSocketChannel serverChannel = ServerSocketChannel.open();
         serverChannel.configureBlocking(false);
-        serverChannel.socket().bind(new InetSocketAddress(hostname, port));
+        serverChannel.socket().bind(new InetSocketAddress(config.getHostname(), config.getPort()));
         
         eventDispacher.dispach(new ServerOpenEvent(serverChannel));
     }
 
     public static void main(String args[]) throws Exception {
-        new Server();
+        new Server(new FileConfig("config.txt"));
     }
 
     /**
@@ -57,10 +57,6 @@ public class Server {
      */
     public Config getConfig() {
         return config;
-    }
-
-    public static Server getServer() {
-        return server;
     }
 
 }

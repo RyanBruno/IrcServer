@@ -2,10 +2,15 @@ package com.rbruno.irc.command.registration;
 
 import java.util.Optional;
 
+import com.rbruno.irc.command.CommandModule;
 import com.rbruno.irc.command.RegistrationCommand;
 import com.rbruno.irc.net.Request;
 
-public class Quit implements RegistrationCommand {
+public class Quit extends RegistrationCommand {
+
+    public Quit(CommandModule commandModule) {
+        super(commandModule);
+    }
 
     @Override
     public void execute(Request request) {
@@ -13,7 +18,7 @@ public class Quit implements RegistrationCommand {
         if (request.getArgs().length != 0) {
             message = request.getArgs()[0];
         }
-        
+        // TODO QUIT event
         request.getConnection().close(Optional.ofNullable(message));        
     }
 
