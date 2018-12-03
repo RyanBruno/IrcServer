@@ -1,5 +1,8 @@
 package com.rbruno.irc;
 
+import java.net.InetSocketAddress;
+import java.nio.channels.ServerSocketChannel;
+
 import com.rbruno.irc.config.Config;
 import com.rbruno.irc.events.EventDispacher;
 import com.rbruno.irc.events.ServerOpenEvent;
@@ -32,7 +35,15 @@ public class Server {
         // TODO ADD all the modules
         
         new NetworkingModule(eventDispacher);
-        eventDispacher.dispach(new ServerOpenEvent());
+        
+        String hostname = "";
+        int port = 6667;
+        
+        ServerSocketChannel serverChannel = ServerSocketChannel.open();
+        serverChannel.configureBlocking(false);
+        serverChannel.socket().bind(new InetSocketAddress(hostname, port));
+        
+        eventDispacher.dispach(new ServerOpenEvent(serverChannel));
     }
 
     public static void main(String args[]) throws Exception {
