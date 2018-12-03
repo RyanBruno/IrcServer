@@ -1,20 +1,12 @@
 package com.rbruno.irc.command.registration;
 
-import java.util.Optional;
-
-import com.rbruno.irc.client.Client;
-import com.rbruno.irc.command.Command;
+import com.rbruno.irc.command.RegistrationCommand;
 import com.rbruno.irc.net.Request;
 
-public class Pass extends Command {
-
-    public Pass() {
-        super("PASS", 1);
-    }
+public class Pass implements RegistrationCommand {
 
     @Override
-    public void execute(Request request, Optional<Client> client) {
-        super.execute(request, client);
-        // TODO        
+    public void execute(Request request) {
+        // TODO
     }
 }

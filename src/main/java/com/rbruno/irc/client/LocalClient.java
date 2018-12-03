@@ -98,7 +98,7 @@ public class LocalClient implements Client {
      * 
      * @param lastCheckin The last time a user has sent a message. In Unix time.
      */
-    public void setLastCheckin(long lastCheckin) {
+    public void setLastCheckIn(long lastCheckin) {
         this.lastCheckin = lastCheckin;
     }
 

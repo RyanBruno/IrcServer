@@ -1,8 +1,5 @@
 package com.rbruno.irc.command;
 
-import java.util.Optional;
-
-import com.rbruno.irc.client.Client;
 import com.rbruno.irc.command.commands.Admin;
 import com.rbruno.irc.command.commands.Away;
 import com.rbruno.irc.command.commands.Info;
@@ -12,22 +9,23 @@ import com.rbruno.irc.command.commands.Kick;
 import com.rbruno.irc.command.commands.List;
 import com.rbruno.irc.command.commands.Mode;
 import com.rbruno.irc.command.commands.Names;
+import com.rbruno.irc.command.commands.Nick;
 import com.rbruno.irc.command.commands.Notice;
 import com.rbruno.irc.command.commands.Oper;
 import com.rbruno.irc.command.commands.Part;
 import com.rbruno.irc.command.commands.Ping;
 import com.rbruno.irc.command.commands.Pong;
 import com.rbruno.irc.command.commands.Privmsg;
+import com.rbruno.irc.command.commands.Quit;
 import com.rbruno.irc.command.commands.Time;
 import com.rbruno.irc.command.commands.Topic;
 import com.rbruno.irc.command.commands.Version;
 import com.rbruno.irc.command.commands.Who;
 import com.rbruno.irc.command.commands.Whois;
-import com.rbruno.irc.command.registration.Nick;
-import com.rbruno.irc.command.registration.Quit;
-import com.rbruno.irc.net.Request;
+import com.rbruno.irc.events.EventListener;
+import com.rbruno.irc.events.NewCommandEvent;
 
-public class ClientCommandInvoker implements CommandInvoker {
+public class ClientCommandInvoker extends EventListener {
 
     private Oper oper;
     private Quit quit;
@@ -88,78 +86,79 @@ public class ClientCommandInvoker implements CommandInvoker {
     }
 
     @Override
-    public void runCommand(Request request, Optional<Client> client) {
-        switch (request.getCommand().toLowerCase()) {
+    public void onNewCommand(NewCommandEvent event) {
+        switch (event.getRequest().getCommand().toLowerCase()) {
         case "oper":
-            oper.execute(request, client);
+            oper.execute(event.getRequest(), event.getClient());
             break;
         case "quit":
-            quit.execute(request, client);
+            quit.execute(event.getRequest(), event.getClient());
             break;
         case "join":
-            join.execute(request, client);
+            join.execute(event.getRequest(), event.getClient());
             break;
         case "part":
-            part.execute(request, client);
+            part.execute(event.getRequest(), event.getClient());
             break;
         case "mode":
-            mode.execute(request, client);
+            mode.execute(event.getRequest(), event.getClient());
             break;
         case "topic":
-            topic.execute(request, client);
+            topic.execute(event.getRequest(), event.getClient());
             break;
         case "names":
-            names.execute(request, client);
+            names.execute(event.getRequest(), event.getClient());
             break;
         case "list":
-            list.execute(request, client);
+            list.execute(event.getRequest(), event.getClient());
             break;
         case "invite":
-            invite.execute(request, client);
+            invite.execute(event.getRequest(), event.getClient());
             break;
         case "kick":
-            kick.execute(request, client);
+            kick.execute(event.getRequest(), event.getClient());
             break;
         case "version":
-            version.execute(request, client);
+            version.execute(event.getRequest(), event.getClient());
             break;
         case "time":
-            time.execute(request, client);
+            time.execute(event.getRequest(), event.getClient());
             break;
         case "admin":
-            admin.execute(request, client);
+            admin.execute(event.getRequest(), event.getClient());
             break;
         case "info":
-            info.execute(request, client);
+            info.execute(event.getRequest(), event.getClient());
             break;
         case "privmsg":
-            privmsg.execute(request, client);
+            privmsg.execute(event.getRequest(), event.getClient());
             break;
         case "notice":
-            notice.execute(request, client);
+            notice.execute(event.getRequest(), event.getClient());
             break;
         case "who":
-            who.execute(request, client);
+            who.execute(event.getRequest(), event.getClient());
             break;
         case "whois":
-            whois.execute(request, client);
+            whois.execute(event.getRequest(), event.getClient());
             break;
         case "ping":
-            ping.execute(request, client);
+            ping.execute(event.getRequest(), event.getClient());
             break;
         case "pong":
-            pong.execute(request, client);
+            pong.execute(event.getRequest(), event.getClient());
             break;
         case "away":
-            away.execute(request, client);
+            away.execute(event.getRequest(), event.getClient());
             break;
         case "nick":
-            nick.execute(request, client);
+            nick.execute(event.getRequest(), event.getClient());
             break;
         default:
             // TODO
             break;
         }
+
     }
 
 }

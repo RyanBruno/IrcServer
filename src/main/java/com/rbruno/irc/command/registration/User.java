@@ -16,9 +16,7 @@ public class User extends Command {
     }
 
     @Override
-    public void execute(Request request, Optional<Client> client) {
-        super.execute(request, client);
-
+    public void execute(Request request) {
         if (!request.getConnection().getNickname().isPresent()) {
             request.getConnection().send(Error.ERR_NEEDMOREPARAMS, "???", ":Nickname required!");
             return;
@@ -31,6 +29,7 @@ public class User extends Command {
         //request.getConnection().send(Reply.RPL_LUSERCHANNELS, newClient, Server.getServer().getChannelManger().getNonSecretChannels() + " :channels formed");
         //request.getConnection().send(Reply.RPL_LUSERME, newClient, ":I have " + Server.getServer().getClientManager().getClientCount() + " clients and 1 servers");
 
+        //TODO Dispach new client event
         Server.getServer().getClientManager().addClient(newClient);
         request.getConnection().setClient(newClient);
         request.getConnection().setInvoker(Server.getServer().getClientCommandInvoker());

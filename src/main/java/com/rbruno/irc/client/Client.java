@@ -20,7 +20,7 @@ public interface Client {
 
     public String getServername();
 
-    public void setLastCheckin(long lastCheckin);
+    public void setLastCheckIn(long lastCheckin);
 
     public String getAbsoluteName();
 

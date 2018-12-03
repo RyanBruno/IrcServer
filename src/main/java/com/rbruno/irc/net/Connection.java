@@ -17,70 +17,7 @@ public class Connection implements Runnable {
 
     private Optional<Client> client = Optional.empty();
     private Optional<String> nickname = Optional.empty();
-
-    private CommandInvoker invoker;
-
     protected Socket socket;
-    protected BufferedReader reader;
-
-    public Connection(Socket socket, CommandInvoker invoker) {
-        this.socket = socket;
-        this.invoker = invoker;
-    }
-
-    /**
-     * Start listing on socket. When a line is received it creates a new Request
-     * object and send to Command.runCommnd(Request)
-     */
-    @Override
-    public void run() {
-        try {
-            reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"));
-            while (!socket.isClosed()) {
-                Request request = getNextRequest(reader);
-
-                if (request == null) {
-                    close(Optional.empty());
-                    break;
-                }
-                invoker.runCommand(request, client);
-            }
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public Request getNextRequest(BufferedReader reader) throws IOException {
-        String line = reader.readLine();
-
-        if (line == null) {
-            return null;
-        } else {
-            System.out.println(line);
-            return new Request(this, line);
-        }
-    }
-
-    public void setClient(Client client) {
-        this.client = Optional.of(client);
-        this.nickname = Optional.empty();
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = Optional.of(nickname);
-    }
-
-    public void setInvoker(CommandInvoker invoker) {
-        this.invoker = invoker;
-    }
-
-    public Optional<String> getNickname() {
-        if (client.isPresent())
-            return Optional.of(client.get().getNickname());
-        return nickname;
-    }
 
     public boolean send(byte[] block) {
 

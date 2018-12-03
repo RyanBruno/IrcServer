@@ -1,14 +1,12 @@
 package com.rbruno.irc.command;
 
-import java.util.Optional;
-
-import com.rbruno.irc.client.Client;
 import com.rbruno.irc.command.registration.Nick;
 import com.rbruno.irc.command.registration.Pass;
 import com.rbruno.irc.command.registration.User;
-import com.rbruno.irc.net.Request;
+import com.rbruno.irc.events.EventListener;
+import com.rbruno.irc.events.NewCommandEvent;
 
-public class RegistrationCommandInvoker implements CommandInvoker {
+public class RegistrationCommandInvoker extends EventListener {
 
     private Pass pass;
     private Nick nick;
@@ -19,18 +17,18 @@ public class RegistrationCommandInvoker implements CommandInvoker {
         nick = new Nick();
         user = new User();
     }
-
+    
     @Override
-    public void runCommand(Request request, Optional<Client> client) {
-        switch (request.getCommand().toLowerCase()) {
+    public void onNewCommand(NewCommandEvent event) {
+        switch (event.getRequest().getCommand().toLowerCase()) {
         case "pass":
-            pass.execute(request, client);
+            pass.execute(event.getRequest());
             break;
         case "nick":
-            nick.execute(request, client);
+            nick.execute(event.getRequest());
             break;
         case "user":
-            user.execute(request, client);
+            user.execute(event.getRequest());
             break;
         default:
             break;

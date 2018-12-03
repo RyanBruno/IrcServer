@@ -15,10 +15,6 @@ import com.rbruno.irc.oper.OperManager;
 import com.rbruno.irc.plugin.PluginManager;
 
 public class Bootstrap {
-    
-    public Networking createNetworking() throws IOException {
-        return new Networking();
-    }
 
     public Config createConfig() throws Exception {
         try {

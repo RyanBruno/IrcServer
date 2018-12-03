@@ -5,82 +5,80 @@ package com.rbruno.irc.net;
  */
 public class Request {
 
-	private Connection connection;
-	private String prefix;
-	private String command;
-	private String[] args;
-	
-	/**
-	 * Creates a new Request object. Phrases the line into prefix, command and
-	 * arguments.
-	 * 
-	 * @param connection
-	 *            Connection the request came from.
-	 * @param line
-	 *            The line that was sent.
-	 * @throws Exception
-	 */
-	public Request(Connection connection, String line) {
-	  //TODO Yell if malformed
-		this.connection = connection;
-		if (line.startsWith(":")) {
-			this.prefix = line.split(" ")[0].substring(1);
-			line = line.substring(prefix.length() + 1);
-		}
-		this.command = line.split(" ")[0];
-		if (line.length() == command.length()) {
-			line = line.substring(command.length());
-		} else {
-			line = line.substring(command.length() + 1);
-		}
-		this.args = line.split(":")[0].split(" ");
-		if (args.length == 1 && args[0].equals(""))
-			args = new String[0];
-		
-		if (line.split(":").length > 1) {
-			String[] newArray = new String[args.length + 1];
-			for (int i = 0; i < args.length; i++)
-				newArray[i] = args[i];
+    private Connection connection;
+    private String prefix;
+    private String command;
+    private String[] args;
 
-			newArray[newArray.length - 1] = line.split(":")[1];
-			args = newArray;
-		}
-	}
+    /**
+     * Creates a new Request object. Phrases the line into prefix, command and
+     * arguments.
+     * 
+     * @param connection Connection the request came from.
+     * @param line       The line that was sent.
+     * @throws Exception
+     */
+    public Request(Connection connection, String line) {
+        // TODO Yell if malformed
+        this.connection = connection;
+        if (line.startsWith(":")) {
+            this.prefix = line.split(" ")[0].substring(1);
+            line = line.substring(prefix.length() + 1);
+        }
+        this.command = line.split(" ")[0];
+        if (line.length() == command.length()) {
+            line = line.substring(command.length());
+        } else {
+            line = line.substring(command.length() + 1);
+        }
+        this.args = line.split(":")[0].split(" ");
+        if (args.length == 1 && args[0].equals(""))
+            args = new String[0];
 
-	/**
-	 * Returns the connection that the request was sent through.
-	 * 
-	 * @return The connection that the request was sent through.
-	 */
-	public Connection getConnection() {
-		return connection;
-	}
+        if (line.split(":").length > 1) {
+            String[] newArray = new String[args.length + 1];
+            for (int i = 0; i < args.length; i++)
+                newArray[i] = args[i];
 
-	/**
-	 * Returns the prefix of the that was sent. The prefix should only be used
-	 * when sent by server.
-	 * 
-	 * @return The prefix of the that was sent.
-	 */
-	public String getPrefix() {
-		return prefix;
-	}
+            newArray[newArray.length - 1] = line.split(":")[1];
+            args = newArray;
+        }
+    }
 
-	/**
-	 * Returns the command that was sent.
-	 * 
-	 * @return The command that was sent.
-	 */
-	public String getCommand() {
-		return command;
-	}
+    /**
+     * Returns the connection that the request was sent through.
+     * 
+     * @return The connection that the request was sent through.
+     */
+    public Connection getConnection() {
+        return connection;
+    }
 
-	/**
-	 * Returns the arguments that were sent.
-	 * 
-	 * @return The array of arguments.
-	 */
-	public String[] getArgs() {
-		return args;
-	}
+    /**
+     * Returns the prefix of the that was sent. The prefix should only be used when
+     * sent by server.
+     * 
+     * @return The prefix of the that was sent.
+     */
+    public String getPrefix() {
+        return prefix;
+    }
+
+    /**
+     * Returns the command that was sent.
+     * 
+     * @return The command that was sent.
+     */
+    public String getCommand() {
+        return command;
+    }
+
+    /**
+     * Returns the arguments that were sent.
+     * 
+     * @return The array of arguments.
+     */
+    public String[] getArgs() {
+        return args;
+    }
 }
