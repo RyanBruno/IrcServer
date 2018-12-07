@@ -14,14 +14,16 @@ import com.rbruno.irc.events.EventListener;
 import com.rbruno.irc.events.NewRequestEvent;
 import com.rbruno.irc.events.SendDataEvent;
 import com.rbruno.irc.events.ServerOpenEvent;
+import com.rbruno.irc.events.Listener;
 
-public class ConnectionListener extends EventListener {
+
+public class ConnectionListener implements Listener {
 
     private EventDispacher eventDispacher;
 
     private Map<SocketChannel, byte[]> dataTracking = new HashMap<>();
 
-    @Override
+    @EventListener
     public void onServerOpen(ServerOpenEvent event) {
         try {
             Selector selector = Selector.open();
@@ -81,7 +83,7 @@ public class ConnectionListener extends EventListener {
         }
     }
 
-    @Override
+    @EventListener
     public void onSendData(SendDataEvent event) {
         dataTracking.put(event.getSocketChannel(), event.getData());
     }

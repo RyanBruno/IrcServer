@@ -1,11 +1,12 @@
 package com.rbruno.irc.events;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
 public class EventDispacher {
 
-    private List<EventListener> listeners;
+    private List<Listener> listeners;
 
     public enum EventType {
         SERVER_OPEN, NEW_CONNECTION, NEW_REQUEST, SEND_DATA,
@@ -16,36 +17,21 @@ public class EventDispacher {
     }
 
     public EventDispacher() {
-        listeners = new ArrayList<EventListener>();
+        listeners = new ArrayList<Listener>();
     }
 
-    public void registerListener(EventListener eventListener) {
-        listeners.add(eventListener);
+    public void registerListener(Listener listener) {
+        listeners.add(listener);
     }
 
     public void dispach(Event event) {
-        for (EventListener listener : listeners) {   	
-            switch (event.getType()) {
-            case SERVER_OPEN:
-                listener.onServerOpen((ServerOpenEvent) event);
-                break;
-            case NEW_CONNECTION:
-                listener.onNewConnection((NewConnectionEvent) event);
-                break;
-            case NEW_REQUEST:
-                listener.onNewRequest((NewRequestEvent) event);
-                break;
-            case SEND_DATA:
-                listener.onSendData((SendDataEvent) event);
-                break;
-            case CONFIG_CHANGED:
-                listener.onConfigChanged((ConfigChangedEvent) event);
-                break;
-            case CLIENT_REGISTERED:
-                listener.onClientRegistered((ClientRegisteredEvent) event);
-                break;
+        for (Listener listener : listeners) {   	
+            for (Method method : listener.getClass().getMethods()) {
+                EventListener annotation = method.getAnnotation(EventListener.class);
+                if (annotation != null && method.getParameterTypes()[0].equals(ClientRegisteredEvent.class)) {
+                    method.invoke(listener, () event);
+                }
             }
-            // TODO if event.isCanceled();
         }
     }
 
