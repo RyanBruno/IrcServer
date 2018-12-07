@@ -5,7 +5,7 @@ import java.nio.channels.SocketChannel;
 import com.rbruno.irc.events.EventDispacher.EventType;
 
 public class NickSetEvent extends Event {
-
+    
     private SocketChannel socketChannel;
     private String nickname;
 
