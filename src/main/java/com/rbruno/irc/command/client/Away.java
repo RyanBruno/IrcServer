@@ -4,10 +4,15 @@ import java.util.Optional;
 
 import com.rbruno.irc.client.Client;
 import com.rbruno.irc.command.ClientCommand;
+import com.rbruno.irc.command.CommandModule;
 import com.rbruno.irc.net.Request;
 import com.rbruno.irc.reply.Reply;
 
-public class Away implements ClientCommand {
+public class Away extends ClientCommand {
+
+    public Away(CommandModule commandModule) {
+        super(commandModule);
+    }
 
     @Override
     public void execute(Request request, Client client) {

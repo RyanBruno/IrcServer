@@ -9,11 +9,10 @@ public class EventDispacher {
     private List<Listener> listeners;
 
     public enum EventType {
-        SERVER_OPEN, NEW_CONNECTION, NEW_REQUEST, SEND_DATA,
         CONFIG_CHANGED,
-        CLIENT_REGISTERED, CLIENT_DISCONNECT,
-        NICK_SET, NICK_CHANGED,
-        
+        NEW_REQUEST, SEND_DATA,
+        NICK_SET, CLIENT_CHANGED,
+        CHANNEL_CHANGED,
     }
 
     public EventDispacher() {
