@@ -1,5 +1,6 @@
 package com.rbruno.irc.events;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,11 +25,15 @@ public class EventDispacher {
     }
 
     public void dispach(Event event) {
-        for (Listener listener : listeners) {   	
+        for (Listener listener : listeners) {
             for (Method method : listener.getClass().getMethods()) {
                 EventListener annotation = method.getAnnotation(EventListener.class);
-                if (annotation != null && method.getParameterTypes()[0].equals(ClientRegisteredEvent.class)) {
-                    method.invoke(listener, () event);
+                if (annotation != null && method.getParameterTypes()[0] == event.getClass()) {
+                    try {
+                        method.invoke(listener, event);
+                    } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }

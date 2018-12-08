@@ -1,15 +1,14 @@
 package com.rbruno.irc.command.registration;
 
 import com.rbruno.irc.client.LocalClient;
-import com.rbruno.irc.command.CommandModule;
-import com.rbruno.irc.command.RegistrationCommand;
 import com.rbruno.irc.events.ClientChangedEvent;
 import com.rbruno.irc.events.ClientChangedEvent.ClientChangeType;
+import com.rbruno.irc.events.Listener;
 import com.rbruno.irc.net.Request;
 
-public class User extends RegistrationCommand {
+public class User extends RegistrationCommand implements Listener {
 
-    public User(CommandModule commandModule) {
+    public User(RegCommandModule commandModule) {
         super(commandModule);
     }
 

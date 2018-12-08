@@ -1,13 +1,12 @@
 package com.rbruno.irc.command.registration;
 
-import com.rbruno.irc.command.CommandModule;
-import com.rbruno.irc.command.RegistrationCommand;
+import com.rbruno.irc.events.Listener;
 import com.rbruno.irc.events.NickSetEvent;
 import com.rbruno.irc.net.Request;
 
-public class Nick extends RegistrationCommand {
+public class Nick extends RegistrationCommand implements Listener {
 
-    public Nick(CommandModule commandModule) {
+    public Nick(RegCommandModule commandModule) {
         super(commandModule);
     }
 

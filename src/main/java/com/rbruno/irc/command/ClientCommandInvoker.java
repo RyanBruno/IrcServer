@@ -25,9 +25,10 @@ import com.rbruno.irc.command.client.Who;
 import com.rbruno.irc.command.client.Whois;
 import com.rbruno.irc.events.EventDispacher;
 import com.rbruno.irc.events.EventListener;
+import com.rbruno.irc.events.Listener;
 import com.rbruno.irc.events.NewRequestEvent;
 
-public class ClientCommandInvoker extends EventListener {
+public class ClientCommandInvoker implements Listener {
 
     private ClientCommand oper;
     private ClientCommand quit;
@@ -89,9 +90,9 @@ public class ClientCommandInvoker extends EventListener {
         away = new Away(commandModule);
     }
 
-    @Override
+    @EventListener
     public void onNewRequest(NewRequestEvent event) {
-        Client client = commandModule.getClient(event.getRequest().getSocketConnection());
+        Client client = commandModule.getClient(event.getRequest().getSocketChannel());
 
         switch (event.getRequest().getCommand().toLowerCase()) {
         case "oper":

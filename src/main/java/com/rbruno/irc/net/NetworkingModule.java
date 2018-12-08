@@ -1,20 +1,15 @@
 package com.rbruno.irc.net;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 
 import com.rbruno.irc.events.EventDispacher;
-import com.rbruno.irc.events.EventListener;
 import com.rbruno.irc.events.Module;
-import com.rbruno.irc.events.NewRequestEvent;
-import com.rbruno.irc.events.SendDataEvent;
 
 public class NetworkingModule extends Module {
 
@@ -76,7 +71,7 @@ public class NetworkingModule extends Module {
         socketChannel.configureBlocking(false);
         socketChannel.register(key.selector(), SelectionKey.OP_READ);
 
-        connectionMap.put(socketChannel, new IrcConnection(socketChannel));
+        connectionMap.put(socketChannel, new IrcConnection(socketChannel, this));
     }
 
     @Override
