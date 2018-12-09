@@ -19,15 +19,6 @@ public class LocalClient implements Client {
 
     private int modeMap = ClientMode.NOTICE.code;
 
-    public enum ClientMode {
-        INVISIBLE(1), NOTICE(2), WALLOPS(4), OPERATOR(8);
-        public final int code;
-
-        private ClientMode(int code) {
-            this.code = code;
-        }
-    }
-
     public boolean invisible;
     public boolean notice;
     public boolean wallops;

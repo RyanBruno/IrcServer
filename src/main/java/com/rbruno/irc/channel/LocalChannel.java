@@ -1,19 +1,27 @@
 package com.rbruno.irc.channel;
 
-import java.security.InvalidParameterException;
-
 import org.apache.commons.lang3.ArrayUtils;
-
-import com.rbruno.irc.client.Client;
 
 public class LocalChannel implements Channel {
 
     private String name;
     private String topic;
+    private String password;
+    
+    private int limit;
+    
+    private int modeMap;
 
-    private Client[] clients;
+    private String[] clients;
 
-    public LocalChannel(String name, String topic, Client[] clients) {
+    public LocalChannel(String name, String topic, String[] clients) {
+        this.name = name;
+        this.topic = topic;
+
+        this.clients = clients;
+    }
+    
+    public LocalChannel(String name, String topic, int limit, int modeMap, String[] clients) {
         this.name = name;
         this.topic = topic;
 
@@ -31,19 +39,19 @@ public class LocalChannel implements Channel {
     }
 
     @Override
-    public Channel addClient(Client client) {
-        return new LocalChannel(getName(), getTopic(), ArrayUtils.add(clients, client));
+    public Channel addClient(String nickname) {
+        return new LocalChannel(getName(), getTopic(), limit, modeMap, ArrayUtils.add(clients, nickname));
     }
 
     @Override
-    public Channel removeClient(Client client) {
-        int index = ArrayUtils.indexOf(clients, client);
-        
-        if (index > 0) {
-            throw new InvalidParameterException("Cannot remove a client that is not found!");
+    public Channel removeClient(String nickname) {
+        int index = ArrayUtils.indexOf(clients, nickname);
+
+        if (index < 0) {
+        	return this;
         }
         
-        return new LocalChannel(getName(), getTopic(), ArrayUtils.remove(clients, index));
+        return new LocalChannel(getName(), getTopic(), limit, modeMap, ArrayUtils.remove(clients, index));
     }
 
     @Override
@@ -52,8 +60,28 @@ public class LocalChannel implements Channel {
     }
 
     @Override
-    public boolean hasClient(Client client) {
-        return ArrayUtils.contains(clients, client);
+    public boolean hasClient(String nickname) {
+        return ArrayUtils.contains(clients, nickname);
     }
+
+	@Override
+	public String getPassword() {
+		return password;
+	}
+
+	@Override
+	public boolean isMode(ChannelMode mode) {
+		return (modeMap & mode.code) == 0;
+	}
+
+	@Override
+	public Channel setPassword(String password) {
+		return new LocalChannel(name, password, limit, modeMap, clients);
+	}
+
+	@Override
+	public Channel setMode(int code) {
+		return new LocalChannel(name, topic, limit, code, clients);
+	}
 
 }

@@ -1,17 +1,26 @@
 package com.rbruno.irc.command.client;
 
 import java.nio.channels.SocketChannel;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.rbruno.irc.client.Client;
+import com.rbruno.irc.events.ClientChangedEvent;
+import com.rbruno.irc.events.ConfigChangedEvent;
 import com.rbruno.irc.events.EventDispacher;
+import com.rbruno.irc.events.EventListener;
 import com.rbruno.irc.events.Listener;
 import com.rbruno.irc.events.Module;
 
 public class ClientCommandModule extends Module implements Listener {
+	
+	private Map<SocketChannel, Client> clientMap;
+	
+	private String hostname;
 
     public ClientCommandModule(EventDispacher eventDispacher) {
         super(eventDispacher);
-        // TODO Auto-generated constructor stub
+        clientMap = new HashMap<>();
     }
 
     @Override
@@ -45,14 +54,28 @@ public class ClientCommandModule extends Module implements Listener {
         // commands.add(new Whowas());
         // commands.add(new Kill());
         getEventDispacher().registerListener(new Ping(this));
-        getEventDispacher().registerListener(new Pong(this));
+        //getEventDispacher().registerListener(new Pong(this));
         // commands.add(new Error());
         // Optional Commands
         getEventDispacher().registerListener(new Away(this));
     }
 
     public Client getClient(SocketChannel socketChannel) {
-        return null;
+        return clientMap.get(socketChannel);
     }
+    
+    @EventListener
+    public void onClientUpdated(ClientChangedEvent event) {
+    	clientMap.put(event.getClient().getSocketChannel(), event.getClient());
+    }
+    
+    @EventListener
+    public void onConfigChange(ConfigChangedEvent event) {
+    	hostname = event.getConfig().getHostname();
+    }
+
+	public String getHostname() {
+		return hostname;
+	}
 
 }

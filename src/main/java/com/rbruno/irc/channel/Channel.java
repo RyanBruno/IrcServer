@@ -1,19 +1,25 @@
 package com.rbruno.irc.channel;
 
-import com.rbruno.irc.client.Client;
-
 public interface Channel {
 
-    public String getName();
+	public String getName();
 
-    public String getTopic();
+	public String getTopic();
 
-    public Channel addClient(Client client);
+	public boolean hasClient(String nickname);
+	
+	public String getPassword();
+	
+	public boolean isMode(ChannelMode mode);
 
-    public Channel removeClient(Client client);
+	public Channel addClient(String nickname);
 
-    public Channel setTopic(String topic);
+	public Channel removeClient(String nickname);
 
-    public boolean hasClient(Client client);
+	public Channel setTopic(String topic);
+	
+	public Channel setPassword(String password);
+	
+	public Channel setMode(int code);
 
 }

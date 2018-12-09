@@ -1,22 +1,21 @@
 package com.rbruno.irc.command.client;
 
-import java.util.Optional;
-
-import com.rbruno.irc.Server;
 import com.rbruno.irc.client.Client;
-import com.rbruno.irc.command.Command;
+import com.rbruno.irc.events.Event;
 import com.rbruno.irc.net.Request;
+import com.rbruno.irc.net.SendEventBuilder;
 
-public class Ping extends Command {
+public class Ping extends ClientCommand {
 
-    public Ping() {
-        super("PING", 1);
-    }
+    public Ping(ClientCommandModule commandModule) {
+		super("PING", commandModule);
+	}
 
-    @Override
-    public void execute(Request request, Optional<Client> client) {
-        super.execute(request, client);
-        request.getConnection().send(":" + Server.getServer().getConfig().getHostname() + " PONG " + client.get());
-    }
+	@Override
+	public Event execute(Request request, Client client) {
+		SendEventBuilder builder = new SendEventBuilder(getCommandModule().getHostname());
+		builder.addMessage(":" + getCommandModule().getHostname() + " PONG " + client.getAbsoluteName());
+		return builder.getEvent();
+	}
 
 }

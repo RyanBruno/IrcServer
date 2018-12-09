@@ -2,8 +2,6 @@ package com.rbruno.irc.client;
 
 import java.nio.channels.SocketChannel;
 
-import com.rbruno.irc.client.LocalClient.ClientMode;
-
 public interface Client {
 
     public SocketChannel getSocketChannel();

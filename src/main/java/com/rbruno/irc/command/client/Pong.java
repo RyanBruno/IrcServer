@@ -1,19 +1,18 @@
 package com.rbruno.irc.command.client;
 
-import java.util.Optional;
-
 import com.rbruno.irc.client.Client;
-import com.rbruno.irc.command.Command;
+import com.rbruno.irc.events.Event;
 import com.rbruno.irc.net.Request;
 
-public class Pong extends Command {
+public class Pong extends ClientCommand {
 
-    public Pong() {
-        super("PONG", 0);
-    }
+	public Pong(ClientCommandModule commandModule) {
+		super("PONG", commandModule);
+	}
 
-    @Override
-    public void execute(Request request, Optional<Client> client) {
-        super.execute(request, client);
-    }
+	@Override
+	public Event execute(Request request, Client client) {
+		return null;
+	}
+
 }
