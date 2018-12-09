@@ -1,4 +1,4 @@
-package com.rbruno.irc.command;
+package com.rbruno.irc.command.client;
 
 import com.rbruno.irc.client.Client;
 import com.rbruno.irc.events.EventListener;

@@ -33,4 +33,9 @@ public class ChannelChangedEvent extends Event {
         return changeType;
     }
 
+    @Override
+    public String toString() {
+        return getType().name() + " " + channel.getName() + " " + changeType.name();
+    }
+
 }

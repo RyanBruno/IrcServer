@@ -3,7 +3,6 @@ package com.rbruno.irc;
 import java.net.InetSocketAddress;
 import java.nio.channels.ServerSocketChannel;
 
-import com.rbruno.irc.command.CommandModule;
 import com.rbruno.irc.config.Config;
 import com.rbruno.irc.config.FileConfig;
 import com.rbruno.irc.events.ConfigChangedEvent;
@@ -33,7 +32,7 @@ public class Server {
         
         // TODO ADD all the modules
         
-        new CommandModule(eventDispacher);
+        //new RegCommandModule(eventDispacher);
         
         eventDispacher.dispach(new ConfigChangedEvent(config));
         

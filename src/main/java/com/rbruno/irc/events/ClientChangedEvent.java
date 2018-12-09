@@ -32,4 +32,9 @@ public class ClientChangedEvent extends Event {
         return changeType;
     }
 
+    @Override
+    public String toString() {
+        return getType().name() + " " + client.getAbsoluteName() + " " + changeType.name();
+    }
+
 }

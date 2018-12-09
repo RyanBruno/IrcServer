@@ -19,4 +19,9 @@ public class ConfigChangedEvent extends Event {
     public Config getConfig() {
         return config;
     }
+
+    @Override
+    public String toString() {
+        return getType().name();
+    }
 }

@@ -5,4 +5,6 @@ import com.rbruno.irc.events.EventDispacher.EventType;
 public abstract class Event {
 
     protected abstract EventType getType();
+    
+    public abstract String toString();
 }

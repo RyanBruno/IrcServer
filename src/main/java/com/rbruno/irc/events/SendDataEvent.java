@@ -26,5 +26,10 @@ public class SendDataEvent extends Event {
     public byte[] getData() {
         return data;
     }
+    
+    @Override
+    public String toString() {
+        return getType().name();
+    }
 
 }

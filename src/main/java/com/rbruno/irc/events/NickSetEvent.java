@@ -26,5 +26,11 @@ public class NickSetEvent extends Event {
     public String getNickname() {
         return nickname;
     }
+    
+
+    @Override
+    public String toString() {
+        return getType().name() + " " + nickname;
+    }
 
 }

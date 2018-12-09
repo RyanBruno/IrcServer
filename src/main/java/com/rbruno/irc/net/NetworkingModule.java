@@ -24,6 +24,8 @@ public class NetworkingModule extends Module {
             serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
 
             while (true) {
+                if (selector.select() <= 0) continue;
+
                 Iterator<SelectionKey> keys = selector.selectedKeys().iterator();
 
                 while (keys.hasNext()) {
@@ -33,7 +35,7 @@ public class NetworkingModule extends Module {
 
                     if (!key.isValid()) {
                         // TODO closed
-                        return;
+                        throw new Exception("Invalid Key");
                     }
 
                     if (key.isAcceptable()) {
@@ -51,7 +53,7 @@ public class NetworkingModule extends Module {
                 
             }
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

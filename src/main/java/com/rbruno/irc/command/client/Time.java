@@ -6,7 +6,6 @@ import java.util.Optional;
 
 import com.rbruno.irc.Server;
 import com.rbruno.irc.client.Client;
-import com.rbruno.irc.command.ClientCommand;
 import com.rbruno.irc.command.CommandModule;
 import com.rbruno.irc.net.Request;
 import com.rbruno.irc.reply.Reply;

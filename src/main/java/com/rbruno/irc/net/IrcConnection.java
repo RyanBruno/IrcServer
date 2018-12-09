@@ -36,6 +36,7 @@ public class IrcConnection {
         incomingBuffer.flip();
     }
 
+    // TODO Move to utils
     private int readForIndex() {
         incomingBuffer.mark();
 
@@ -43,14 +44,16 @@ public class IrcConnection {
         while (incomingBuffer.hasRemaining()) {
             char current = (char) incomingBuffer.get();
 
-            if (current == '\r' || cReturn) {
-                cReturn = true;
+            if (cReturn) {
                 if (current == '\n') {
                     int postion = incomingBuffer.position();
                     incomingBuffer.reset();
                     return postion;
+                } else {
+                    cReturn = false;
                 }
-                cReturn = false;
+            } else if (current == '\r') {
+                cReturn = true;
             }
         }
         incomingBuffer.reset();
