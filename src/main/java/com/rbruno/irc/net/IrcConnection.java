@@ -2,6 +2,8 @@ package com.rbruno.irc.net;
 
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.rbruno.irc.events.NewRequestEvent;
 
@@ -17,13 +19,30 @@ public class IrcConnection {
 
     public void read() {
         int read = socketChannel.read(incomingBuffer);
-
-        if (incomingBuffer.asCharBuffer().toString().contains("\r\n")) {
+        
+        incomingBuffer.flip();
+        
+        int index;
+        while (index = findRequestIndex(incomingBuffer) != -1) {
             
         }
+        // While (Check for \r\n
+        // Read request for 
 
-        Request request = new Request(socketChannel, readBuffer.asCharBuffer().toString());
-        getEventDispacher().dispach(new NewRequestEvent(request));        
+    }
+    
+    public String findRequest(ByteBuffer buffer) {
+        int before = incomingBuffer.position();
+        List<Character> request = new ArrayList<Character>();
+        while (incomingBuffer.hasRemaining()) {
+            char current = (char) incomingBuffer.get();
+            if (current == '\r' || current == '\n') {
+                
+            }
+            request.add();
+        }
+        
+        return new String(request.st);
     }
 
 }
