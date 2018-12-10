@@ -1,7 +1,6 @@
 package com.rbruno.irc.client;
 
 import java.nio.channels.SocketChannel;
-import java.util.Optional;
 
 public interface Client {
 
@@ -9,22 +8,24 @@ public interface Client {
 
     public String getNickname();
 
-    public void setNickname(String nickname);
-
-    public String getRealName();
-
     public String getUsername();
 
     public String getHostname();
 
     public String getServername();
 
-    public void setLastCheckIn(long lastCheckin);
+    public String getRealName();
 
     public String getAbsoluteName();
 
-    public void setAwayMessage(Optional<String> message);
+    public String getAwayMessage();
 
-    public Optional<String> getAwayMessage();
+    public boolean isMode(ClientMode mode);
+
+    public Client setNickname(String nickname);
+
+    public Client setAwayMessage(String message);
+
+    public Client setModes(byte mode);
 
 }

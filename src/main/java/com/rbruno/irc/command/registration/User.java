@@ -1,24 +1,24 @@
 package com.rbruno.irc.command.registration;
 
 import com.rbruno.irc.client.LocalClient;
-import com.rbruno.irc.command.CommandModule;
-import com.rbruno.irc.command.RegistrationCommand;
 import com.rbruno.irc.events.ClientChangedEvent;
 import com.rbruno.irc.events.ClientChangedEvent.ClientChangeType;
+import com.rbruno.irc.events.Event;
+import com.rbruno.irc.events.Listener;
 import com.rbruno.irc.net.Request;
 
-public class User extends RegistrationCommand {
+public class User extends RegistrationCommand implements Listener {
 
-    public User(CommandModule commandModule) {
-        super(commandModule);
+    public User(RegCommandModule commandModule) {
+        super("USER", commandModule);
     }
 
     @Override
-    public void execute(Request request) {
+    public Event execute(Request request) {
         if (getCommandModule().getNickname(request.getSocketChannel()) == null) {
             //request.getConnection().send(Error.ERR_NEEDMOREPARAMS, "???", ":Nickname required!");
             // TODO Send
-            return;
+            return null;
         }
         LocalClient newClient = new LocalClient(request.getSocketChannel(), getCommandModule().getNickname(request.getSocketChannel()), request.getArgs()[0], request.getArgs()[1], request.getArgs()[2], request.getArgs()[3]);
 
@@ -28,9 +28,7 @@ public class User extends RegistrationCommand {
         //request.getConnection().send(Reply.RPL_LUSERCHANNELS, newClient, Server.getServer().getChannelManger().getNonSecretChannels() + " :channels formed");
         //request.getConnection().send(Reply.RPL_LUSERME, newClient, ":I have " + Server.getServer().getClientManager().getClientCount() + " clients and 1 servers");
 
-        //TODO Dispach new client event
-        getCommandModule().getEventDispacher().dispach(new ClientChangedEvent(newClient, ClientChangeType.CLIENT_REGISTERED));
-   
+        return new ClientChangedEvent(newClient, ClientChangeType.CLIENT_REGISTERED);
     }
 
 }

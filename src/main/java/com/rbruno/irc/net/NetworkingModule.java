@@ -1,20 +1,15 @@
 package com.rbruno.irc.net;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 
 import com.rbruno.irc.events.EventDispacher;
-import com.rbruno.irc.events.EventListener;
 import com.rbruno.irc.events.Module;
-import com.rbruno.irc.events.NewRequestEvent;
-import com.rbruno.irc.events.SendDataEvent;
 
 public class NetworkingModule extends Module {
 
@@ -29,6 +24,8 @@ public class NetworkingModule extends Module {
             serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
 
             while (true) {
+                if (selector.select() <= 0) continue;
+
                 Iterator<SelectionKey> keys = selector.selectedKeys().iterator();
 
                 while (keys.hasNext()) {
@@ -38,7 +35,7 @@ public class NetworkingModule extends Module {
 
                     if (!key.isValid()) {
                         // TODO closed
-                        return;
+                        throw new Exception("Invalid Key");
                     }
 
                     if (key.isAcceptable()) {
@@ -56,7 +53,7 @@ public class NetworkingModule extends Module {
                 
             }
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -76,7 +73,7 @@ public class NetworkingModule extends Module {
         socketChannel.configureBlocking(false);
         socketChannel.register(key.selector(), SelectionKey.OP_READ);
 
-        connectionMap.put(socketChannel, new IrcConnection(socketChannel));
+        connectionMap.put(socketChannel, new IrcConnection(socketChannel, this));
     }
 
     @Override

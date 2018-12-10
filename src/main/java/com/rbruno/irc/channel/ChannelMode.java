@@ -1,80 +1,15 @@
 package com.rbruno.irc.channel;
 
-import java.util.Optional;
+public enum ChannelMode {
+    PRIVATE(1),
+    SECRETE(2),
+    INVITE_ONLY(4),
+    OP_MUST_SET_TOPIC(8),
+    NO_OUTSIDE_MESSAGES(16),
+    MODERATED(32);
+    public final int code;
 
-public class ChannelMode {
-
-    private boolean privateChannel;
-    private boolean secrete;
-    private boolean inviteOnly;
-    private boolean opMustSetTopic;
-    private boolean noOutSideMessages;
-    private boolean moderated;
-    private int userLimit = 10;
-    private Optional<String> password = Optional.empty();
-
-    public boolean isPrivateChannel() {
-        return privateChannel;
+    private ChannelMode(int code) {
+        this.code = code;
     }
-
-    public void setPrivate(boolean privateChannel) {
-        this.privateChannel = privateChannel;
-    }
-
-    public boolean isSecrete() {
-        return secrete;
-    }
-
-    public void setSecret(boolean secrete) {
-        this.secrete = secrete;
-    }
-
-    public boolean isInviteOnly() {
-        return inviteOnly;
-    }
-
-    public void setInviteOnly(boolean inviteOnly) {
-        this.inviteOnly = inviteOnly;
-    }
-
-    public boolean isOpMustSetTopic() {
-        return opMustSetTopic;
-    }
-
-    public void setOpMustSetTopic(boolean opMustSetTopic) {
-        this.opMustSetTopic = opMustSetTopic;
-    }
-
-    public boolean isNoOutsideMessages() {
-        return noOutSideMessages;
-    }
-
-    public void setNoOutSideMessages(boolean noOutSideMessages) {
-        this.noOutSideMessages = noOutSideMessages;
-    }
-
-    public boolean isModerated() {
-        return moderated;
-    }
-
-    public void setModerated(boolean moderated) {
-        this.moderated = moderated;
-    }
-
-    public int getuserLimit() {
-        return userLimit;
-    }
-
-    public void setUserLimit(int limit) {
-        this.userLimit = limit;
-    }
-
-    public Optional<String> getPassword() {
-        return password;
-    }
-
-    public void setPassword(Optional<String> password) {
-        this.password = password;
-    }
-
 }

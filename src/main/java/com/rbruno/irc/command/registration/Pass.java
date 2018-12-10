@@ -1,17 +1,18 @@
 package com.rbruno.irc.command.registration;
 
-import com.rbruno.irc.command.CommandModule;
-import com.rbruno.irc.command.RegistrationCommand;
+import com.rbruno.irc.events.Event;
+import com.rbruno.irc.events.Listener;
 import com.rbruno.irc.net.Request;
 
-public class Pass extends RegistrationCommand {
+public class Pass extends RegistrationCommand implements Listener {
 
-    public Pass(CommandModule commandModule) {
-        super(commandModule);
+    public Pass(RegCommandModule commandModule) {
+        super("PASS", commandModule);
     }
 
     @Override
-    public void execute(Request request) {
+    public Event execute(Request request) {
         // TODO
+        return null;
     }
 }

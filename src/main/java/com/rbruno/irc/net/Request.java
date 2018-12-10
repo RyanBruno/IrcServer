@@ -34,7 +34,7 @@ public class Request {
         } else {
             line = line.substring(command.length() + 1);
         }
-        this.args = line.split(":")[0].split(" ");
+        this.args = line.trim().split(":")[0].split(" ");
         if (args.length == 1 && args[0].equals(""))
             args = new String[0];
 
