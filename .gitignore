@@ -3,7 +3,7 @@
 .project
 */bin/
 */target/
-*/.settings/
+.settings/
 *.*.swp
 Test/
 .test/
@@ -11,3 +11,4 @@ Test/
 /bin/
 .gradle/
 build/
+log.txt
