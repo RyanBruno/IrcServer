@@ -6,38 +6,44 @@ import java.util.Iterator;
 
 import com.rbruno.irc.events.ClientChangedEvent;
 import com.rbruno.irc.events.ClientChangedEvent.ClientChangeType;
+import com.rbruno.irc.events.ConfigChangedEvent;
 import com.rbruno.irc.events.EventDispacher;
 import com.rbruno.irc.events.EventListener;
 import com.rbruno.irc.events.Listener;
 import com.rbruno.irc.events.Module;
 import com.rbruno.irc.events.NickSetEvent;
 
+import io.netty.channel.Channel;
+
 public class RegCommandModule extends Module implements Listener {
 
-    private HashMap<SocketChannel, String> nicks;
+    private HashMap<Channel, String> nicks;
+    private String hostname;
 
     public RegCommandModule(EventDispacher eventDispacher) {
         super(eventDispacher);
-        nicks = new HashMap<SocketChannel, String>();
+        nicks = new HashMap<Channel, String>();
     }
 
     @Override
     public void registerEventListeners() {
         getEventDispacher().registerListener(this);
-        getEventDispacher().registerListener(new Pass(this));
-        getEventDispacher().registerListener(new Nick(this));
-        getEventDispacher().registerListener(new User(this));
+    }
+    
+    @EventListener
+    public void onConfigChanged(ConfigChangedEvent event) {
+        this.hostname = event.getConfig().getHostname();
     }
 
     @EventListener
     public void onNickSet(NickSetEvent event) {
-        nicks.put(event.getSocketChannel(), event.getNickname());
+        nicks.put(event.getChannel(), event.getNickname());
     }
 
     @EventListener
     public void onClientChanged(ClientChangedEvent event) {
         if (event.getChangeType() == ClientChangeType.CLIENT_REGISTERED)
-            nicks.remove(event.getClient().getSocketChannel());
+            nicks.remove(event.getClient().getChannel());
     }
 
     public String getNickname(SocketChannel socketChannel) {
@@ -51,6 +57,10 @@ public class RegCommandModule extends Module implements Listener {
                 return true;
         }
         return false;
+    }
+
+    public String getHostname() {
+        return hostname;
     }
 
 }

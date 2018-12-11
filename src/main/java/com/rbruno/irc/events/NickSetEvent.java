@@ -1,16 +1,16 @@
 package com.rbruno.irc.events;
 
-import java.nio.channels.SocketChannel;
-
 import com.rbruno.irc.events.EventDispacher.EventType;
+
+import io.netty.channel.Channel;
 
 public class NickSetEvent extends Event {
     
-    private SocketChannel socketChannel;
+    private Channel channel;
     private String nickname;
 
-    public NickSetEvent(SocketChannel socketChannel, String nickname) {
-        this.socketChannel = socketChannel;
+    public NickSetEvent(Channel channel, String nickname) {
+        this.channel = channel;
         this.nickname = nickname;
     }
 
@@ -19,8 +19,8 @@ public class NickSetEvent extends Event {
         return EventType.NICK_SET;
     }
 
-    public SocketChannel getSocketChannel() {
-        return socketChannel;
+    public Channel getChannel() {
+        return channel;
     }
 
     public String getNickname() {

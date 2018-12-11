@@ -1,8 +1,5 @@
 package com.rbruno.irc;
 
-import java.net.InetSocketAddress;
-import java.nio.channels.ServerSocketChannel;
-
 import com.rbruno.irc.config.Config;
 import com.rbruno.irc.config.FileConfig;
 import com.rbruno.irc.events.ConfigChangedEvent;
@@ -35,12 +32,8 @@ public class Server {
         //new RegCommandModule(eventDispacher);
         
         eventDispacher.dispach(new ConfigChangedEvent(config));
-        
-        ServerSocketChannel serverChannel = ServerSocketChannel.open();
-        serverChannel.configureBlocking(false);
-        serverChannel.socket().bind(new InetSocketAddress(config.getHostname(), config.getPort()));
-        
-        new NetworkingModule(eventDispacher, serverChannel);
+ 
+        new NetworkingModule(eventDispacher, config.getPort());
         
     }
 

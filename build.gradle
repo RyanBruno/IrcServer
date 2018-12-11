@@ -11,5 +11,9 @@ application {
 
 dependencies {
     testCompile 'junit:junit:4.9'
-    implementation 'org.apache.commons:commons-lang3:3.8.1'
+
+	compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.8.1'
+    compile group: 'io.netty', name: 'netty-all', version: '4.1.32.Final'
 }
+
+
