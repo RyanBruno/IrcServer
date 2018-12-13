@@ -21,7 +21,7 @@ public class ClientChangedEvent extends Event {
 
     public enum ClientChangeType {
         CLIENT_REGISTERED, CLIENT_DISCONNECT,
-        NICK_CHANGED,
+        NICK_CHANGED, UNAWAY, AWAY_SET
     }
 
     public Client getClient() {

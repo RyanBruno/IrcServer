@@ -1,4 +1,4 @@
-package com.rbruno.irc.command.client;
+package com.rbruno.irc.command;
 
 import java.util.Arrays;
 import java.util.Optional;

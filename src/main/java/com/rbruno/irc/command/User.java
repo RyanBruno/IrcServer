@@ -1,6 +1,7 @@
-package com.rbruno.irc.command.registration;
+package com.rbruno.irc.command;
 
 import com.rbruno.irc.client.LocalClient;
+import com.rbruno.irc.command.registration.RegCommandModule;
 import com.rbruno.irc.events.ClientChangedEvent;
 import com.rbruno.irc.events.ClientChangedEvent.ClientChangeType;
 import com.rbruno.irc.events.Event;

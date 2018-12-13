@@ -44,6 +44,10 @@ public class Response {
     public boolean addMessage(Error error, Client client, String args) {
         return addMessage(error.getCode(), client, args);
     }
+    
+    public boolean addUnknownRegCommand(String command) {
+        return addMessage(new Client[0], ":" + hostname + " " + Error.ERR_UNKNOWNCOMMAND.getCode() +" " + command + " :Unknown Command");
+    }
 
     
     public Map<Client[], String> getResponseMap() {

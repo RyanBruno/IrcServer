@@ -1,6 +1,6 @@
 package com.rbruno.irc.net;
 
-import com.rbruno.irc.events.EventDispacher;
+import com.rbruno.irc.bus.CommandBus;
 import com.rbruno.irc.events.Module;
 
 import io.netty.bootstrap.ServerBootstrap;
@@ -10,10 +10,10 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 
-public class NetworkingModule extends Module {
+public class NetworkingModule extends Module{
 
-    public NetworkingModule(EventDispacher eventDispacher, int port) throws InterruptedException {
-        super(eventDispacher);
+    public NetworkingModule(CommandBus bus, int port) throws InterruptedException {
+        super(null, bus);
 
         EventLoopGroup bossGroup = new NioEventLoopGroup(1);
         EventLoopGroup workerGroup = new NioEventLoopGroup();
@@ -22,7 +22,7 @@ public class NetworkingModule extends Module {
             b.group(bossGroup, workerGroup)
              .channel(NioServerSocketChannel.class)
              .handler(new LoggingHandler(LogLevel.INFO))
-             .childHandler(new RequestChannelInitializer());
+             .childHandler(new RequestChannelInitializer(bus));
 
             b.bind(port).sync().channel().closeFuture().sync();
         } finally {
@@ -32,7 +32,8 @@ public class NetworkingModule extends Module {
     }
 
     @Override
-    public void registerEventListeners() {       
-    }
+    public void registerEventListeners() {}
 
+    @Override
+    public void setForwards() {}
 }

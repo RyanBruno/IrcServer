@@ -1,5 +1,6 @@
 package com.rbruno.irc;
 
+import com.rbruno.irc.bus.CommandBus;
 import com.rbruno.irc.config.Config;
 import com.rbruno.irc.config.FileConfig;
 import com.rbruno.irc.events.ConfigChangedEvent;
@@ -26,6 +27,7 @@ public class Server {
      */
     private Server(Config config) throws Exception {
         EventDispacher eventDispacher = new EventDispacher();
+        CommandBus bus = new CommandBus();
         
         // TODO ADD all the modules
         
@@ -33,7 +35,7 @@ public class Server {
         
         eventDispacher.dispach(new ConfigChangedEvent(config));
  
-        new NetworkingModule(eventDispacher, config.getPort());
+        new NetworkingModule(bus, config.getPort());
         
     }
 

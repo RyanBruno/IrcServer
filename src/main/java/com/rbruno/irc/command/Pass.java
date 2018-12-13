@@ -1,5 +1,6 @@
-package com.rbruno.irc.command.registration;
+package com.rbruno.irc.command;
 
+import com.rbruno.irc.command.registration.RegCommandModule;
 import com.rbruno.irc.events.Event;
 import com.rbruno.irc.events.Listener;
 import com.rbruno.irc.net.Request;

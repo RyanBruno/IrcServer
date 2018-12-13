@@ -4,16 +4,21 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-public class CommandBus<R, S, K> {
-    
-    Map<K, Function<R, S>> map = new HashMap<>();
+import com.rbruno.irc.net.Request;
+import com.rbruno.irc.net.Response;
 
-    public void registerMethod(K key, Function<R, S> handler) {
-        map.put(key, handler);
-    }
+public class CommandBus implements Bus<Request, Response, String> {
     
-    public S apply(R request, Function<R, K> key) {
-        return map.get(key.apply(request)).apply(request);
+    Map<String, Function<Request, Response>> map = new HashMap<>();
+
+    @Override
+    public void forwardTo(String key, Function<Request, Response> responder) {
+        map.put(key.toUpperCase(), responder);
+    }
+
+    @Override
+    public Response apply(String key, Request request) {
+        return map.get(key.toUpperCase()).apply(request);
     }
     
 }

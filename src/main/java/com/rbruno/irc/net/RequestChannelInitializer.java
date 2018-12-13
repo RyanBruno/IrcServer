@@ -1,5 +1,7 @@
 package com.rbruno.irc.net;
 
+import com.rbruno.irc.bus.CommandBus;
+
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
@@ -10,6 +12,12 @@ import io.netty.handler.codec.string.StringEncoder;
 
 public class RequestChannelInitializer extends ChannelInitializer<SocketChannel> {
 
+    private CommandBus bus;
+
+    public RequestChannelInitializer(CommandBus bus) {
+        this.bus = bus;
+    }
+    
     @Override
     protected void initChannel(SocketChannel ch) throws Exception {
         ChannelPipeline pipeline = ch.pipeline();
@@ -20,7 +28,7 @@ public class RequestChannelInitializer extends ChannelInitializer<SocketChannel>
         pipeline.addLast(new StringEncoder());
 
         // and then business logic.
-        pipeline.addLast(new RequestChannelHandler());
+        pipeline.addLast(new RequestChannelHandler(bus));
     }
 
 }

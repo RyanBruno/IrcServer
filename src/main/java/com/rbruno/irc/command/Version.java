@@ -1,11 +1,10 @@
-package com.rbruno.irc.command.client;
+package com.rbruno.irc.command;
 
 import java.util.Optional;
 
 import com.rbruno.irc.Server;
 import com.rbruno.irc.client.Client;
 import com.rbruno.irc.command.Command;
-import com.rbruno.irc.command.CommandModule;
 import com.rbruno.irc.net.Request;
 import com.rbruno.irc.reply.Reply;
 
