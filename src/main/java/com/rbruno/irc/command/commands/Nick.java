@@ -1,4 +1,4 @@
-package com.rbruno.irc.command.registration;
+package com.rbruno.irc.command.commands;
 
 import java.util.Optional;
 

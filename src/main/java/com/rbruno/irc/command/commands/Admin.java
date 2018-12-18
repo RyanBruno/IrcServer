@@ -1,32 +1,37 @@
 package com.rbruno.irc.command.commands;
 
-import java.util.Optional;
-
-import com.rbruno.irc.Server;
 import com.rbruno.irc.client.Client;
 import com.rbruno.irc.command.Command;
+import com.rbruno.irc.command.CommandContext;
+import com.rbruno.irc.config.Config;
 import com.rbruno.irc.net.Request;
+import com.rbruno.irc.net.Response;
 import com.rbruno.irc.reply.Reply;
 
 public class Admin extends Command {
 
-    public Admin() {
-        super("ADMIN", 0);
-    }
+	public Admin(CommandContext context) {
+		super(context);
+	}
 
-    @Override
-    public void execute(Request request, Optional<Client> client) {
-        super.execute(request, client);
+	@Override
+	public Response[] execute(Request request) {
+		Config config = getContext().getConfig();
 
-        request.getConnection().send(Reply.RPL_ADMINME, client.get(), Server.getServer().getConfig().getHostname() + " :Administrative info");
-        if (Server.getServer().getConfig().getAdminLoc1().isPresent()) {
-            request.getConnection().send(Reply.RPL_ADMINLOC1, client.get(), Server.getServer().getConfig().getHostname() + " :" + Server.getServer().getConfig().getAdminLoc1().get());
-            if (Server.getServer().getConfig().getAdminLoc2().isPresent()) {
-                request.getConnection().send(Reply.RPL_ADMINLOC2, client.get(), Server.getServer().getConfig().getHostname() + " :" + Server.getServer().getConfig().getAdminLoc2().get());
-                if (Server.getServer().getConfig().getAdminMail().isPresent()) {
-                    request.getConnection().send(Reply.RPL_ADMINMAIL, client.get(), Server.getServer().getConfig().getHostname() + " :" + Server.getServer().getConfig().getAdminMail().get());
-                }
-            }
-        }
-    }
+		Client client = getContext().getClient(request.getChannel());
+		if (client == null) {
+			return new Response[] { new Response(request.getChannel(), "ADMIN", config.getHostname()) };
+		}
+
+		Response response[] = new Response[4];
+
+		response[0] = new Response(Reply.RPL_ADMINME, client, config.getHostname() + " :Administrative info", config.getHostname());
+
+		response[1] = new Response(Reply.RPL_ADMINLOC1, client, config.getHostname() + " :" + config.getAdminLoc1(), config.getHostname());
+
+		response[2] = new Response(Reply.RPL_ADMINLOC2, client, config.getHostname() + " :" + config.getAdminLoc2(), config.getHostname());
+
+		response[3] = new Response(Reply.RPL_ADMINMAIL, client, config.getHostname() + " :" + config.getAdminMail(), config.getHostname());
+		return response;
+	}
 }
