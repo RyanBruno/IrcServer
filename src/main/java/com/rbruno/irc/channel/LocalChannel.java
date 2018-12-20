@@ -58,39 +58,12 @@ public class LocalChannel implements Channel {
     }
 
     @Override
-    public void sendToAll(String message) {
-        Iterator<Client> clients = getIterator();
-        while (clients.hasNext()) {
-            Client client = clients.next();
-            client.getConnection().send(message);
-        }
-    }
-
-    @Override
-    public void partClient(Client client, Optional<String> message) {
-        messenger.clientPart(this, client, message.isPresent() ? message.get() : "Leaving");
-        clients.remove(client);
-    }
-
-    @Override
-    public void quitClient(Client client, Optional<String> message) {
-        messenger.clientQuit(this, client, message.isPresent() ? message.get() : "Leaving");
-        clients.remove(client);
-    }
-
-    @Override
-    public void kickClient(Client client, Optional<String> message) {
-        messenger.clientKick(this, client, message.isPresent() ? message.get() : "You have been kicked from the channel");
-        clients.remove(client);
-    }
-    
-    @Override
-    public void clientDisconnected(Client client) {
+    public void removeClient(Client client) {
         clients.remove(client);
         ops.remove(client);
         voice.remove(client);
         banned.remove(client);
-        invited.remove(client);
+        invited.remove(client);    	
     }
 
     @Override
@@ -158,6 +131,5 @@ public class LocalChannel implements Channel {
     @Override
     public void invitePlayer(Client invitor, Client target) {
         invited.add(target);
-        messenger.invitePlayer(this, invitor, target);
     }
 }

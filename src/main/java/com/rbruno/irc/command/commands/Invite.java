@@ -1,41 +1,53 @@
 package com.rbruno.irc.command.commands;
 
-import java.util.Optional;
-
-import com.rbruno.irc.Server;
 import com.rbruno.irc.channel.Channel;
 import com.rbruno.irc.client.Client;
 import com.rbruno.irc.command.Command;
+import com.rbruno.irc.command.CommandContext;
+import com.rbruno.irc.config.Config;
 import com.rbruno.irc.net.Request;
+import com.rbruno.irc.net.Response;
 import com.rbruno.irc.reply.Error;
+import com.rbruno.irc.reply.Reply;
 
 public class Invite extends Command {
 
-    public Invite() {
-        super("INVITE", 2);
-    }
+	public Invite(CommandContext context) {
+		super(context);
+	}
 
-    @Override
-    public void execute(Request request, Optional<Client> client) {
-        super.execute(request, client);
-        Channel channel = Server.getServer().getChannelManger().getChannel(request.getArgs()[1]);
+	@Override
+	public Response[] execute(Request request) {
+		Config config = getContext().getConfig();
+
+		Client client = getContext().getClient(request.getChannel());
+		if (client == null) {
+			return new Response[] { new Response(request.getChannel(), "INVITE", config.getHostname()) };
+		}
+		
+        Channel channel = getContext().getChannel(request.getArgs()[1]);
         
         if (channel == null) {
-            request.getConnection().send(Error.ERR_NOSUCHCHANNEL, client.get(), request.getArgs()[1] + " :No such channel");
-            return;
+            return new Response[] {new Response(Error.ERR_NOSUCHCHANNEL, client, request.getArgs()[1] + " :No such channel", config.getHostname())};
         }
         
-        if (!channel.isChanOp(client.get()) && !Server.getServer().getOperManager().isop(client.get())) {
-            request.getConnection().send(Error.ERR_CHANOPRIVSNEEDED, client.get(), request.getArgs()[1] + " :You're not channel operator");
-            return;
+        if (!channel.isChanOp(client) && !getContext().isop(client)) {
+            return new Response[] {new Response(Error.ERR_CHANOPRIVSNEEDED, client, request.getArgs()[1] + " :You're not channel operator", config.getHostname())};
         }
         
-        Client target = Server.getServer().getClientManager().getClient(request.getArgs()[0]);
+        Client target = getContext().getClient(request.getArgs()[0]);
         if (target == null) {
-            request.getConnection().send(Error.ERR_NOSUCHNICK, client.get(), request.getArgs()[1] + " :No such nick");
-            return;
+            return new Response[] { new Response(Error.ERR_NOSUCHNICK, client, request.getArgs()[1] + " :No such nick", config.getHostname()) };
         }
-        channel.invitePlayer(client.get(), target);
- }
+
+        channel.invitePlayer(target);
+
+        Response[] response = new Response[2];
+
+        response[0] = new Response(Reply.RPL_INVITING, client, target.getNickname() + " " + channel.getName(), config.getHostname());
+        response[1] = new Response(target, ":" + client.getAbsoluteName() + " INVITE " + target.getNickname() + " " + channel.getName());
+        
+        return response;
+	}
 
 }

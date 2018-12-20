@@ -5,9 +5,7 @@ import java.util.logging.Level;
 
 import com.rbruno.irc.channel.ChannelManager;
 import com.rbruno.irc.client.ClientManager;
-import com.rbruno.irc.command.ClientCommandInvoker;
 import com.rbruno.irc.command.CommandInvoker;
-import com.rbruno.irc.command.RegistrationCommandInvoker;
 import com.rbruno.irc.config.Config;
 import com.rbruno.irc.config.FileConfig;
 import com.rbruno.irc.logger.Logger;

@@ -29,4 +29,17 @@ public class CommandContext {
 		return null;
 	}
 
+	public Client getClient(String string) {
+		return null;
+	}
+
+	public boolean isop(Client client) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public com.rbruno.irc.channel.Channel getChannel(String string) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

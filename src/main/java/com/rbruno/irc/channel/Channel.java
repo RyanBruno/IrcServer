@@ -1,7 +1,6 @@
 package com.rbruno.irc.channel;
 
 import java.util.Iterator;
-import java.util.Optional;
 
 import com.rbruno.irc.client.Client;
 
@@ -17,11 +16,7 @@ public interface Channel {
 
     public void addClient(Client client);
 
-    public void partClient(Client client, Optional<String> message);
-
-    public void quitClient(Client client, Optional<String> message);
-
-    public void kickClient(Client client, Optional<String> message);
+    public void removeClient(Client client);
 
     public Iterator<Client> getIterator();
 
@@ -39,12 +34,10 @@ public interface Channel {
 
     public void setVoice(Client client, boolean voice);
 
-    public void sendToAll(String message);
-
     public int getUsersCount();
 
-    public void invitePlayer(Client invitor, Client target);
+    public void invitePlayer(Client client);
 
-    void clientDisconnected(Client client);
+	public boolean isInvited(Client client);
 
 }

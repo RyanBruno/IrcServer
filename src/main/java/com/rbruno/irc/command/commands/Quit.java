@@ -1,30 +1,20 @@
 package com.rbruno.irc.command.commands;
 
-import java.util.Optional;
-
-import com.rbruno.irc.client.Client;
 import com.rbruno.irc.command.Command;
+import com.rbruno.irc.command.CommandContext;
 import com.rbruno.irc.net.Request;
+import com.rbruno.irc.net.Response;
 
 public class Quit extends Command {
 
-    public Quit() {
-        super("QUIT", 0);
-    }
+    public Quit(CommandContext context) {
+		super(context);
+	}
 
-    @Override
-    public void execute(Request request, Optional<Client> client) {
-        super.execute(request, client);
-        if (!client.isPresent()) {
-            return;
-        }
-
-        String message = null;
-        if (request.getArgs().length != 0) {
-            message = request.getArgs()[0];
-        }
-        
-        request.getConnection().close(Optional.ofNullable(message));
-    }
+	@Override
+	public Response[] execute(Request request) {
+		// TODO
+		return null;
+	}
 
 }
